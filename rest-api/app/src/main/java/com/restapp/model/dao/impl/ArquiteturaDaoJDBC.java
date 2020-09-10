@@ -10,6 +10,7 @@ import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ArquiteturaDao;
 import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Artigos;
 
 public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
@@ -47,8 +48,23 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
 	@Override
 	public List<Arquitetura> findAll() {
-		return null;
-		
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		String sql = "SELECT * FROM arquitetura";
+		try {
+			conn = DB.getConnection();
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(instantiateArquitetura(rs));
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		return list;
 	}
 
 	@Override

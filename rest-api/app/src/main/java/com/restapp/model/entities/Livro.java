@@ -10,7 +10,6 @@ public class Livro {
 	private String biografia;
 	private String descricao;
 	private String autor;
-	private String autor2;
 	private String titulo;
 	private String categoria;
 	
@@ -21,7 +20,7 @@ public class Livro {
 	
 
 	public Livro(Integer id, Integer edicao, Integer ano, String tipo, String editora, String biografia,
-			String descricao, String autor, String autor2, String titulo, String categoria) {
+			String descricao, String autor, String titulo, String categoria) {
 		this.id = id;
 		this.edicao = edicao;
 		this.ano = ano;
@@ -30,7 +29,6 @@ public class Livro {
 		this.biografia = biografia;
 		this.descricao = descricao;
 		this.autor = autor;
-		this.autor2 = autor2;
 		this.titulo = titulo;
 		this.categoria = categoria;
 	}
@@ -101,14 +99,6 @@ public class Livro {
 		this.autor = autor;
 	}
 
-	public String getAutor2() {
-		return autor2;
-	}
-
-	public void setAutor2(String autor2) {
-		this.autor2 = autor2;
-	}
-
 	public String getTitulo() {
 		return titulo;
 	}
@@ -128,8 +118,7 @@ public class Livro {
 	@Override
 	public String toString() {
 		return "Livro [id=" + id + ", edicao=" + edicao + ", ano=" + ano + ", tipo=" + tipo + ", editora=" + editora
-				+ ", biografia=" + biografia + ", descricao=" + descricao + ", autor=" + autor + ", autor2=" + autor2
-				+ ", titulo=" + titulo + ", categoria=" + categoria + "]";
+				+ ", biografia=" + biografia + ", descricao=" + descricao + ", autor=" + autor + ", titulo=" + titulo + ", categoria=" + categoria + "]";
 	}
 		
 	
