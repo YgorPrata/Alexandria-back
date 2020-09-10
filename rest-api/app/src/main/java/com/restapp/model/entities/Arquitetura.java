@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Arquitetura {
 	
-	private Integer id;
+	private Integer id_arq;
 	private String categoria;
 	private String titulo;
 	private String tipo;
@@ -18,9 +18,9 @@ public class Arquitetura {
 	}
 
 
-	public Arquitetura(Integer id, String categoria, String titulo, String tipo, String autor,
+	public Arquitetura(Integer id_arq, String categoria, String titulo, String tipo, String autor,
 			String material, Date ano, String descricao) {
-		this.id = id;
+		this.id_arq = id_arq;
 		this.categoria = categoria;
 		this.titulo = titulo;
 		this.tipo = tipo;
@@ -31,13 +31,13 @@ public class Arquitetura {
 	}
 
 
-	public Integer getId() {
-		return id;
+	public Integer getId_arq() {
+		return id_arq;
 	}
 
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId_arq(Integer id_arq) {
+		this.id_arq = id_arq;
 	}
 
 
@@ -112,7 +112,7 @@ public class Arquitetura {
 
 	@Override
 	public String toString() {
-		return "Arquitetura [id=" + id + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo
+		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo
 				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao="
 				+ descricao + "]";
 	}

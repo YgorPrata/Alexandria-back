@@ -2,7 +2,7 @@ package com.restapp.model.entities;
 
 public class Livro {
 	
-	private Integer id;
+	private Integer id_livro;
 	private Integer edicao;
 	private Integer ano;
 	private String tipo;
@@ -12,6 +12,7 @@ public class Livro {
 	private String autor;
 	private String titulo;
 	private String categoria;
+	private Integer id_arq;
 	
 	public Livro(){
 		
@@ -19,9 +20,9 @@ public class Livro {
 	
 	
 
-	public Livro(Integer id, Integer edicao, Integer ano, String tipo, String editora, String biografia,
+	public Livro(Integer id_livro, Integer edicao, Integer ano, String tipo, String editora, String biografia,
 			String descricao, String autor, String titulo, String categoria) {
-		this.id = id;
+		this.id_livro = id_livro;
 		this.edicao = edicao;
 		this.ano = ano;
 		this.tipo = tipo;
@@ -35,12 +36,12 @@ public class Livro {
 
 
 
-	public Integer getId() {
-		return id;
+	public Integer getId_livro() {
+		return id_livro;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId_livro(Integer id_livro) {
+		this.id_livro = id_livro;
 	}
 
 	public Integer getEdicao() {
@@ -114,10 +115,24 @@ public class Livro {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
+	
+	
+
+	public Integer getId_arq() {
+		return id_arq;
+	}
+
+
+
+	public void setId_arq(Integer id_arq) {
+		this.id_arq = id_arq;
+	}
+
+
 
 	@Override
 	public String toString() {
-		return "Livro [id=" + id + ", edicao=" + edicao + ", ano=" + ano + ", tipo=" + tipo + ", editora=" + editora
+		return "Livro [id_livro=" + id_livro + ", edicao=" + edicao + ", ano=" + ano + ", tipo=" + tipo + ", editora=" + editora
 				+ ", biografia=" + biografia + ", descricao=" + descricao + ", autor=" + autor + ", titulo=" + titulo + ", categoria=" + categoria + "]";
 	}
 		

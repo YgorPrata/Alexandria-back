@@ -75,7 +75,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
 	private Arquitetura instantiateArquitetura(ResultSet rs) throws SQLException {
 		Arquitetura arq = new Arquitetura();
-		arq.setId(rs.getInt("id"));
+		arq.setId_arq(rs.getInt("id"));
 		arq.setAutor(rs.getString("autor"));
 		arq.setTitulo(rs.getString("titulo"));
 		arq.setDescricao(rs.getString("descricao"));

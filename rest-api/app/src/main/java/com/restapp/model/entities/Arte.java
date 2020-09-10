@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Arte {
 	
-	private Integer id;
+	private Integer id_arte;
 	private String categoria;
 	private String titulo;
 	private String tipo;
@@ -13,14 +13,15 @@ public class Arte {
 	private String tecnica;
 	private Date ano;
 	private String descricao;
+	private Integer id_arq;
 	
 	public Arte(){
 		
 	}
 	
-	public Arte(Integer id, String categoria, String titulo, String tipo, String autor, String material,
+	public Arte(Integer id_arte, String categoria, String titulo, String tipo, String autor, String material,
 			String tecnica, Date ano, String descricao) {
-		this.id = id;
+		this.id_arte = id_arte;
 		this.categoria = categoria;
 		this.titulo = titulo;
 		this.tipo = tipo;
@@ -31,12 +32,12 @@ public class Arte {
 		this.descricao = descricao;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getId_arte() {
+		return id_arte;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId_arte(Integer id_arte) {
+		this.id_arte = id_arte;
 	}
 
 	public String getCategoria() {
@@ -103,9 +104,17 @@ public class Arte {
 		this.descricao = descricao;
 	}
 
+	public Integer getId_arq() {
+		return id_arq;
+	}
+
+	public void setId_arq(Integer id_arq) {
+		this.id_arq = id_arq;
+	}
+
 	@Override
 	public String toString() {
-		return "Arte [id=" + id + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo + ", autor="
+		return "Arte [id_arte=" + id_arte + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo + ", autor="
 				+ autor + ", material=" + material + ", tecnica=" + tecnica + ", ano=" + ano
 				+ ", descricao=" + descricao + "]";
 	}

@@ -59,7 +59,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 
 	private Arte instantiateArte(ResultSet rs) throws SQLException {
 		Arte arte = new Arte();
-		arte.setId(rs.getInt("id"));
+		arte.setId_arte(rs.getInt("id"));
 		arte.setAutor(rs.getString("autor"));
 		arte.setTitulo(rs.getString("titulo"));
 		arte.setDescricao(rs.getString("descricao"));
