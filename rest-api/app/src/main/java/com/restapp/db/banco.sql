@@ -12,7 +12,7 @@ create table Artigos(
 create table Arquitetura(
 	id_arq int primary key auto_increment,
 	categoria varchar(20),
-	titulo varchar(20),
+	nome varchar(20),
 	tipo varchar(20),
 	autor varchar(20),
 	material varchar(20),
@@ -71,14 +71,19 @@ values("categoriateste", "tipoteste",
 		1, "biografiateste", "descricaoteste", "tituloteste", 2020, 1
 );
 
-insert into arquitetura(categoria, titulo, tipo, autor, material, data, descricao)
-values("categoriateste", "titulo teste",
+insert into arquitetura(categoria, nome, tipo, autor, material, data, descricao)
+values("categoriateste", "nometeste",
 		"tipoteste","autorteste",
 		"materialteste", "2020/01/01", "descricaoteste"
 );
 
 
 	
+
+
+
+
+
 
 
 

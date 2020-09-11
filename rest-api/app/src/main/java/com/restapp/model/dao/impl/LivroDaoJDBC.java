@@ -2,16 +2,13 @@ package com.restapp.model.dao.impl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.mysql.jdbc.PreparedStatement;
 import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.LivroDao;
 import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Artigos;
 import com.restapp.model.entities.Livro;
 
 public class LivroDaoJDBC extends DB implements LivroDao {
@@ -27,28 +24,30 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	}
 
 	@Override
-	public Livro insert(Livro livro, String tituloarq) {
-		String selectsql = "SELECT id_arq from arquitetura WHERE titulo=?";
-		Arquitetura arq1 = new Arquitetura();
+	public Livro insert(Livro livro, String arqnome) {
+		String selectsql = ("SELECT arquitetura.id_arq " + "FROM arquitetura " + "INNER JOIN livro "
+				+ "WHERE arquitetura.nome=? " + "AND arquitetura.id_arq = livro.id_arq;");
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(selectsql);
-			ps.setString(1, tituloarq);
+			ps.setString(1, arqnome);
 			ResultSet rsarqid = ps.executeQuery();
+
 			if (rsarqid.next()) {
-				arq1.setId_arq(rsarqid.getInt("id_arq"));
+				rsarqid.getInt("arquitetura.id_arq");
 			}
 
-			String insertsql = "INSERT INTO livro (categoria, tipo, autor, "
-					+ "editora, edicao, biografia, descricao, "
-					+ "titulo, ano, id_arq) "
-					+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? ,?) st.RETURN_GENERATED_KEYS";
-			if (rsarqid != null) {
+			else if (rsarqid.next() == false) {
+				System.out.println("Esta obra não está em nenhuma arquitetura.\nObra não cadastrada.");
+			}
+
+			else {
 				try {
+					conn = DB.getConnection();
 					ps = conn.prepareStatement("INSERT INTO livro (categoria, tipo, autor, "
-							+ "editora, edicao, biografia, descricao, "
-							+ "titulo, ano, id_arq) "
-							+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? , id_arq)", st.RETURN_GENERATED_KEYS);
+							+ "editora, edicao, biografia, descricao, " + "titulo, ano, id_arq) "
+							+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? , " + rsarqid.getInt("arquitetura.id_arq") + ")",
+							st.RETURN_GENERATED_KEYS);
 					ps.setString(1, livro.getCategoria());
 					ps.setString(2, livro.getTipo());
 					ps.setString(3, livro.getAutor());
@@ -58,15 +57,14 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 					ps.setString(7, livro.getDescricao());
 					ps.setString(8, livro.getTitulo());
 					ps.setInt(9, livro.getAno());
-					ps.setInt(10, livro.getId_arq());
 
 					ps.executeUpdate();
 
 					rs = ps.getGeneratedKeys();
 
-					while (rs.next()) {
+					/*while (rs.next()) {
 						int id = rs.getInt(1);
-					}
+					}*/
 
 				} catch (SQLException e) {
 					throw new DbException(e.getMessage());
@@ -95,13 +93,13 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	@Override
 	public List<Livro> findAll() {
 		return null;
-		
+
 	}
 
 	@Override
 	public List<Livro> findByName(String autor) {
 		return null;
-		
+
 	}
 
 	private Livro instantiateLivro(ResultSet rs) throws SQLException {
@@ -117,5 +115,5 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 		livro.setTipo(rs.getString("tipo"));
 		return livro;
 	}
-	
+
 }

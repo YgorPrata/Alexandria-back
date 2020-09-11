@@ -13,14 +13,15 @@ public class Arte {
 	private String tecnica;
 	private Date ano;
 	private String descricao;
-	private Integer id_arq;
+	
+	private Arquitetura arq;
 	
 	public Arte(){
 		
 	}
 	
 	public Arte(Integer id_arte, String categoria, String titulo, String tipo, String autor, String material,
-			String tecnica, Date ano, String descricao) {
+			String tecnica, Date ano, String descricao, Arquitetura arq) {
 		this.id_arte = id_arte;
 		this.categoria = categoria;
 		this.titulo = titulo;
@@ -30,6 +31,7 @@ public class Arte {
 		this.tecnica = tecnica;
 		this.ano = ano;
 		this.descricao = descricao;
+		this.arq = arq;
 	}
 
 	public Integer getId_arte() {
@@ -104,12 +106,37 @@ public class Arte {
 		this.descricao = descricao;
 	}
 
-	public Integer getId_arq() {
-		return id_arq;
+	public Arquitetura getArq() {
+		return arq;
 	}
 
-	public void setId_arq(Integer id_arq) {
-		this.id_arq = id_arq;
+	public void setArq(Arquitetura arq) {
+		this.arq = arq;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id_arte == null) ? 0 : id_arte.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Arte other = (Arte) obj;
+		if (id_arte == null) {
+			if (other.id_arte != null)
+				return false;
+		} else if (!id_arte.equals(other.id_arte))
+			return false;
+		return true;
 	}
 
 	@Override

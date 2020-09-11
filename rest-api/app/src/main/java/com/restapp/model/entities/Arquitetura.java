@@ -6,7 +6,7 @@ public class Arquitetura {
 	
 	private Integer id_arq;
 	private String categoria;
-	private String titulo;
+	private String nome;
 	private String tipo;
 	private String autor;
 	private String material;
@@ -17,12 +17,11 @@ public class Arquitetura {
 		
 	}
 
-
-	public Arquitetura(Integer id_arq, String categoria, String titulo, String tipo, String autor,
+	public Arquitetura(Integer id_arq, String categoria, String nome, String tipo, String autor,
 			String material, Date ano, String descricao) {
 		this.id_arq = id_arq;
 		this.categoria = categoria;
-		this.titulo = titulo;
+		this.nome = nome;
 		this.tipo = tipo;
 		this.autor = autor;
 		this.material = material;
@@ -51,13 +50,13 @@ public class Arquitetura {
 	}
 
 
-	public String getTitulo() {
-		return titulo;
+	public String getNome() {
+		return nome;
 	}
 
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 
@@ -109,10 +108,34 @@ public class Arquitetura {
 		this.descricao = descricao;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id_arq == null) ? 0 : id_arq.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Arquitetura other = (Arquitetura) obj;
+		if (id_arq == null) {
+			if (other.id_arq != null)
+				return false;
+		} else if (!id_arq.equals(other.id_arq))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
-		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo
+		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
 				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao="
 				+ descricao + "]";
 	}

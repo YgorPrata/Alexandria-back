@@ -77,7 +77,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		Arquitetura arq = new Arquitetura();
 		arq.setId_arq(rs.getInt("id"));
 		arq.setAutor(rs.getString("autor"));
-		arq.setTitulo(rs.getString("titulo"));
+		arq.setNome(rs.getString("nome"));
 		arq.setDescricao(rs.getString("descricao"));
 		arq.setAno(rs.getDate("ano"));
 		arq.setCategoria(rs.getString("categoria"));

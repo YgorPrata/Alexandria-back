@@ -12,17 +12,15 @@ public class Livro {
 	private String autor;
 	private String titulo;
 	private String categoria;
-	private Integer id_arq;
+	
+	private Arquitetura arq;
 	
 	public Livro(){
 		
 	}
-	
-	
 
-	public Livro(Integer id_livro, Integer edicao, Integer ano, String tipo, String editora, String biografia,
+	public Livro(Integer edicao, Integer ano, String tipo, String editora, String biografia,
 			String descricao, String autor, String titulo, String categoria) {
-		this.id_livro = id_livro;
 		this.edicao = edicao;
 		this.ano = ano;
 		this.tipo = tipo;
@@ -34,12 +32,10 @@ public class Livro {
 		this.categoria = categoria;
 	}
 
-
-
 	public Integer getId_livro() {
 		return id_livro;
 	}
-
+	
 	public void setId_livro(Integer id_livro) {
 		this.id_livro = id_livro;
 	}
@@ -116,19 +112,41 @@ public class Livro {
 		this.categoria = categoria;
 	}
 	
-	
 
-	public Integer getId_arq() {
-		return id_arq;
+	public Arquitetura getArq() {
+		return arq;
 	}
 
 
 
-	public void setId_arq(Integer id_arq) {
-		this.id_arq = id_arq;
+	public void setArq(Arquitetura arq) {
+		this.arq = arq;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id_livro == null) ? 0 : id_livro.hashCode());
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Livro other = (Livro) obj;
+		if (id_livro == null) {
+			if (other.id_livro != null)
+				return false;
+		} else if (!id_livro.equals(other.id_livro))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {

@@ -1,8 +1,7 @@
 package com.restapp.model.dao.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Livro;
 
 public class MainTeste {
 
@@ -65,6 +64,14 @@ public class MainTeste {
 		//ArtigosDaoJDBC artdao = new ArtigosDaoJDBC();
 		
 		//System.out.println(artdao.findAll());
+		
+		//testelivroin
+		
+		LivroDaoJDBC livrodao = new LivroDaoJDBC();
+
+		Livro livro = new Livro(3,2020,"tipo3","editora3","biografia3","descricao3","autor3","titulo3","categoria3");
+				
+		livrodao.insert(livro, "nometest" );
 
 	}
 

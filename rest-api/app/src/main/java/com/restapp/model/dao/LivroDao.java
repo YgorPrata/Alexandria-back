@@ -6,7 +6,7 @@ import com.restapp.model.entities.Livro;
 
 public interface LivroDao {
 	
-	Livro insert(Livro livro, String tituloarq);
+	Livro insert(Livro livro, String arqnome);
 	Livro update(Livro livro);
 	List<Livro> findByName(String autor);
 	List<Livro> findAll();
