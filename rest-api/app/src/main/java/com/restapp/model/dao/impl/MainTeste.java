@@ -69,11 +69,10 @@ public class MainTeste {
 		
 		LivroDaoJDBC livrodao = new LivroDaoJDBC();
 
-		Livro livro = new Livro(3,2020,"tipo3","editora3","biografia3","descricao3","autor3","titulo3","categoria3");
+		Livro livro = new Livro(2, 2020, "tipo2", "editora2", "biografia2", "descricao2", "autor2", "titulo2", "categoria2");
 				
-		livrodao.insert(livro, "nometest" );
+		livrodao.insert(livro, "nometeste");
 
 	}
 
 }
-	

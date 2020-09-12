@@ -25,23 +25,18 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 
 	@Override
 	public Livro insert(Livro livro, String arqnome) {
-		String selectsql = ("SELECT arquitetura.id_arq " + "FROM arquitetura " + "INNER JOIN livro "
+		String sql = ("SELECT arquitetura.id_arq " + "FROM arquitetura " + "INNER JOIN livro "
 				+ "WHERE arquitetura.nome=? " + "AND arquitetura.id_arq = livro.id_arq;");
 		try {
 			conn = DB.getConnection();
-			ps = conn.prepareStatement(selectsql);
+			ps = conn.prepareStatement(sql);
 			ps.setString(1, arqnome);
 			ResultSet rsarqid = ps.executeQuery();
 
 			if (rsarqid.next()) {
 				rsarqid.getInt("arquitetura.id_arq");
-			}
-
-			else if (rsarqid.next() == false) {
-				System.out.println("Esta obra não está em nenhuma arquitetura.\nObra não cadastrada.");
-			}
-
-			else {
+				System.out.println("Obra existente, id: "+rsarqid.getInt("arquitetura.id_arq")+". Adicionando a nova obra na base de dados");
+				
 				try {
 					conn = DB.getConnection();
 					ps = conn.prepareStatement("INSERT INTO livro (categoria, tipo, autor, "
@@ -66,18 +61,26 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 						int id = rs.getInt(1);
 					}*/
 
-				} catch (SQLException e) {
+				} 
+				catch (SQLException e) {
 					throw new DbException(e.getMessage());
-				} finally {
+				}
+				finally {
 					DB.closeResultSet(rs);
 					DB.closeStatement(ps);
 				}
 			}
+			
+			else if (rsarqid.next() == false) {
+				System.out.println("Esta obra não está em nenhuma arquitetura.\nObra não cadastrada.");
+			}
 
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e.getMessage());
-		} finally {
+		}
+		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
