@@ -40,7 +40,8 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 				try {
 					conn = DB.getConnection();
 					ps = conn.prepareStatement("INSERT INTO livro (categoria, tipo, autor, "
-							+ "editora, edicao, biografia, descricao, " + "titulo, ano, id_arq) "
+							+ "editora, edicao, biografia, descricao, "
+							+ "titulo, ano, id_arq) "
 							+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? , " + rsarqid.getInt("arquitetura.id_arq") + ")",
 							st.RETURN_GENERATED_KEYS);
 					ps.setString(1, livro.getCategoria());
@@ -56,10 +57,6 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 					ps.executeUpdate();
 
 					rs = ps.getGeneratedKeys();
-
-					/*while (rs.next()) {
-						int id = rs.getInt(1);
-					}*/
 
 				} 
 				catch (SQLException e) {

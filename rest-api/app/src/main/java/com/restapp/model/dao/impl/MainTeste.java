@@ -1,7 +1,9 @@
 package com.restapp.model.dao.impl;
 
-import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Livro;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.restapp.model.entities.Arte;
 
 public class MainTeste {
 
@@ -65,13 +67,28 @@ public class MainTeste {
 		
 		//System.out.println(artdao.findAll());
 		
-		//testelivroin
 		
+		
+		
+		
+		////////////////INSERT LIVRO\\\\\\\\\\\\\
+		/*
 		LivroDaoJDBC livrodao = new LivroDaoJDBC();
 
 		Livro livro = new Livro(2, 2020, "tipo2", "editora2", "biografia2", "descricao2", "autor2", "titulo2", "categoria2");
 				
 		livrodao.insert(livro, "nometeste");
+		*/
+		
+		////////////////INSERT LIVRO\\\\\\\\\\\\\
+		
+		ArteDaoJDBC artedao = new ArteDaoJDBC();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Arte arte = new Arte("categoria2", "titulo2", "autor2", "tipo2", "material2", "tecnica2", sdf.parse("01/01/2020"), "descricao2");
+		
+		artedao.insert(arte, "nometest");
 
 	}
 

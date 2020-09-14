@@ -25,6 +25,7 @@ create table Arte(
 	categoria varchar(20),
 	titulo varchar(20),
 	autor varchar(20),
+	tipo varchar(20),
 	material varchar(20),
 	tecnica varchar(20),
 	data date,
@@ -58,9 +59,9 @@ VALUES
 	("tituloteste", "autorteste",
 	"assuntoteste");
 
-insert into arte(categoria, titulo, autor, material, tecnica, data, descricao, id_arq)
+insert into arte(categoria, titulo, autor, tipo, material, tecnica, data, descricao, id_arq)
 values("categoriateste", "tituloteste",
-		"autorteste", "materialteste",
+		"autorteste", "tipoteste", "materialteste",
 		"tecnicateste","2020/01/01",
 		"descricaoteste", 1
 );

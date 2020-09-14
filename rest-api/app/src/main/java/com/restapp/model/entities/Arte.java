@@ -1,5 +1,6 @@
 package com.restapp.model.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Arte {
@@ -11,7 +12,7 @@ public class Arte {
 	private String autor;
 	private String material;
 	private String tecnica;
-	private Date ano;
+	private Date data;
 	private String descricao;
 	
 	private Arquitetura arq;
@@ -20,18 +21,17 @@ public class Arte {
 		
 	}
 	
-	public Arte(Integer id_arte, String categoria, String titulo, String tipo, String autor, String material,
-			String tecnica, Date ano, String descricao, Arquitetura arq) {
-		this.id_arte = id_arte;
+	public Arte(String categoria, String titulo, String tipo, String autor, String material,
+			String tecnica, Date data, String descricao) {
+
 		this.categoria = categoria;
 		this.titulo = titulo;
 		this.tipo = tipo;
 		this.autor = autor;
 		this.material = material;
 		this.tecnica = tecnica;
-		this.ano = ano;
+		this.data = data;
 		this.descricao = descricao;
-		this.arq = arq;
 	}
 
 	public Integer getId_arte() {
@@ -90,12 +90,12 @@ public class Arte {
 		this.tecnica = tecnica;
 	}
 
-	public Date getAno() {
-		return ano;
+	public Date getData() {
+		return data;
 	}
 
-	public void setAno(Date ano) {
-		this.ano = ano;
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	public String getDescricao() {
@@ -142,7 +142,7 @@ public class Arte {
 	@Override
 	public String toString() {
 		return "Arte [id_arte=" + id_arte + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo + ", autor="
-				+ autor + ", material=" + material + ", tecnica=" + tecnica + ", ano=" + ano
+				+ autor + ", material=" + material + ", tecnica=" + tecnica + ", data=" + data
 				+ ", descricao=" + descricao + "]";
 	}
 		
