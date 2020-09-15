@@ -10,7 +10,7 @@ public class Arquitetura {
 	private String tipo;
 	private String autor;
 	private String material;
-	private Date ano;
+	private Date data;
 	private String descricao;
 	
 	public Arquitetura() {
@@ -18,14 +18,14 @@ public class Arquitetura {
 	}
 
 	public Arquitetura(Integer id_arq, String categoria, String nome, String tipo, String autor,
-			String material, Date ano, String descricao) {
+			String material, Date data, String descricao) {
 		this.id_arq = id_arq;
 		this.categoria = categoria;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.autor = autor;
 		this.material = material;
-		this.ano = ano;
+		this.data = data;
 		this.descricao = descricao;
 	}
 
@@ -89,13 +89,13 @@ public class Arquitetura {
 	}
 
 
-	public Date getAno() {
-		return ano;
+	public Date getData() {
+		return data;
 	}
 
 
-	public void setAno(Date ano) {
-		this.ano = ano;
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 
@@ -136,7 +136,7 @@ public class Arquitetura {
 	@Override
 	public String toString() {
 		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
-				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao="
+				+ ", autor=" + autor + ", material=" + material + ", data=" + data + ", descricao="
 				+ descricao + "]";
 	}
 	
