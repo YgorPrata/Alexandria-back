@@ -14,17 +14,31 @@ import javax.ws.rs.core.MediaType;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Arquitetura;
 
-@Path("produto")
+@Path("/produto")
 public class ArquiteturaResource {
 	
-	ArquiteturaDaoJDBC Arquitetura = new ArquiteturaDaoJDBC();
+	ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 	
 	@GET @Path("/arquitetura")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Arquitetura> findAll() throws Exception {		
 		System.out.println("findAll");
-		return Arquitetura.findAll();
+		return arqdao.findAll();
+	}
+	
+	@GET @Path("/arquitetura/busca/{query}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Arquitetura> findByName(@PathParam("query") String query){
+		System.out.println("findByName: " + query);
+		return arqdao.findByName(query);
+	}
+	
+	@POST @Path("/cadastro")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Arquitetura insert(Arquitetura arq) {
+		return arqdao.insert(arq);
 	}
 	
 }

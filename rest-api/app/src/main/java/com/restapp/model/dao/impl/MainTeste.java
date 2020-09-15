@@ -1,9 +1,6 @@
 package com.restapp.model.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.restapp.model.entities.Arte;
+import com.restapp.model.entities.Livro;
 
 public class MainTeste {
 
@@ -71,24 +68,41 @@ public class MainTeste {
 		
 		
 		
-		////////////////INSERT LIVRO\\\\\\\\\\\\\
-		/*
-		LivroDaoJDBC livrodao = new LivroDaoJDBC();
+		////////////////INSERT LIVRO\\\\\\\\\\\\\		
+		/*LivroDaoJDBC livrodao = new LivroDaoJDBC();
 
-		Livro livro = new Livro(2, 2020, "tipo2", "editora2", "biografia2", "descricao2", "autor2", "titulo2", "categoria2");
+		Livro livro = new Livro(2, 2020, "", "editora2", "biografia2", "descricao2", "autor2", "titulo2", "categoria2");
 				
 		livrodao.insert(livro, "nometeste");
+		
 		*/
 		
-		////////////////INSERT LIVRO\\\\\\\\\\\\\
 		
-		ArteDaoJDBC artedao = new ArteDaoJDBC();
+		////////////////INSERT ARTE\\\\\\\\\\\\\		
+		/*ArteDaoJDBC artedao = new ArteDaoJDBC();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		Arte arte = new Arte("categoria2", "titulo2", "autor2", "tipo2", "material2", "tecnica2", sdf.parse("01/01/2020"), "descricao2");
 		
-		artedao.insert(arte, "nometest");
+		artedao.insert(arte, "nometest");*/
+		
+		
+		
+		////////////////INSERT ARQUITETURA\\\\\\\\\\\\\		
+		/*ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Arquitetura arq = new Arquitetura("categoriateste", "nometeste", "tipoteste", "autorteste", "materialteste", sdf.parse("10/09/2020"), "descricaoteste");
+		
+		arqdao.insert(arq);*/
+		
+		
+		
+		
+		
+		
 
 	}
 

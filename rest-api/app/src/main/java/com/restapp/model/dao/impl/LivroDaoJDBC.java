@@ -35,13 +35,13 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 
 			if (rsarqid.next()) {
 				rsarqid.getInt("arquitetura.id_arq");
-				System.out.println("Obra existente, id: "+rsarqid.getInt("arquitetura.id_arq")+". Adicionando a nova obra na base de dados");
-				
+				System.out.println("Obra existente, id: " + rsarqid.getInt("arquitetura.id_arq")
+						+ ". Adicionando a nova obra na base de dados");
+
 				try {
 					conn = DB.getConnection();
 					ps = conn.prepareStatement("INSERT INTO livro (categoria, tipo, autor, "
-							+ "editora, edicao, biografia, descricao, "
-							+ "titulo, ano, id_arq) "
+							+ "editora, edicao, biografia, descricao, " + "titulo, ano, id_arq) "
 							+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? , " + rsarqid.getInt("arquitetura.id_arq") + ")",
 							st.RETURN_GENERATED_KEYS);
 					ps.setString(1, livro.getCategoria());
@@ -54,40 +54,39 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 					ps.setString(8, livro.getTitulo());
 					ps.setInt(9, livro.getAno());
 
-					ps.executeUpdate();
+					int insert = ps.executeUpdate();
 
-					rs = ps.getGeneratedKeys();
+					if (insert > 0) {
+						rs = ps.getGeneratedKeys();
+						if (rs.next()) {
+							int id = rs.getInt(1);
+							livro.setId_livro(id);
+						}
+					} else {
+						throw new DbException("Erro incomum. A conclusão do cadastro não foi efetuada.");
+					}
 
-				} 
-				catch (SQLException e) {
+				} catch (SQLException e) {
 					throw new DbException(e.getMessage());
-				}
-				finally {
+				} finally {
 					DB.closeResultSet(rs);
 					DB.closeStatement(ps);
 				}
 			}
-			
+
 			else if (rsarqid.next() == false) {
 				System.out.println("Esta obra não está em nenhuma arquitetura.\nObra não cadastrada.");
 			}
 
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e.getMessage());
-		}
-		finally {
+		} finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
 		return livro;
 
-	}
-
-	@Override
-	public Livro update(Livro livro) {
-		return null;
 	}
 
 	@Override
