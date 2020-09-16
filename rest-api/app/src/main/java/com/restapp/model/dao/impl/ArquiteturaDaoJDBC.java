@@ -92,7 +92,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	public List<Arquitetura> findByName(String autor) {
 
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
-		String sql = "SELECT DISTINCT FROM arquitetura WHERE autor = ?";
+		String sql = "SELECT * FROM arquitetura WHERE autor = ?";
 
 		try {
 			conn = DB.getConnection();

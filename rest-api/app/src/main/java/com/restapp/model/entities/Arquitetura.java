@@ -17,8 +17,9 @@ public class Arquitetura {
 		
 	}
 
-	public Arquitetura(String categoria, String nome, String tipo, String autor,
+	public Arquitetura(Integer id_arq, String categoria, String nome, String tipo, String autor,
 			String material, Date data, String descricao) {
+		this.id_arq = id_arq;
 		this.categoria = categoria;
 		this.nome = nome;
 		this.tipo = tipo;
