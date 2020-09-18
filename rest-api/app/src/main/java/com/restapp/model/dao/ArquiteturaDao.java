@@ -6,7 +6,7 @@ import com.restapp.model.entities.Arquitetura;
 
 public interface ArquiteturaDao {
 	
-	Arquitetura insert(Arquitetura art);
+	boolean insert(Arquitetura arq);
 	List<Arquitetura> findByName(String autor);
 	List<Arquitetura> findAll();
 }

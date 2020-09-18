@@ -45,7 +45,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 				try {
 					conn = DB.getConnection();
 					ps = conn.prepareStatement("INSERT INTO arte (categoria, titulo, autor, tipo, material, "
-							+ " tecnica, data, descricao, id_arq) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, "
+							+ " tecnica, data, descricao, id_arq) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? "
 							+ rsarq.getInt("arquitetura.id_arq") + ")", st.RETURN_GENERATED_KEYS);
 
 					ps.setString(1, arte.getCategoria());
@@ -55,7 +55,8 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 					ps.setString(5, arte.getMaterial());
 					ps.setString(6, arte.getTecnica());
 					ps.setDate(7, new java.sql.Date(arte.getData().getTime()));
-					ps.setString(8, arte.getDescricao());
+					ps.setInt(8, arte.getAno());
+					ps.setString(9, arte.getDescricao());
 
 					ps.executeUpdate();
 

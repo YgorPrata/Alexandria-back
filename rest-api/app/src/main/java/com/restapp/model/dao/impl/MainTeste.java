@@ -1,6 +1,9 @@
 package com.restapp.model.dao.impl;
 
-import com.restapp.model.entities.Livro;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.restapp.model.entities.Arquitetura;
 
 public class MainTeste {
 
@@ -65,9 +68,6 @@ public class MainTeste {
 		//System.out.println(artdao.findAll());
 		
 		
-		
-		
-		
 		////////////////INSERT LIVRO\\\\\\\\\\\\\		
 		/*LivroDaoJDBC livrodao = new LivroDaoJDBC();
 
@@ -95,8 +95,12 @@ public class MainTeste {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		Arquitetura arq = new Arquitetura("categoriateste", "nometeste", "tipoteste", "autorteste", "materialteste", sdf.parse("10/09/2020"), "descricaoteste");
-		
+
 		arqdao.insert(arq);*/
+		
+		ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		
+		System.out.println(arqdao.findByName("nome").size());
 		
 		
 		

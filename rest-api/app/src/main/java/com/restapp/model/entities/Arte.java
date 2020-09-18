@@ -12,7 +12,9 @@ public class Arte {
 	private String autor;
 	private String material;
 	private String tecnica;
+	//atributo data ainda esta a ser definido
 	private Date data;
+	private Integer ano;
 	private String descricao;
 	
 	private Arquitetura arq;
@@ -22,7 +24,7 @@ public class Arte {
 	}
 	
 	public Arte(String categoria, String titulo, String tipo, String autor, String material,
-			String tecnica, Date data, String descricao) {
+			String tecnica, Date data, Integer ano, String descricao) {
 
 		this.categoria = categoria;
 		this.titulo = titulo;
@@ -31,6 +33,7 @@ public class Arte {
 		this.material = material;
 		this.tecnica = tecnica;
 		this.data = data;
+		this.ano = ano;
 		this.descricao = descricao;
 	}
 
@@ -96,6 +99,14 @@ public class Arte {
 
 	public void setData(Date data) {
 		this.data = data;
+	}
+
+	public Integer getAno() {
+		return ano;
+	}
+
+	public void setAno(Integer ano) {
+		this.ano = ano;
 	}
 
 	public String getDescricao() {

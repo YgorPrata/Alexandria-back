@@ -17,6 +17,7 @@ create table Arquitetura(
 	autor varchar(20),
 	material varchar(20),
 	data date,
+	ano int,
 	descricao varchar(200)
 );
 	
@@ -29,6 +30,7 @@ create table Arte(
 	material varchar(20),
 	tecnica varchar(20),
 	data date,
+	ano int,
 	descricao varchar(200),
 	id_arq int,
 	

@@ -1,8 +1,10 @@
 package com.restapp.model.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,6 @@ import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ArquiteturaDao;
 import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Arte;
 
 public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
@@ -25,45 +26,33 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public Arquitetura insert(Arquitetura arq) {
-
+	public boolean insert(Arquitetura arq) {
+		
+		boolean sucesso = false;
+		
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement("INSERT INTO arquitetura (nome, categoria, tipo, autor, "
-					+ "material, data, descricao) VALUES (?, ?, ?, ?, ?, ?, ?)", st.RETURN_GENERATED_KEYS);
+					+ "material, data, ano, descricao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, arq.getNome());
 			ps.setString(2, arq.getCategoria());
 			ps.setString(3, arq.getTipo());
 			ps.setString(4, arq.getAutor());
 			ps.setString(5, arq.getMaterial());
 			ps.setDate(6, new java.sql.Date(arq.getData().getTime()));
-			ps.setString(7, arq.getDescricao());
+			ps.setInt(7, arq.getAno());
+			ps.setString(8, arq.getDescricao());
 
 			ps.executeUpdate();
-
-			rs = ps.getGeneratedKeys();
-
-			int insert = ps.executeUpdate();
-
-			if (insert > 0) {
-				rs = ps.getGeneratedKeys();
-				if (rs.next()) {
-					int id = rs.getInt(1);
-					arq.setId_arq(id);
-				}
-			}
-
-			else {
-				throw new DbException("Erro incomum. A conclusão do cadastro não foi efetuada.");
-			}
-
+			sucesso = true;
+			
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
-		return arq;
+		return sucesso;
 	}
 
 	@Override

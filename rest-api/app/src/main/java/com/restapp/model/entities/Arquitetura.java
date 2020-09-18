@@ -1,8 +1,11 @@
 package com.restapp.model.entities;
 
-import java.util.Date;
+import java.sql.Date;
+
+import javax.json.bind.annotation.JsonbDateFormat;
 
 public class Arquitetura {
+	
 	
 	private Integer id_arq;
 	private String categoria;
@@ -10,25 +13,26 @@ public class Arquitetura {
 	private String tipo;
 	private String autor;
 	private String material;
+	@JsonbDateFormat(value = "dd/MM/yyyy")
 	private Date data;
+	private Integer ano;
 	private String descricao;
 	
 	public Arquitetura() {
 		
 	}
 
-	public Arquitetura(Integer id_arq, String categoria, String nome, String tipo, String autor,
-			String material, Date data, String descricao) {
-		this.id_arq = id_arq;
+	public Arquitetura(String categoria, String nome, String tipo, String autor,
+			String material, Date data, Integer ano, String descricao) {
 		this.categoria = categoria;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.autor = autor;
 		this.material = material;
 		this.data = data;
+		this.ano = ano;
 		this.descricao = descricao;
 	}
-
 
 	public Integer getId_arq() {
 		return id_arq;
@@ -98,6 +102,13 @@ public class Arquitetura {
 		this.data = data;
 	}
 
+	public Integer getAno() {
+		return ano;
+	}
+
+	public void setAno(Integer ano) {
+		this.ano = ano;
+	}
 
 	public String getDescricao() {
 		return descricao;
@@ -136,7 +147,7 @@ public class Arquitetura {
 	@Override
 	public String toString() {
 		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
-				+ ", autor=" + autor + ", material=" + material + ", data=" + data + ", descricao="
+				+ ", autor=" + autor + ", material=" + material + ", data=" + data + ", ano=" + ano + ", descricao="
 				+ descricao + "]";
 	}
 	
