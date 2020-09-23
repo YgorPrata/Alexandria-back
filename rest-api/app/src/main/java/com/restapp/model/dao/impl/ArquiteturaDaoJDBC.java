@@ -26,22 +26,22 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public boolean insert(Arquitetura arq) {
+	public boolean insert(Arquitetura arq, String arqpath) {
 		
 		boolean sucesso = false;
+		String sql = "INSERT INTO arquitetura (nome, categoria, tipo, autor, material, ano, descricao, arq_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "+arqpath+")";
 		
 		try {
 			conn = DB.getConnection();
-			ps = conn.prepareStatement("INSERT INTO arquitetura (nome, categoria, tipo, autor, "
-					+ "material, data, ano, descricao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			ps = conn.prepareStatement(sql);
 			ps.setString(1, arq.getNome());
 			ps.setString(2, arq.getCategoria());
 			ps.setString(3, arq.getTipo());
 			ps.setString(4, arq.getAutor());
 			ps.setString(5, arq.getMaterial());
-			ps.setDate(6, new java.sql.Date(arq.getData().getTime()));
-			ps.setInt(7, arq.getAno());
-			ps.setString(8, arq.getDescricao());
+			//ps.setDate(6, new java.sql.Date(arq.getData().getTime()));
+			ps.setInt(6, arq.getAno());
+			ps.setString(7, arq.getDescricao());
 
 			ps.executeUpdate();
 			sucesso = true;
@@ -109,7 +109,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		arq.setAutor(rs.getString("autor"));
 		arq.setNome(rs.getString("nome"));
 		arq.setDescricao(rs.getString("descricao"));
-		arq.setData(rs.getDate("data"));
+		//arq.setData(rs.getDate("data"));
+		arq.setAno(rs.getInt("ano"));
 		arq.setCategoria(rs.getString("categoria"));
 		arq.setMaterial(rs.getString("material"));
 		arq.setTipo(rs.getString("tipo"));

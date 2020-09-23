@@ -17,6 +17,7 @@ create table Arquitetura(
 	autor varchar(20),
 	material varchar(20),
 	data date,
+	arq_path varchar(500) not null,
 	ano int,
 	descricao varchar(200)
 );

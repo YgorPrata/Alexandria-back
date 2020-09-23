@@ -13,8 +13,8 @@ public class Arquitetura {
 	private String tipo;
 	private String autor;
 	private String material;
-	@JsonbDateFormat(value = "dd/MM/yyyy")
-	private Date data;
+	//@JsonbDateFormat(value = "dd/MM/yyyy")
+	//private Date data;
 	private Integer ano;
 	private String descricao;
 	
@@ -23,13 +23,13 @@ public class Arquitetura {
 	}
 
 	public Arquitetura(String categoria, String nome, String tipo, String autor,
-			String material, Date data, Integer ano, String descricao) {
+			String material, Integer ano, String descricao) {
 		this.categoria = categoria;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.autor = autor;
 		this.material = material;
-		this.data = data;
+		//this.data = data;
 		this.ano = ano;
 		this.descricao = descricao;
 	}
@@ -93,14 +93,14 @@ public class Arquitetura {
 	}
 
 
-	public Date getData() {
+	/*public Date getData() {
 		return data;
 	}
 
 
 	public void setData(Date data) {
 		this.data = data;
-	}
+	}*/
 
 	public Integer getAno() {
 		return ano;
@@ -147,7 +147,7 @@ public class Arquitetura {
 	@Override
 	public String toString() {
 		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
-				+ ", autor=" + autor + ", material=" + material + ", data=" + data + ", ano=" + ano + ", descricao="
+				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao="
 				+ descricao + "]";
 	}
 	

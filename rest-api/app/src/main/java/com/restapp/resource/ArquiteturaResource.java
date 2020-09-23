@@ -1,8 +1,13 @@
 package com.restapp.resource;
 
-import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,55 +16,140 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
 import com.restapp.db.DbException;
 import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.entities.Arquitetura;
 
 @Path("/produto")
 public class ArquiteturaResource {
-	
+
 	ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
-	
-	@GET @Path("/arquitetura")
+	String path = "c:/temp/";
+
+	@GET
+	@Path("/arquitetura")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findAll() throws Exception {		
-		if(arqdao.findAll().size() > 0) {
+	public Response findAll() throws Exception {
+		if (arqdao.findAll().size() > 0) {
 			return Response.ok().entity(arqdao.findAll()).build();
-		}
-		else {
+		} else {
 			return Response.status(404).entity("Não há nenhum registro para essa categoria").build();
 		}
 	}
-	
-	@GET @Path("/arquitetura/busca/{query}")
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response findByName(@PathParam("query") String query){
-		if(arqdao.findByName(query).size() > 0) {
+
+	@GET
+	@Path("/arquitetura/busca/{query}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findByName(@PathParam("query") String query) {
+		if (arqdao.findByName(query).size() > 0) {
 			return Response.ok().entity(arqdao.findByName(query)).build();
-		}
-		else {
+		} else {
 			return Response.status(404).entity("Não há nenhum registro com esse nome.").build();
 		}
-		
+
 	}
-	
-	@POST @Path("arquitetura/cadastro")
-	@Consumes({MediaType.APPLICATION_JSON})
-	public Response insert(Arquitetura arq) {		
+
+	/*@POST
+	@Path("/arquitetura/cadastro")
+	@Consumes({ MediaType.MULTIPART_FORM_DATA })
+	public Response uploadFile(@FormDataParam("file") InputStream fileInputStream,
+
+			@FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
 		try {
-			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq);
-			if(cadsalvo) {
-				return Response.ok().entity(arq).build();
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			OutputStream out = new FileOutputStream(new File(path + fileMetaData.getFileName()));
+			while ((read = fileInputStream.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
 			}
-			else {
-				//se o cadastro não for salvo
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Localização do arquivo upado: " + path + fileMetaData.getFileName());
+		return Response.ok().entity("Arquivo: " + fileMetaData.getFileName()).build();
+
+	}*/
+
+	/*@POST
+	@Path("arquitetura/cadastro")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response insert(Arquitetura arq, String archnome) {
+		try {
+			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, path);
+			if (cadsalvo) {
+				return Response.ok().entity(arq).build();
+			} else { // se o cadastro não for salvo
 				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
 			}
-		}
-		catch (DbException e) {
+		} catch (DbException e) {
 			e.printStackTrace();
 			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
 		}
+	}*/
+
+	@POST
+	@Path("/arquitetura/cadastro")
+	@Consumes({MediaType.MULTIPART_FORM_DATA} )
+	public Response uploadFile(@FormDataParam("file") InputStream fileInputStream,
+			@FormDataParam("file") FormDataContentDisposition contentDispositionHeader,
+			@FormParam("nome") String nome,
+			@FormParam("categoria") String categoria,
+			@FormParam("tipo") String tipo,
+			@FormParam("autor") String autor,
+			@FormParam("material") String material,
+			@FormParam("ano") Integer ano,
+			@FormParam("descricao") String descricao) {
+		String filePath = path + contentDispositionHeader.getFileName();
+		
+		Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
+
+		saveFile(arq, fileInputStream, filePath);
+
+		String output = "File saved to server location : " + filePath;
+
+		return Response.status(200).entity(output).build();
+
 	}
-	
+
+	private Response saveFile(Arquitetura arq, InputStream uploadedInputStream, String filePath) {		
+		try {			
+			OutputStream outpuStream = new FileOutputStream(new File(filePath));
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			outpuStream = new FileOutputStream(new File(filePath));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				outpuStream.write(bytes, 0, read);
+			}
+			outpuStream.flush();
+			outpuStream.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		System.out.println("Arquitetura: " +arq);
+		System.out.println("InputStream: " +uploadedInputStream);
+		System.out.println("filePath: " +filePath);
+		
+		try {
+			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, filePath);
+			if (cadsalvo) {
+				return Response.ok().entity("Cadastro salvo").build();
+			} else { // se o cadastro não for salvo
+				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
+			}
+		} catch (DbException e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
+		}
+
+	}
+
 }
