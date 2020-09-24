@@ -26,14 +26,17 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public boolean insert(Arquitetura arq, String arqpath) {
+	public boolean insert(Arquitetura arq, List<String> listarq, String descricao) {
 		
+		//System.out.println("caminho: "+arqpath);
 		boolean sucesso = false;
-		String sql = "INSERT INTO arquitetura (nome, categoria, tipo, autor, material, ano, descricao, arq_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "+arqpath+")";
-		
+		int id = 0;
+	
 		try {
 			conn = DB.getConnection();
-			ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement("INSERT INTO arquitetura (nome, categoria, tipo,"
+					+ " autor, material, ano, descricao, arq_path) VALUES (?, ?, ?, ?, ?, ?, ?)",
+					st.RETURN_GENERATED_KEYS);
 			ps.setString(1, arq.getNome());
 			ps.setString(2, arq.getCategoria());
 			ps.setString(3, arq.getTipo());
@@ -44,20 +47,52 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			ps.setString(7, arq.getDescricao());
 
 			ps.executeUpdate();
+			rs = ps.getGeneratedKeys();
+			
+			while (rs.next()) {
+				id = rs.getInt(1);
+			}
+			
 			sucesso = true;
 			
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		} finally {
+		}
+		
+		try {
+			for(int i = 0; i <= listarq.size(); i++) {
+				String caminho = listarq.get(i);	
+					if(caminho.endsWith(".jpg") || caminho.endsWith(".png")) {
+						String sql = "INSERT INTO img_path (path_img, descricao, id_arq) VALUES ('" + caminho + "', '" + descricao + "', "+ id +")";
+						conn = DB.getConnection();
+						ps = conn.prepareStatement(sql);
+						
+						ps.executeUpdate();
+					
+					}
+					
+					else if(caminho.endsWith(".pdf") || caminho.endsWith(".txt") || caminho.endsWith(".docx")) {
+						String sql = "INSERT INTO txt_path (path_txt, id_arq) VALUES ('" + caminho + "', "+ id +")";
+						conn = DB.getConnection();
+						ps = conn.prepareStatement(sql);
+						
+						ps.executeUpdate();
+					}
+			}
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
-		}
+		}			
 		return sucesso;
 	}
 
 	@Override
 	public List<Arquitetura> findAll() {
-		
+
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
 		String sql = "SELECT * FROM arquitetura";
 		try {
@@ -109,7 +144,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		arq.setAutor(rs.getString("autor"));
 		arq.setNome(rs.getString("nome"));
 		arq.setDescricao(rs.getString("descricao"));
-		//arq.setData(rs.getDate("data"));
+		// arq.setData(rs.getDate("data"));
 		arq.setAno(rs.getInt("ano"));
 		arq.setCategoria(rs.getString("categoria"));
 		arq.setMaterial(rs.getString("material"));

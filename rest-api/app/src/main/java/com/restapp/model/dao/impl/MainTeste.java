@@ -98,9 +98,28 @@ public class MainTeste {
 
 		arqdao.insert(arq);*/
 		
-		ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		/*ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		
-		System.out.println(arqdao.findByName("nome").size());
+		System.out.println(arqdao.findByName("nome").size());*/
+		
+		/*String teste = "c:/temp/texto ok.txt";
+		
+		System.out.println(teste.endsWith(""));*/
+		
+		List<String> list = new ArrayList<String>();
+		
+		list.add("teste1");
+		list.add("teste2");
+		list.add("teste3");
+		
+		for(int i = 0; i <= list.size() - 1; i++) {
+			String palavras = list.get(i);
+			System.out.println(palavras);
+			
+			
+		}
+		
+		
 		
 		
 		

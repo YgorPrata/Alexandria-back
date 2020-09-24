@@ -2,45 +2,37 @@ drop database if exists alexandria;
 create database alexandria;
 use alexandria;
 
-create table Artigos(
-	id_artigos int primary key auto_increment,
-	titulo varchar(20),
-	autor varchar(20),
-	assunto varchar(200)
-);
-
 create table Arquitetura(
-	id_arq int primary key auto_increment,
+	id_arq int not null primary key auto_increment,
 	categoria varchar(20),
 	nome varchar(20),
 	tipo varchar(20),
 	autor varchar(20),
 	material varchar(20),
-	data date,
-	arq_path varchar(500) not null,
 	ano int,
 	descricao varchar(200)
 );
 	
 create table Arte(
-	id_arte int primary key auto_increment,
+	id_arte int not null primary key auto_increment,
 	categoria varchar(20),
 	titulo varchar(20),
 	autor varchar(20),
 	tipo varchar(20),
 	material varchar(20),
 	tecnica varchar(20),
-	data date,
 	ano int,
 	descricao varchar(200),
 	id_arq int,
+ 
 	
-	CONSTRAINT FK_EntidadesxArquitetura FOREIGN KEY (id_arq)
-	REFERENCES Arte(id_arte)
+	CONSTRAINT FK_arquitetura FOREIGN KEY (id_arq)
+	REFERENCES Arquitetura(id_arq)
+	
 );
 
 create table Livro(
-	id_livro int primary key auto_increment,
+	id_livro int not null primary key auto_increment,
 	categoria varchar(20),
 	tipo varchar(20),
 	autor varchar(20),
@@ -52,47 +44,58 @@ create table Livro(
 	ano int,
 	id_arq int,
 	
-	CONSTRAINT FK_EntidadesxArquitetura2 FOREIGN KEY (id_arq) 
-	REFERENCES Livro(id_livro)
+	CONSTRAINT FK_arquitetura2 FOREIGN KEY (id_arq)
+	REFERENCES Arquitetura(id_arq)
+	
+);
+
+create table img_path(
+	id_img int not null primary key auto_increment,
+	path_img varchar (1000),
+	descricao varchar(50),
+	id_arq int,
+	id_livro int,
+	id_arte int,
+	
+	CONSTRAINT fk_arquiteturaximg FOREIGN KEY (id_arq) REFERENCES Arquitetura(id_arq),
+	CONSTRAINT fk_livroximg FOREIGN KEY (id_livro) REFERENCES Livro(id_livro),
+	CONSTRAINT fk_arteximg FOREIGN KEY (id_arte) REFERENCES Arte(id_arte)	
+);
+
+create table txt_path(
+	id_txt int not null primary key auto_increment,
+	path_txt varchar(1000),
+	id_arq int,
+	id_livro int,
+	id_arte int,
+	
+	CONSTRAINT fk_arquiteturaxtxt FOREIGN KEY (id_arq) REFERENCES Arquitetura(id_arq),
+	CONSTRAINT fk_livroxtxt FOREIGN KEY (id_livro) REFERENCES Livro(id_livro),
+	CONSTRAINT fk_artextxt FOREIGN KEY (id_arte) REFERENCES Arte(id_arte)
 );
 
 
-INSERT INTO Artigos(titulo, autor, assunto)
-VALUES
-	("tituloteste", "autorteste",
-	"assuntoteste");
-
-insert into arte(categoria, titulo, autor, tipo, material, tecnica, data, descricao, id_arq)
+insert into arte(categoria, titulo, autor, tipo, material, tecnica, ano, descricao)
 values("categoriateste", "tituloteste",
 		"autorteste", "tipoteste", "materialteste",
-		"tecnicateste","2020/01/01",
-		"descricaoteste", 1
+		"tecnicateste", 2020,
+		"descricaoteste"
 );
 
-insert into livro(categoria, tipo, autor, editora, edicao, biografia, descricao, titulo, ano, id_arq)
+insert into livro(categoria, tipo, autor, editora, edicao, biografia, descricao, titulo, ano)
 values("categoriateste", "tipoteste",
 		"autorteste", "editorateste",
-		1, "biografiateste", "descricaoteste", "tituloteste", 2020, 1
+		1, "biografiateste", "descricaoteste", "tituloteste", 2020
 );
 
-insert into arquitetura(categoria, nome, tipo, autor, material, data, descricao)
+insert into arquitetura(categoria, nome, tipo, autor, material, ano, descricao)
 values("categoriateste", "nometeste",
 		"tipoteste","autorteste",
-		"materialteste", "2020/01/01", "descricaoteste"
+		"materialteste", 2020, "descricaoteste"
 );
 
+insert into img_path(path_img, descricao)
+values("c:/temp/imagem.jpg","descricao");
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
+insert into txt_path(path_txt)
+values("c:/temp/texto.txt");

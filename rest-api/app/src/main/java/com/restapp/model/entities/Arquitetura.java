@@ -32,6 +32,7 @@ public class Arquitetura {
 		//this.data = data;
 		this.ano = ano;
 		this.descricao = descricao;
+		
 	}
 
 	public Integer getId_arq() {
