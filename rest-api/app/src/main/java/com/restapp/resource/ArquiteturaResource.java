@@ -131,7 +131,8 @@ public class ArquiteturaResource {
 
 	}*/
 	
-	@Path("/files")
+	
+	/*@Path("/arquitetura/cadastro")
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFiles2(
@@ -147,36 +148,44 @@ public class ArquiteturaResource {
 			@FormDataParam("ano") Integer ano,
 			@FormDataParam("descricao") String descricao) {
 
-			String fileDetails;
 			Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
+			List<String> listarqnome = new ArrayList<String>();
 
-		/* Save multiple files */
+		//Save multiple files
 
 		for (int i = 0; i < bodyParts.size(); i++) {
 			//casting pra gerar um inputstream e dar upload no arquivo
 			BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
-			String fileName = bodyParts.get(i).getContentDisposition().getFileName();
-
-			saveFile(arq, bodyPartEntity.getInputStream(), fileName);
-
-			fileDetails = "Arquivo salvo: "+ path + fileName;
+			String fileImg = bodyParts.get(i).getContentDisposition().getFileName();
+			
+			listarqnome.add(path+fileImg);
+			saveFile(bodyPartEntity.getInputStream(), fileImg);
+			
+			System.out.println("===BODY PARTS=== " +bodyParts);
+			System.out.println("===bodyPartEntity===" +bodyPartEntity.getInputStream());
 		}
 
-		/* Save File 2 */
+		//Save File 2
 
-		String file2Name = fileDisposition2.getFileName();
+		String filetxt = fileDisposition2.getFileName();
 
-		saveFile(arq, file2, file2Name);
-		fileDetails = "Arquivo salvo: "+ path  + file2Name;
-
-		System.out.println(fileDetails);
-
-		return Response.ok(fileDetails.toString()).build();
+		saveFile(file2, filetxt);
+		
+		try {
+			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, listarqnome, "testedescricao", path+filetxt);
+			if (cadsalvo) {
+				return Response.ok().entity("Cadastro salvo").build();
+			} else { // se o cadastro não for salvo
+				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
+			}
+		} catch (DbException e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
+		}
+		
 	}
 
-	private Response saveFile(Arquitetura arq, InputStream file, String name) {
-		List<String> list = new ArrayList<String>();
-		
+	private void saveFile(InputStream file, String name) {
 		try {			
 			OutputStream outpuStream = new FileOutputStream(new File(path + name));
 			int read = 0;
@@ -191,20 +200,89 @@ public class ArquiteturaResource {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		list.add(path+name);
-		
-		try {
-			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, list, "testedescricao");
-			if (cadsalvo) {
-				return Response.ok().entity("Cadastro salvo").build();
-			} else { // se o cadastro não for salvo
-				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
-			}
-		} catch (DbException e) {
-			e.printStackTrace();
-			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
-		}
-	}
+	}*/
+	
+	
+	@Path("/arquitetura/cadastro")
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadFiles2(
+			@FormDataParam("file") List<FormDataBodyPart> inputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDisposition,
+			@FormDataParam("file2") InputStream inputStream2,
+			@FormDataParam("file2") FormDataContentDisposition fileDisposition2,
+			@FormDataParam("nome") String nome,
+			@FormDataParam("categoria") String categoria,
+			@FormDataParam("tipo") String tipo,
+			@FormDataParam("autor") String autor,
+			@FormDataParam("material") String material,
+			@FormDataParam("ano") Integer ano,
+			@FormDataParam("descricao") String descricao,
+			@FormDataParam("descricao2") List<String> descricao2) {
 
+			List<String> listarqnome = new ArrayList<String>();
+			List<String> listdescimg = new ArrayList<String>();
+			String auxArq;
+			String auxTxt;
+			String auxDesc;
+			
+			for (int i = 0; i < inputStream.size(); i++) {
+				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();
+							
+				auxArq = inputStream.get(i).getContentDisposition().getFileName();
+				
+				listarqnome.add(path+auxArq);
+				
+				saveFile(bodyPartEntity.getInputStream(), auxArq);
+				
+				System.out.println("===InputStream=== " +inputStream);
+				System.out.println("===bodyPartEntity===" +bodyPartEntity);
+			}
+		
+			Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
+			
+			for(int i = 0; i < descricao2.size(); i++) {
+				auxDesc = descricao2.get(i);
+				System.out.println("===SAÍDA DESCRICAO DE CADA IMAGEM=="+auxDesc);
+				listdescimg.add(auxDesc);
+			}
+			
+			
+			auxTxt = fileDisposition2.getFileName();
+			saveFile(inputStream2, auxTxt);
+			
+			try {
+				boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, listarqnome, listdescimg, path+auxTxt);
+				if (cadsalvo) {
+					return Response.ok().entity("Cadastro salvo").build();
+				} else { // se o cadastro não for salvo
+					return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
+				}
+			} catch (DbException e) {
+				e.printStackTrace();
+				return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
+			}
+			
+	}
+	
+
+	private void saveFile(InputStream uploadedInputStream, String filePath) {		
+		try {			
+			OutputStream outpuStream = new FileOutputStream(new File(filePath));
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			outpuStream = new FileOutputStream(new File(filePath));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				outpuStream.write(bytes, 0, read);
+			}
+			outpuStream.flush();
+			outpuStream.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+			
+	}
+	
 }

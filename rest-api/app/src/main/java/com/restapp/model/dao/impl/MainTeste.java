@@ -115,8 +115,7 @@ public class MainTeste {
 		for(int i = 0; i <= list.size() - 1; i++) {
 			String palavras = list.get(i);
 			System.out.println(palavras);
-			
-			
+		
 		}
 		
 		

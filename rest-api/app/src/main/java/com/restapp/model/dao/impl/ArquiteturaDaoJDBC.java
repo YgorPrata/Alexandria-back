@@ -26,16 +26,18 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public boolean insert(Arquitetura arq, List<String> listarq, String descricao) {
+	public boolean insert(Arquitetura arq, List<String> listarq, List<String> listdesc, String arqtxt) {
 		
 		//System.out.println("caminho: "+arqpath);
 		boolean sucesso = false;
 		int id = 0;
+		String caminho;
+		String descimg;
 	
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement("INSERT INTO arquitetura (nome, categoria, tipo,"
-					+ " autor, material, ano, descricao, arq_path) VALUES (?, ?, ?, ?, ?, ?, ?)",
+					+ " autor, material, ano, descricao) VALUES (?, ?, ?, ?, ?, ?, ?)",
 					st.RETURN_GENERATED_KEYS);
 			ps.setString(1, arq.getNome());
 			ps.setString(2, arq.getCategoria());
@@ -49,7 +51,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			
-			while (rs.next()) {
+			if (rs.next()) {
 				id = rs.getInt(1);
 			}
 			
@@ -58,26 +60,41 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
 		
 		try {
-			for(int i = 0; i <= listarq.size(); i++) {
-				String caminho = listarq.get(i);	
+			for(int i = 0; i <= listarq.size() - 1; i++) {
+				caminho = listarq.get(i);
+				descimg = listdesc.get(i);
 					if(caminho.endsWith(".jpg") || caminho.endsWith(".png")) {
-						String sql = "INSERT INTO img_path (path_img, descricao, id_arq) VALUES ('" + caminho + "', '" + descricao + "', "+ id +")";
+						String sql = "INSERT INTO img_path (path_img, descricao, id_arq) VALUES ('" + caminho + "', '" + descimg + "', "+ id +")";
 						conn = DB.getConnection();
-						ps = conn.prepareStatement(sql);
-						
+						ps = conn.prepareStatement(sql);						
 						ps.executeUpdate();
+						
+						System.out.println(caminho);
+						System.out.println(descimg);
 					
 					}
-					
-					else if(caminho.endsWith(".pdf") || caminho.endsWith(".txt") || caminho.endsWith(".docx")) {
-						String sql = "INSERT INTO txt_path (path_txt, id_arq) VALUES ('" + caminho + "', "+ id +")";
-						conn = DB.getConnection();
-						ps = conn.prepareStatement(sql);
-						
-						ps.executeUpdate();
+					else {
+						System.out.println("Extensão não aceita.");
 					}
+			}
+			
+			if(arqtxt.endsWith(".pdf") || arqtxt.endsWith(".txt") || arqtxt.endsWith(".docx")) {
+				String sql = "INSERT INTO txt_path (path_txt, id_arq) VALUES ('" + arqtxt + "', "+ id +")";
+				conn = DB.getConnection();
+				ps = conn.prepareStatement(sql);
+				
+				ps.executeUpdate();
+				
+				System.out.println(arqtxt);
+			}
+			else {
+				System.out.println("Extensão não aceita.");
 			}
 		}
 		catch(SQLException e) {
