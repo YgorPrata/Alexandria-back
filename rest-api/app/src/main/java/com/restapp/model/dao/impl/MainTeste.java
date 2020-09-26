@@ -2,8 +2,8 @@ package com.restapp.model.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import com.restapp.model.entities.Arquitetura;
 
 public class MainTeste {
 
@@ -106,26 +106,22 @@ public class MainTeste {
 		
 		System.out.println(teste.endsWith(""));*/
 		
-		List<String> list = new ArrayList<String>();
-		
-		list.add("teste1");
-		list.add("teste2");
-		list.add("teste3");
+		/*List<String> list = new ArrayList<String>();
+		String path = "c:/temp/";
+		list.add("129381290382093.jpg");
+		list.add("1293dasda82093.jpg");
+		list.add("129381eqeqwcqq4390382093.jpg");
 		
 		for(int i = 0; i <= list.size() - 1; i++) {
 			String palavras = list.get(i);
-			System.out.println(palavras);
+			System.out.println(path.concat(palavras));
 		
-		}
-		
-		
+		}*/
 		
 		
-		
-		
-		
-		
+		//random-string
+		System.out.println(UUID.randomUUID().toString());
 
 	}
-
+	
 }
