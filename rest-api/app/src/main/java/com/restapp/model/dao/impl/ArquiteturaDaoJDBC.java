@@ -26,7 +26,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public boolean insert(Arquitetura arq, List<String> listarq, List<String> listdesc, String arqtxt) {
+	public boolean insert(Arquitetura arq, List<String> listimg, List<String> listdesc, String arqtxt) {
 		
 		//System.out.println("caminho: "+arqpath);
 		boolean sucesso = false;
@@ -44,7 +44,6 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			ps.setString(3, arq.getTipo());
 			ps.setString(4, arq.getAutor());
 			ps.setString(5, arq.getMaterial());
-			//ps.setDate(6, new java.sql.Date(arq.getData().getTime()));
 			ps.setInt(6, arq.getAno());
 			ps.setString(7, arq.getDescricao());
 
@@ -60,38 +59,35 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		}
-		finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}
 		
 		try {
-			for(int i = 0; i <= listarq.size() - 1; i++) {
-				caminho = listarq.get(i);
+			for(int i = 0; i <= listimg.size() - 1; i++) {
+				caminho = listimg.get(i);
 				descimg = listdesc.get(i);
 					if(caminho.endsWith(".jpg") || caminho.endsWith(".png")) {
-						String sql = "INSERT INTO img_path (path_img, descricao, id_arq) VALUES ('" + caminho + "', '" + descimg + "', "+ id +")";
+						String sql = "INSERT INTO img_path (path_img, desc_img, id_arq) VALUES ('" + caminho + "', '" + descimg + "', "+ id +")";
 						conn = DB.getConnection();
 						ps = conn.prepareStatement(sql);						
 						ps.executeUpdate();
-						
-						System.out.println(caminho);
-						System.out.println(descimg);
-					
+				
 					}
 					else {
 						System.out.println("Extensão não aceita.");
 					}
 			}
-			
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		
+		try {			
 			if(arqtxt.endsWith(".pdf") || arqtxt.endsWith(".txt") || arqtxt.endsWith(".docx")) {
 				String sql = "INSERT INTO txt_path (path_txt, id_arq) VALUES ('" + arqtxt + "', "+ id +")";
 				conn = DB.getConnection();
 				ps = conn.prepareStatement(sql);
 				
 				ps.executeUpdate();
-				
-				System.out.println(arqtxt);
+						
 			}
 			else {
 				System.out.println("Extensão não aceita.");
@@ -116,6 +112,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				list.add(instantiateArquitetura(rs));
 			}
@@ -130,7 +127,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public List<Arquitetura> findByName(String autor) {
+	public List<Arquitetura> findByAutor(String autor) {
 
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
 		String sql = "SELECT * FROM arquitetura WHERE autor = ?";
@@ -140,10 +137,38 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, autor);
 
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
+
 
 			while (rs.next()) {
 				list.add(instantiateArquitetura(rs));
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		return list;
+	}
+	
+	@Override
+	public List<Arquitetura> GetImageByName(String nome) {
+		String sql = "SELECT * FROM arquitetura AS arq INNER JOIN img_path AS img ON arq.id_arq = img.id_arq WHERE arq.nome = ?";
+		
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		List<String> listpath = new ArrayList<String>();
+		List<String> listdesc = new ArrayList<String>();
+		
+		try {
+			conn = DB.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, nome);
+			rs = ps.executeQuery();
+					
+			while(rs.next()) {
+				list.add(instantiateArquitetura(rs));	
 			}
 
 		} catch (SQLException e) {
@@ -158,14 +183,16 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	private Arquitetura instantiateArquitetura(ResultSet rs) throws SQLException {
 		Arquitetura arq = new Arquitetura();
 		arq.setId_arq(rs.getInt("id_arq"));
-		arq.setAutor(rs.getString("autor"));
 		arq.setNome(rs.getString("nome"));
-		arq.setDescricao(rs.getString("descricao"));
-		// arq.setData(rs.getDate("data"));
-		arq.setAno(rs.getInt("ano"));
 		arq.setCategoria(rs.getString("categoria"));
-		arq.setMaterial(rs.getString("material"));
 		arq.setTipo(rs.getString("tipo"));
+		arq.setAutor(rs.getString("autor"));
+		arq.setMaterial(rs.getString("material"));
+		arq.setAno(rs.getInt("ano"));
+		arq.setDescricao(rs.getString("descricao"));		
+		arq.setImg_path(rs.getString("path_img"));
+		arq.setImg_desc(rs.getString("desc_img"));
 		return arq;
 	}
+	
 }

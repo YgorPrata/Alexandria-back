@@ -26,12 +26,8 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 
 	@Override
 	public Arte insert(Arte arte, String arqnome) {
-
-		String sql = ("SELECT arquitetura.id_arq, arquitetura.nome FROM arquitetura INNER JOIN arte "
-				+ "WHERE arquitetura.nome=? AND arquitetura.id_arq = arte.id_arq;");
-		
-		//String sql =("SELECT arquitetura.id_arq, arquitetura.nome FROM arquitetura INNER JOIN arte "
-			//	+ " ON arquitetura.id_arq = arte.id_arq WHERE arquitetura.nome=?");
+		String sql =("SELECT arquitetura.id_arq, arquitetura.nome FROM arquitetura INNER JOIN arte"
+				+ " ON arquitetura.id_arq = arte.id_arq WHERE arquitetura.nome=?");
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
@@ -57,9 +53,8 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 					ps.setString(4, arte.getTipo());
 					ps.setString(5, arte.getMaterial());
 					ps.setString(6, arte.getTecnica());
-					ps.setDate(7, new java.sql.Date(arte.getData().getTime()));
-					ps.setInt(8, arte.getAno());
-					ps.setString(9, arte.getDescricao());
+					ps.setInt(7, arte.getAno());
+					ps.setString(8, arte.getDescricao());
 
 					ps.executeUpdate();
 
@@ -155,7 +150,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 		arte.setAutor(rs.getString("autor"));
 		arte.setTitulo(rs.getString("titulo"));
 		arte.setDescricao(rs.getString("descricao"));
-		arte.setData(rs.getDate("data"));
+		arte.setAno(rs.getInt("ano"));
 		arte.setCategoria(rs.getString("categoria"));
 		arte.setMaterial(rs.getString("material"));
 		arte.setTipo(rs.getString("tipo"));

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,14 +31,15 @@ import com.restapp.model.entities.Arquitetura;
 public class ArquiteturaResource {
 
 	ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
-	String path = "c:/temp/";
+	String pathimg = "c:/temp/imgs/";
+	String pathtxt = "c:/temp/txt/";
 
 	@GET
 	@Path("/arquitetura")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findAll() throws Exception {
 		if (arqdao.findAll().size() > 0) {
-			return Response.ok().entity(arqdao.findAll()).build();
+			return Response.status(200).entity(arqdao.findAll()).build();
 		} else {
 			return Response.status(404).entity("Não há nenhum registro para essa categoria").build();
 		}
@@ -46,156 +48,70 @@ public class ArquiteturaResource {
 	@GET
 	@Path("/arquitetura/busca/{query}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response findByName(@PathParam("query") String query) {
-		if (arqdao.findByName(query).size() > 0) {
-			return Response.ok().entity(arqdao.findByName(query)).build();
+	public Response findByName(@PathParam("autor") String autor) {
+		if (arqdao.findByAutor(autor).size() > 0) {
+			return Response.status(200).entity(arqdao.findByAutor(autor)).build();
 		} else {
 			return Response.status(404).entity("Não há nenhum registro com esse nome.").build();
 		}
 
 	}
-
-	/*@POST
-	@Path("arquitetura/cadastro")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response insert(Arquitetura arq, String archnome) {
-		try {
-			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, path);
-			if (cadsalvo) {
-				return Response.ok().entity(arq).build();
-			} else { // se o cadastro não for salvo
-				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
-			}
-		} catch (DbException e) {
-			e.printStackTrace();
-			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
-		}
-	}*/
-
-	/*@POST
-	@Path("/arquitetura/cadastro")
-	@Consumes({MediaType.MULTIPART_FORM_DATA} )
-	public Response uploadFile(@FormDataParam("file") InputStream fileInputStream,
-			@FormDataParam("file") FormDataContentDisposition contentDispositionHeader,
-			@FormDataParam("nome") String nome,
-			@FormDataParam("categoria") String categoria,
-			@FormDataParam("tipo") String tipo,
-			@FormDataParam("autor") String autor,
-			@FormDataParam("material") String material,
-			@FormDataParam("ano") Integer ano,
-			@FormDataParam("descricao") String descricao) {
-		String filePath = path + contentDispositionHeader.getFileName();
-		
-		Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
-		saveFile(arq, fileInputStream, filePath);
-		String output = "File saved to server location : " + filePath;
-		return Response.status(200).entity(output).build();
-	}*/
-
-	/*private Response saveFile(Arquitetura arq, InputStream uploadedInputStream, String filePath) {		
-		try {			
-			OutputStream outpuStream = new FileOutputStream(new File(filePath));
-			int read = 0;
-			byte[] bytes = new byte[1024];
-			outpuStream = new FileOutputStream(new File(filePath));
-			while ((read = uploadedInputStream.read(bytes)) != -1) {
-				outpuStream.write(bytes, 0, read);
-			}
-			outpuStream.flush();
-			outpuStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	
+	@GET
+	@Path("/getImage")
+	@Produces({"images/png", "images/jpg"})
+	 public Response GetImageByName(@PathParam("nome") String nome) {
+		Arquitetura arq = new Arquitetura();
+		String aux;
+		String aux2;
+		System.out.println("SAIDA ARQUITETURA: "+arq);
+		for(int i = 0; i <= 10 ; i++ ) {
+			aux = arq.getImg_path();
+			aux2 = arq.getImg_desc();
+			
+			System.out.println("CAMINHOS: "+ aux);
+			System.out.println("DESCRICOES: "+ aux2);
 		}
 		
-		System.out.println("Arquitetura: " +arq);
-		System.out.println("InputStream: " +uploadedInputStream);
-		System.out.println("filePath: " +filePath);
-		
-		try {
-			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, filePath, "testedescricao");
-			if (cadsalvo) {
-				return Response.ok().entity("Cadastro salvo").build();
-			} else { // se o cadastro não for salvo
-				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
-			}
-		} catch (DbException e) {
-			e.printStackTrace();
-			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
-		}
-	}*/
+		/*file = new File(caminhoPasta + "/imagem.png");
+		 
+		responseBuilder = Response.ok(file);
+ 
+		responseBuilder.header("Content-Disposition", "attachment;filename=" + file.getName());
+ 
+		return responseBuilder.build();
+
+	     String mmcpath = gi.filepath;
+
+	     BufferedImage image = ImageUtil.getImageFromPath(mmcpath);
+
+	     if (image != null) {
+
+	         // resize the image to fit the GUI's image frame
+	         image = ImageUtil.resize(image, width, height);
+	         InputStream is = ImageUtil.getStreamFromImage(image, FileHelper.getFileSuffix(mmcpath));
+
+	         if (is != null) {
+	             return Response.ok(is).build();
+	         } else {
+	             return Response.noContent().build();
+	         }
+	     }
+		*/
+
+
+	     return Response.noContent().build();
+	 }
 	
 	
-	/*@Path("/arquitetura/cadastro")
 	@POST
+	@Path("/arquitetura/cadastro")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFiles2(
-			@FormDataParam("files") List<FormDataBodyPart> bodyParts,
-			@FormDataParam("files") FormDataContentDisposition fileDispositions,
-			@FormDataParam("file2") InputStream file2,
-			@FormDataParam("file2") FormDataContentDisposition fileDisposition2,
-			@FormDataParam("nome") String nome,
-			@FormDataParam("categoria") String categoria,
-			@FormDataParam("tipo") String tipo,
-			@FormDataParam("autor") String autor,
-			@FormDataParam("material") String material,
-			@FormDataParam("ano") Integer ano,
-			@FormDataParam("descricao") String descricao) {
-			Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
-			List<String> listarqnome = new ArrayList<String>();
-		//Save multiple files
-		for (int i = 0; i < bodyParts.size(); i++) {
-			//casting pra gerar um inputstream e dar upload no arquivo
-			BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
-			String fileImg = bodyParts.get(i).getContentDisposition().getFileName();
-			
-			listarqnome.add(path+fileImg);
-			saveFile(bodyPartEntity.getInputStream(), fileImg);
-			
-			System.out.println("===BODY PARTS=== " +bodyParts);
-			System.out.println("===bodyPartEntity===" +bodyPartEntity.getInputStream());
-		}
-		//Save File 2
-		String filetxt = fileDisposition2.getFileName();
-		saveFile(file2, filetxt);
-		
-		try {
-			boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, listarqnome, "testedescricao", path+filetxt);
-			if (cadsalvo) {
-				return Response.ok().entity("Cadastro salvo").build();
-			} else { // se o cadastro não for salvo
-				return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
-			}
-		} catch (DbException e) {
-			e.printStackTrace();
-			return Response.status(500).entity("Ops! Parece que o banco de dados está com um problema.").build();
-		}
-		
-	}
-	private void saveFile(InputStream file, String name) {
-		try {			
-			OutputStream outpuStream = new FileOutputStream(new File(path + name));
-			int read = 0;
-			byte[] bytes = new byte[1024];
-			outpuStream = new FileOutputStream(new File(path + name));
-			while ((read = file.read(bytes)) != -1) {
-				outpuStream.write(bytes, 0, read);
-			}
-			outpuStream.flush();
-			outpuStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}*/
-	
-	
-	@Path("/arquitetura/cadastro")
-	@POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFiles2(
-			@FormDataParam("file") List<FormDataBodyPart> inputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDisposition,
-			@FormDataParam("file2") InputStream inputStream2,
-			@FormDataParam("file2") FormDataContentDisposition fileDisposition2,
+			@FormDataParam("img") List<FormDataBodyPart> inputStream,
+			@FormDataParam("img") FormDataContentDisposition fileDisposition,
+			@FormDataParam("txt") InputStream inputStream2,
+			@FormDataParam("txt") FormDataContentDisposition fileDisposition2,
 			@FormDataParam("nome") String nome,
 			@FormDataParam("categoria") String categoria,
 			@FormDataParam("tipo") String tipo,
@@ -210,33 +126,35 @@ public class ArquiteturaResource {
 			String nomesImgs;
 			String nomeTxt;
 			String auxDesc;
-			String auxParameter;
+			boolean txtsalvo;
+			boolean imgsalvo = false;
 			
 			//tratando os dados recebidos por parametro e enviando para salvar (saveFile)
 			for (int i = 0; i < inputStream.size(); i++) {
 				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();							
-				nomesImgs = inputStream.get(i).getContentDisposition().getFileName();				
-				listarqnome.add(path+nomesImgs);				
-				saveFile(bodyPartEntity.getInputStream(), nomesImgs);
+				nomesImgs = pathimg+UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();				
+				listarqnome.add(nomesImgs);				
+				imgsalvo = saveFile(bodyPartEntity.getInputStream(), nomesImgs);
 				
 				auxDesc = descricao2.get(i);
 				listdescimg.add(auxDesc);
 			}					
 			
 			//tratando o único dado de arquivo texto e enviando para salvar (saveFile)
-			nomeTxt = fileDisposition2.getFileName();
-			saveFile(inputStream2, nomeTxt);
-			auxParameter = path+nomeTxt;
+			nomeTxt = pathtxt+UUID.randomUUID()+fileDisposition2.getFileName();
+			txtsalvo = saveFile(inputStream2, nomeTxt);
+			
 			
 			//Buscar alguma forma de tratar o cadastro caso não consiga salvar os arquivos no saveFile
 			Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
-			
-			try {
-				boolean cadsalvo = new ArquiteturaDaoJDBC().insert(arq, listarqnome, listdescimg, auxParameter);
-				if (cadsalvo) {
-					return Response.ok().entity("Cadastro salvo").build();
+			System.out.println("RETORNO TXTSALVO: "+txtsalvo+ "RETORNO IMGSALVO"+imgsalvo);		
+			try {				
+				if (txtsalvo && imgsalvo) {
+					arqdao.insert(arq, listarqnome, listdescimg, nomeTxt);
+					return Response.status(200).build();
 				} else { 
 					return Response.status(500).entity("Ops! Ocorreu um erro ao salvar o cadastro no banco.").build();
+					
 				}
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -245,28 +163,42 @@ public class ArquiteturaResource {
 			
 	}
 	
-	private Response saveFile(InputStream uploadedInputStream, String nomesArqs) {		
-		String aux = path+nomesArqs;
+	private boolean saveFile(InputStream uploadedInputStream, String nomesArqs) {		
 		try {
-			if(aux.startsWith("c:/temp/")) {
-				OutputStream outpuStream = new FileOutputStream(new File(aux));
+			if(nomesArqs.endsWith(".txt") || nomesArqs.startsWith(".pdf") || nomesArqs.startsWith(".docx")) {
+				File file = new File(nomesArqs);
+				OutputStream ops = new FileOutputStream(file);
 				int read = 0;
 				byte[] bytes = new byte[1024];
 				
 				while ((read = uploadedInputStream.read(bytes)) != -1) {
-					outpuStream.write(bytes, 0, read);
+					ops.write(bytes, 0, read);
 				}
-				outpuStream.flush();
-				outpuStream.close();
-				return Response.ok().build();
+				ops.flush();
+				ops.close();
+				return true;
+			}
+			else if(nomesArqs.endsWith(".jpg") || nomesArqs.startsWith(".png")){
+				File file = new File(nomesArqs);
+				OutputStream ops = new FileOutputStream(file);
+				int read = 0;
+				byte[] bytes = new byte[1024];
+				
+				while ((read = uploadedInputStream.read(bytes)) != -1) {
+					ops.write(bytes, 0, read);
+				}
+				ops.flush();
+				ops.close();
+				return true;
 			}
 			else {
-				return Response.status(500).entity("Ocorreu um erro com o nome dos arquivos.").build();
+				System.out.println("arquivo não salvo.");
+				return false;
 			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			return Response.status(500).entity("Ocorreu um erro ao salvar os arquivos.").build();
+			return false;
 		}
 				
 	}

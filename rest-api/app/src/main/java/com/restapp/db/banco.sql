@@ -4,8 +4,8 @@ use alexandria;
 
 create table Arquitetura(
 	id_arq int not null primary key auto_increment,
-	categoria varchar(20),
 	nome varchar(20),
+	categoria varchar(20),
 	tipo varchar(20),
 	autor varchar(20),
 	material varchar(20),
@@ -52,7 +52,7 @@ create table Livro(
 create table img_path(
 	id_img int not null primary key auto_increment,
 	path_img varchar (1000),
-	descricao varchar(50),
+	desc_img varchar(50),
 	id_arq int,
 	id_livro int,
 	id_arte int,
@@ -88,14 +88,14 @@ values("categoriateste", "tipoteste",
 		1, "biografiateste", "descricaoteste", "tituloteste", 2020
 );
 
-insert into arquitetura(categoria, nome, tipo, autor, material, ano, descricao)
-values("categoriateste", "nometeste",
+insert into arquitetura(nome, categoria, tipo, autor, material, ano, descricao)
+values("nometeste","categoriateste", 
 		"tipoteste","autorteste",
 		"materialteste", 2020, "descricaoteste"
 );
 
-insert into img_path(path_img, descricao)
-values("c:/temp/imagem.jpg","descricao");
+insert into img_path(path_img, desc_img)
+values("c:/temp/imgs/imagem.jpg","descricao");
 
 insert into txt_path(path_txt)
-values("c:/temp/texto.txt");
+values("c:/temp/txt/texto.txt");

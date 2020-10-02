@@ -2,7 +2,9 @@ package com.restapp.model.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Arte;
 
 
 public class MainTeste {
@@ -120,8 +122,29 @@ public class MainTeste {
 		
 		
 		//random-string
-		System.out.println(UUID.randomUUID().toString());
-
+		//System.out.println(UUID.randomUUID().toString());
+		
+		/*ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		
+		list = arqdao.GetImageByName("Museu do amanha");
+		
+		for(Arquitetura arq : list) {
+			System.out.println(arq+"\n");
+		}*/
+		
+		ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		list = arqdao.GetImageByName("museu do inferno");
+		
+		Arquitetura aux = new Arquitetura();
+		for(int i = 0; i <= list.size() - 1; i++ ) {
+			aux = list.get(i);			
+			System.out.println("SAIDA DOS CAMINHOS: "+aux.getImg_path());
+			System.out.println("SAIDA DAS DESCRICOES: "+aux.getImg_desc());
+		}
+		System.out.println("ARQUITETURA: "+aux);
+		
 	}
 	
 }

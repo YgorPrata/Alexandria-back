@@ -12,8 +12,6 @@ public class Arte {
 	private String autor;
 	private String material;
 	private String tecnica;
-	//atributo data ainda esta a ser definido
-	private Date data;
 	private Integer ano;
 	private String descricao;
 	
@@ -24,7 +22,7 @@ public class Arte {
 	}
 	
 	public Arte(String categoria, String titulo, String tipo, String autor, String material,
-			String tecnica, Date data, Integer ano, String descricao) {
+			String tecnica, Integer ano, String descricao) {
 
 		this.categoria = categoria;
 		this.titulo = titulo;
@@ -32,7 +30,6 @@ public class Arte {
 		this.autor = autor;
 		this.material = material;
 		this.tecnica = tecnica;
-		this.data = data;
 		this.ano = ano;
 		this.descricao = descricao;
 	}
@@ -93,13 +90,6 @@ public class Arte {
 		this.tecnica = tecnica;
 	}
 
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
-	}
 
 	public Integer getAno() {
 		return ano;
@@ -153,8 +143,7 @@ public class Arte {
 	@Override
 	public String toString() {
 		return "Arte [id_arte=" + id_arte + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo + ", autor="
-				+ autor + ", material=" + material + ", tecnica=" + tecnica + ", data=" + data
-				+ ", descricao=" + descricao + "]";
+				+ autor + ", material=" + material + ", tecnica=" + tecnica + ", descricao=" + descricao + "]";
 	}
 		
 }

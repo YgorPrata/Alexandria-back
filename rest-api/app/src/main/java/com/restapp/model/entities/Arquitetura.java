@@ -13,26 +13,27 @@ public class Arquitetura {
 	private String tipo;
 	private String autor;
 	private String material;
-	//@JsonbDateFormat(value = "dd/MM/yyyy")
-	//private Date data;
 	private Integer ano;
 	private String descricao;
+	
+	private String img_path;
+	private String img_desc;
+	private String txt_path;
 	
 	public Arquitetura() {
 		
 	}
 
-	public Arquitetura(String categoria, String nome, String tipo, String autor,
+	public Arquitetura(String nome, String categoria, String tipo, String autor,
 			String material, Integer ano, String descricao) {
-		this.categoria = categoria;
-		this.nome = nome;
+		this.nome = nome;		
+		this.categoria = categoria;		
 		this.tipo = tipo;
 		this.autor = autor;
 		this.material = material;
-		//this.data = data;
 		this.ano = ano;
 		this.descricao = descricao;
-		
+
 	}
 
 	public Integer getId_arq() {
@@ -93,16 +94,6 @@ public class Arquitetura {
 		this.material = material;
 	}
 
-
-	/*public Date getData() {
-		return data;
-	}
-
-
-	public void setData(Date data) {
-		this.data = data;
-	}*/
-
 	public Integer getAno() {
 		return ano;
 	}
@@ -118,6 +109,32 @@ public class Arquitetura {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	
+
+	public String getImg_path() {
+		return img_path;
+	}
+
+	public void setImg_path(String img_path) {
+		this.img_path = img_path;
+	}
+	
+
+	public String getImg_desc() {
+		return img_desc;
+	}
+
+	public void setImg_desc(String img_desc) {
+		this.img_desc = img_desc;
+	}
+
+	public String getTxt_path() {
+		return txt_path;
+	}
+
+	public void setTxt_path(String txt_path) {
+		this.txt_path = txt_path;
 	}
 
 	@Override
@@ -149,7 +166,7 @@ public class Arquitetura {
 	public String toString() {
 		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
 				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao="
-				+ descricao + "]";
+				+ descricao + " img_path=" + img_path + " img_desc=" + img_desc +"]";
 	}
 	
 	
