@@ -16,6 +16,7 @@ public class Arquitetura {
 	private Integer ano;
 	private String descricao;
 	
+	private Integer id_img;
 	private String img_path;
 	private String img_desc;
 	private String txt_path;
@@ -111,6 +112,15 @@ public class Arquitetura {
 		this.descricao = descricao;
 	}
 	
+		
+
+	public Integer getId_img() {
+		return id_img;
+	}
+
+	public void setId_img(Integer id_img) {
+		this.id_img = id_img;
+	}
 
 	public String getImg_path() {
 		return img_path;
@@ -165,9 +175,12 @@ public class Arquitetura {
 	@Override
 	public String toString() {
 		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
-				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao="
-				+ descricao + " img_path=" + img_path + " img_desc=" + img_desc +"]";
+				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao=" + descricao
+				+ ", id_img=" + id_img + ", img_path=" + img_path + ", img_desc=" + img_desc + ", txt_path=" + txt_path
+				+ "]";
 	}
+
+	
 	
 	
 }

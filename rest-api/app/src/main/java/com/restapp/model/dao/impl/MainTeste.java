@@ -139,7 +139,9 @@ public class MainTeste {
 		
 		Arquitetura aux = new Arquitetura();
 		for(int i = 0; i <= list.size() - 1; i++ ) {
-			aux = list.get(i);			
+			aux = list.get(i);
+			
+			System.out.println("SAIDA DOS IDS DAS IMG: " +aux.getId_img());
 			System.out.println("SAIDA DOS CAMINHOS: "+aux.getImg_path());
 			System.out.println("SAIDA DAS DESCRICOES: "+aux.getImg_desc());
 		}

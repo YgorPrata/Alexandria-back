@@ -76,7 +76,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 				} catch (SQLException e) {
 					throw new DbException(e.getMessage());
 				} finally {
-					DB.closeResultSet(rs);
+					DB.closeResultSet(rsarq);
 					DB.closeStatement(ps);
 				}
 			}

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,6 +24,9 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.entities.Arquitetura;
@@ -46,9 +50,9 @@ public class ArquiteturaResource {
 	}
 
 	@GET
-	@Path("/arquitetura/busca/{query}")
+	@Path("/arquitetura/busca/{autor}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response findByName(@PathParam("autor") String autor) {
+	public Response findByAutor(@PathParam("autor") String autor) {
 		if (arqdao.findByAutor(autor).size() > 0) {
 			return Response.status(200).entity(arqdao.findByAutor(autor)).build();
 		} else {
@@ -58,50 +62,46 @@ public class ArquiteturaResource {
 	}
 	
 	@GET
-	@Path("/getImage")
+	@Path("/arquitetura/buscararq/{nome}")
+	//@Produces({ MediaType.APPLICATION_JSON })
 	@Produces({"images/png", "images/jpg"})
-	 public Response GetImageByName(@PathParam("nome") String nome) {
-		Arquitetura arq = new Arquitetura();
-		String aux;
-		String aux2;
-		System.out.println("SAIDA ARQUITETURA: "+arq);
-		for(int i = 0; i <= 10 ; i++ ) {
-			aux = arq.getImg_path();
-			aux2 = arq.getImg_desc();
+	public Response GetImageByName(@PathParam("nome") String nome) throws JsonProcessingException {
+		Arquitetura aux;
+		ArrayList<Arquitetura> list = new ArrayList<Arquitetura>(arqdao.GetImageByName(nome));
+		//Tratando imagens e descricoes
+		for(int i = 0; i <= list.size() - 1; i++) {
+			aux = list.get(i);			
 			
-			System.out.println("CAMINHOS: "+ aux);
-			System.out.println("DESCRICOES: "+ aux2);
+			System.out.println(aux.getImg_desc());
+			System.out.println(aux.getId_img());
+			System.out.println(aux.getImg_path());
+						
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			String jsondesc = ow.writeValueAsString(aux.getImg_desc());
+			
+			File file = new File(aux.getImg_path());
+			System.out.println("IMAGEM: "+file);
+		      if (!file.exists()) {
+		    	  return Response.status(404).build();
+		      }
+		
+			String mt = new MimetypesFileTypeMap().getContentType(file);
+			return Response.ok(file, mt).build();
+			
 		}
 		
-		/*file = new File(caminhoPasta + "/imagem.png");
-		 
-		responseBuilder = Response.ok(file);
- 
-		responseBuilder.header("Content-Disposition", "attachment;filename=" + file.getName());
- 
-		return responseBuilder.build();
+		//Tratando entidade arquitetura
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(arqdao.GetImageByName(nome));
+		
+		if (arqdao.GetImageByName(nome).size() == 0) {
+			return Response.status(404).build();
+		} else {			
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();			
+		}
 
-	     String mmcpath = gi.filepath;
-
-	     BufferedImage image = ImageUtil.getImageFromPath(mmcpath);
-
-	     if (image != null) {
-
-	         // resize the image to fit the GUI's image frame
-	         image = ImageUtil.resize(image, width, height);
-	         InputStream is = ImageUtil.getStreamFromImage(image, FileHelper.getFileSuffix(mmcpath));
-
-	         if (is != null) {
-	             return Response.ok(is).build();
-	         } else {
-	             return Response.noContent().build();
-	         }
-	     }
-		*/
-
-
-	     return Response.noContent().build();
-	 }
+	}
+		
 	
 	
 	@POST
@@ -145,7 +145,7 @@ public class ArquiteturaResource {
 			txtsalvo = saveFile(inputStream2, nomeTxt);
 			
 			
-			//Buscar alguma forma de tratar o cadastro caso não consiga salvar os arquivos no saveFile
+			
 			Arquitetura arq = new Arquitetura(nome, categoria, tipo, autor, material, ano, descricao);
 			System.out.println("RETORNO TXTSALVO: "+txtsalvo+ "RETORNO IMGSALVO"+imgsalvo);		
 			try {				

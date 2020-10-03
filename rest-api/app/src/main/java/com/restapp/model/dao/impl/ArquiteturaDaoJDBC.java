@@ -153,31 +153,39 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		return list;
 	}
 	
-	@Override
+
 	public List<Arquitetura> GetImageByName(String nome) {
 		String sql = "SELECT * FROM arquitetura AS arq INNER JOIN img_path AS img ON arq.id_arq = img.id_arq WHERE arq.nome = ?";
-		
+		 
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
-		List<String> listpath = new ArrayList<String>();
-		List<String> listdesc = new ArrayList<String>();
 		
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, nome);
 			rs = ps.executeQuery();
-					
+			
 			while(rs.next()) {
-				list.add(instantiateArquitetura(rs));	
+				list.add(instantiateArquitetura(rs));
 			}
 
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		} finally {
+		} 
+		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
+		
 		return list;
+	}
+	
+	private Arquitetura instantiateImagens(ResultSet rs) throws SQLException{
+		Arquitetura arq = new Arquitetura();
+		arq.setId_img(rs.getInt("id_img"));
+		arq.setImg_path(rs.getString("path_img"));
+		arq.setImg_desc(rs.getString("desc_img"));
+		return arq;
 	}
 
 	private Arquitetura instantiateArquitetura(ResultSet rs) throws SQLException {
@@ -189,7 +197,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		arq.setAutor(rs.getString("autor"));
 		arq.setMaterial(rs.getString("material"));
 		arq.setAno(rs.getInt("ano"));
-		arq.setDescricao(rs.getString("descricao"));		
+		arq.setDescricao(rs.getString("descricao"));
+		arq.setId_img(rs.getInt("id_img"));
 		arq.setImg_path(rs.getString("path_img"));
 		arq.setImg_desc(rs.getString("desc_img"));
 		return arq;
