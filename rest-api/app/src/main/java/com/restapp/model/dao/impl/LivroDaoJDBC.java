@@ -25,8 +25,8 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 
 	@Override
 	public Livro insert(Livro livro, String arqnome) {
-		String sql = ("SELECT arquitetura.id_arq " + "FROM arquitetura " + "INNER JOIN livro "
-				+ "WHERE arquitetura.nome=? " + "AND arquitetura.id_arq = livro.id_arq;");
+		String sql = ("SELECT arq.id_arq " + "FROM arquitetura AS arq " + "INNER JOIN livro "
+				+ "WHERE arq.nome=? " + "AND arq.id_arq = livro.id_arq;");
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
@@ -34,24 +34,25 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 			ResultSet rsarqid = ps.executeQuery();
 
 			if (rsarqid.next()) {
-				rsarqid.getInt("arquitetura.id_arq");
-				System.out.println("Obra existente, id: " + rsarqid.getInt("arquitetura.id_arq")
+				rsarqid.getInt("arq.id_arq");
+				System.out.println("Obra existente, id: " + rsarqid.getInt("arq.id_arq")
 						+ ". Adicionando a nova obra na base de dados");
 
 				try {
 					conn = DB.getConnection();
-					ps = conn.prepareStatement("INSERT INTO livro (categoria, tipo, autor, "
-							+ "editora, edicao, biografia, descricao, " + "titulo, ano, id_arq) "
-							+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? , " + rsarqid.getInt("arquitetura.id_arq") + ")",
+					ps = conn.prepareStatement("INSERT INTO livro (titulo, autor, descricao, "
+							+ "categoria, tipo, editora, edicao, " + "biografia, ano, id_arq) "
+							+ "VALUES(?, ?, ?, ?, ?, ?, ?, ? ,? , " + rsarqid.getInt("arq.id_arq") + ")",
 							st.RETURN_GENERATED_KEYS);
-					ps.setString(1, livro.getCategoria());
-					ps.setString(2, livro.getTipo());
-					ps.setString(3, livro.getAutor());
-					ps.setString(4, livro.getEditora());
-					ps.setInt(5, livro.getEdicao());
-					ps.setString(6, livro.getBiografia());
-					ps.setString(7, livro.getDescricao());
-					ps.setString(8, livro.getTitulo());
+					
+					ps.setString(1, livro.getTitulo());
+					ps.setString(2, livro.getAutor());
+					ps.setString(3, livro.getDescricao());
+					ps.setString(4, livro.getCategoria());
+					ps.setString(5, livro.getTipo());					
+					ps.setString(6, livro.getEditora());
+					ps.setInt(7, livro.getEdicao());
+					ps.setString(8, livro.getBiografia());
 					ps.setInt(9, livro.getAno());
 
 					int insert = ps.executeUpdate();

@@ -8,13 +8,13 @@ public class Arquitetura {
 	
 	
 	private Integer id_arq;
-	private String categoria;
-	private String nome;
-	private String tipo;
+	private String titulo;
 	private String autor;
-	private String material;
-	private Integer ano;
 	private String descricao;
+	private String categoria;
+	private String tipo;
+	private String localidade;
+	private Integer ano;
 	
 	private Integer id_img;
 	private String img_path;
@@ -25,74 +25,70 @@ public class Arquitetura {
 		
 	}
 
-	public Arquitetura(String nome, String categoria, String tipo, String autor,
-			String material, Integer ano, String descricao) {
-		this.nome = nome;		
-		this.categoria = categoria;		
-		this.tipo = tipo;
+	public Arquitetura(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano) {		
+		this.titulo = titulo;
 		this.autor = autor;
-		this.material = material;
-		this.ano = ano;
 		this.descricao = descricao;
-
+		this.categoria = categoria;
+		this.tipo = tipo;
+		this.localidade = localidade;
+		this.ano = ano;
 	}
 
 	public Integer getId_arq() {
 		return id_arq;
 	}
 
-
 	public void setId_arq(Integer id_arq) {
 		this.id_arq = id_arq;
 	}
 
-
-	public String getCategoria() {
-		return categoria;
+	public String getTitulo() {
+		return titulo;
 	}
 
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
-
-
-	public String getNome() {
-		return nome;
-	}
-
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-
-	public String getTipo() {
-		return tipo;
-	}
-
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
 
 	public String getAutor() {
 		return autor;
 	}
 
-
 	public void setAutor(String autor) {
 		this.autor = autor;
 	}
 
-
-	public String getMaterial() {
-		return material;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setMaterial(String material) {
-		this.material = material;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public String getCategoria() {
+		return categoria;
+	}
+	
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getLocalidade() {
+		return localidade;
+	}
+
+	public void setLocalidade(String localidade) {
+		this.localidade = localidade;
 	}
 
 	public Integer getAno() {
@@ -102,17 +98,6 @@ public class Arquitetura {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-	
-		
 
 	public Integer getId_img() {
 		return id_img;
@@ -129,7 +114,6 @@ public class Arquitetura {
 	public void setImg_path(String img_path) {
 		this.img_path = img_path;
 	}
-	
 
 	public String getImg_desc() {
 		return img_desc;
@@ -174,11 +158,13 @@ public class Arquitetura {
 
 	@Override
 	public String toString() {
-		return "Arquitetura [id_arq=" + id_arq + ", categoria=" + categoria + ", nome=" + nome + ", tipo=" + tipo
-				+ ", autor=" + autor + ", material=" + material + ", ano=" + ano + ", descricao=" + descricao
+		return "Arquitetura [id_arq=" + id_arq + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
+				+ ", categoria=" + categoria + ", tipo=" + tipo + ", localidade=" + localidade + ", ano=" + ano
 				+ ", id_img=" + id_img + ", img_path=" + img_path + ", img_desc=" + img_desc + ", txt_path=" + txt_path
 				+ "]";
 	}
+
+	
 
 	
 	

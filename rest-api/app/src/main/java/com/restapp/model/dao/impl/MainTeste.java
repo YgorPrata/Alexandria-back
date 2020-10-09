@@ -1,5 +1,6 @@
 package com.restapp.model.dao.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class MainTeste {
 			System.out.println(arq+"\n");
 		}*/
 		
-		ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		/*ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
 		list = arqdao.GetImageByName("museu do inferno");
 		
@@ -146,7 +147,13 @@ public class MainTeste {
 			System.out.println("SAIDA DAS DESCRICOES: "+aux.getImg_desc());
 		}
 		System.out.println("ARQUITETURA: "+aux);
+		*/
 		
+		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		
+		//System.out.println(arqdao.getArqSimpLocal("rio de janeiro"));
+				
+
 	}
 	
 }

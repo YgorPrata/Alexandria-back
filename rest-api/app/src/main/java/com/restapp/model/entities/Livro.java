@@ -3,57 +3,74 @@ package com.restapp.model.entities;
 public class Livro {
 	
 	private Integer id_livro;
-	private Integer edicao;
-	private Integer ano;
+	private String titulo;
+	private String autor;
+	private String descricao;
+	private String categoria;
 	private String tipo;
 	private String editora;
+	private Integer edicao;
 	private String biografia;
-	private String descricao;
-	private String autor;
-	private String titulo;
-	private String categoria;
-	
-	private Arquitetura arq;
+	private Integer ano;
+		
+	private Integer id_arq;
 	
 	public Livro(){
 		
 	}
 
-	public Livro(Integer edicao, Integer ano, String tipo, String editora, String biografia,
-			String descricao, String autor, String titulo, String categoria) {
-		this.edicao = edicao;
-		this.ano = ano;
+	public Livro(String titulo, String autor, String descricao, String categoria, String tipo, String editora,
+			Integer edicao, String biografia, Integer ano) {
+		super();
+		this.titulo = titulo;
+		this.autor = autor;
+		this.descricao = descricao;
+		this.categoria = categoria;
 		this.tipo = tipo;
 		this.editora = editora;
+		this.edicao = edicao;
 		this.biografia = biografia;
-		this.descricao = descricao;
-		this.autor = autor;
-		this.titulo = titulo;
-		this.categoria = categoria;
+		this.ano = ano;
 	}
 
 	public Integer getId_livro() {
 		return id_livro;
 	}
-	
+
 	public void setId_livro(Integer id_livro) {
 		this.id_livro = id_livro;
 	}
 
-	public Integer getEdicao() {
-		return edicao;
+	public String getTitulo() {
+		return titulo;
 	}
 
-	public void setEdicao(Integer edicao) {
-		this.edicao = edicao;
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 
-	public Integer getAno() {
-		return ano;
+	public String getAutor() {
+		return autor;
 	}
 
-	public void setAno(Integer ano) {
-		this.ano = ano;
+	public void setAutor(String autor) {
+		this.autor = autor;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
 	}
 
 	public String getTipo() {
@@ -72,6 +89,14 @@ public class Livro {
 		this.editora = editora;
 	}
 
+	public Integer getEdicao() {
+		return edicao;
+	}
+
+	public void setEdicao(Integer edicao) {
+		this.edicao = edicao;
+	}
+
 	public String getBiografia() {
 		return biografia;
 	}
@@ -80,47 +105,20 @@ public class Livro {
 		this.biografia = biografia;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public Integer getAno() {
+		return ano;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setAno(Integer ano) {
+		this.ano = ano;
 	}
 
-	public String getAutor() {
-		return autor;
+	public Integer getId_arq() {
+		return id_arq;
 	}
 
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
-
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
-	
-
-	public Arquitetura getArq() {
-		return arq;
-	}
-
-
-
-	public void setArq(Arquitetura arq) {
-		this.arq = arq;
+	public void setId_arq(Integer id_arq) {
+		this.id_arq = id_arq;
 	}
 
 	@Override
@@ -150,9 +148,12 @@ public class Livro {
 
 	@Override
 	public String toString() {
-		return "Livro [id_livro=" + id_livro + ", edicao=" + edicao + ", ano=" + ano + ", tipo=" + tipo + ", editora=" + editora
-				+ ", biografia=" + biografia + ", descricao=" + descricao + ", autor=" + autor + ", titulo=" + titulo + ", categoria=" + categoria + "]";
+		return "Livro [id_livro=" + id_livro + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
+				+ ", categoria=" + categoria + ", tipo=" + tipo + ", editora=" + editora + ", edicao=" + edicao
+				+ ", biografia=" + biografia + ", ano=" + ano + ", id_arq=" + id_arq + "]";
 	}
+
+	
 		
 	
 	

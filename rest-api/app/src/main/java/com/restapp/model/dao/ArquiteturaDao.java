@@ -7,7 +7,10 @@ import com.restapp.model.entities.Arquitetura;
 public interface ArquiteturaDao {
 	
 	boolean insert(Arquitetura arq, List<String> arqpath, List<String> descricao, String arqtxt);
-	List<Arquitetura> GetImageByName(String nome);
-	List<Arquitetura> findByAutor(String autor);
-	List<Arquitetura> findAll();
+	List<Arquitetura> getById(Integer id_arq);
+	List<Arquitetura> getAll();
+	List<Arquitetura> getArqSimpTitulo(String titulo);
+	List<Arquitetura> getArqSimpAutor(String autor);
+	List<Arquitetura> getArqSimpLocal(String local);
+
 }

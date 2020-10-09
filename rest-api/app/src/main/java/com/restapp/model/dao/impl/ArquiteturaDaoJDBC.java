@@ -28,7 +28,6 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	@Override
 	public boolean insert(Arquitetura arq, List<String> listimg, List<String> listdesc, String arqtxt) {
 		
-		//System.out.println("caminho: "+arqpath);
 		boolean sucesso = false;
 		int id = 0;
 		String caminho;
@@ -36,16 +35,15 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	
 		try {
 			conn = DB.getConnection();
-			ps = conn.prepareStatement("INSERT INTO arquitetura (nome, categoria, tipo,"
-					+ " autor, material, ano, descricao) VALUES (?, ?, ?, ?, ?, ?, ?)",
-					st.RETURN_GENERATED_KEYS);
-			ps.setString(1, arq.getNome());
-			ps.setString(2, arq.getCategoria());
-			ps.setString(3, arq.getTipo());
-			ps.setString(4, arq.getAutor());
-			ps.setString(5, arq.getMaterial());
-			ps.setInt(6, arq.getAno());
-			ps.setString(7, arq.getDescricao());
+			ps = conn.prepareStatement("INSERT INTO arquitetura (titulo, autor, descricao, tipo, "
+					+ " categoria, localidade, ano) VALUES (?, ?, ?, ?, ?, ?, ?)",st.RETURN_GENERATED_KEYS);
+			ps.setString(1, arq.getTitulo());
+			ps.setString(2, arq.getAutor());
+			ps.setString(3, arq.getDescricao());
+			ps.setString(4, arq.getTipo());
+			ps.setString(5, arq.getCategoria());			
+			ps.setString(6, arq.getLocalidade());
+			ps.setInt(7, arq.getAno());
 
 			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
@@ -55,8 +53,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			}
 			
 			sucesso = true;
-			
-		} catch (SQLException e) {
+		}
+		catch(SQLException e) {
 			throw new DbException(e.getMessage());
 		}
 		
@@ -69,7 +67,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 						conn = DB.getConnection();
 						ps = conn.prepareStatement(sql);						
 						ps.executeUpdate();
-				
+						sucesso = true;
 					}
 					else {
 						System.out.println("Extensão não aceita.");
@@ -85,9 +83,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 				String sql = "INSERT INTO txt_path (path_txt, id_arq) VALUES ('" + arqtxt + "', "+ id +")";
 				conn = DB.getConnection();
 				ps = conn.prepareStatement(sql);
-				
 				ps.executeUpdate();
-						
+				sucesso = true;		
 			}
 			else {
 				System.out.println("Extensão não aceita.");
@@ -104,7 +101,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 
 	@Override
-	public List<Arquitetura> findAll() {
+	public List<Arquitetura> getAll() {
 
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
 		String sql = "SELECT * FROM arquitetura";
@@ -114,7 +111,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			rs = ps.executeQuery();
 			
 			while (rs.next()) {
-				list.add(instantiateArquitetura(rs));
+				list.add(instanciaTudo(rs));
 			}
 
 		} catch (SQLException e) {
@@ -126,47 +123,19 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		return list;
 	}
 
-	@Override
-	public List<Arquitetura> findByAutor(String autor) {
-
-		List<Arquitetura> list = new ArrayList<Arquitetura>();
-		String sql = "SELECT * FROM arquitetura WHERE autor = ?";
-
-		try {
-			conn = DB.getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, autor);
-
-			rs = ps.executeQuery();
-
-
-			while (rs.next()) {
-				list.add(instantiateArquitetura(rs));
-			}
-
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}
-		return list;
-	}
-	
-
-	public List<Arquitetura> GetImageByName(String nome) {
-		String sql = "SELECT * FROM arquitetura AS arq INNER JOIN img_path AS img ON arq.id_arq = img.id_arq WHERE arq.nome = ?";
+	public List<Arquitetura> getById(Integer id_arq) {
+		String sql = "SELECT * FROM arquitetura AS arq INNER JOIN img_path AS img ON arq.id_arq = img.id_arq WHERE arq.id_arq = ?";
 		 
 		List<Arquitetura> list = new ArrayList<Arquitetura>();
 		
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, nome);
+			ps.setInt(1, id_arq);
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				list.add(instantiateArquitetura(rs));
+				list.add(instanciaTudo(rs));
 			}
 
 		} catch (SQLException e) {
@@ -180,28 +149,127 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		return list;
 	}
 	
-	private Arquitetura instantiateImagens(ResultSet rs) throws SQLException{
+	@Override
+	public List<Arquitetura> getArqSimpTitulo(String titulo) {
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		String sql = "SELECT arq.id_arq, arq.titulo, arq.autor, arq.descricao, arq.localidade, "
+				+ " img.id_img, img.path_img, img.desc_img, img.id_arq FROM arquitetura AS arq "
+				+ "INNER JOIN img_path AS img ON arq.id_arq = img.id_arq WHERE arq.titulo LIKE CONCAT( '%',?,'%')";
+		try {
+			conn = DB.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, titulo);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				list.add(instanciaArqSimp(rs));
+			}			
+				
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		
+		return list;
+		
+	}
+	
+	@Override
+	public List<Arquitetura> getArqSimpAutor(String autor) {
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		String sql = "SELECT arq.id_arq, arq.titulo, arq.autor, arq.descricao, arq.localidade, "
+				+ " img.id_img, img.path_img, img.desc_img, img.id_arq FROM arquitetura AS arq INNER JOIN img_path AS img "
+				+ "ON arq.id_arq = img.id_arq WHERE arq.autor LIKE CONCAT( '%',?,'%')";
+
+		try {
+			conn = DB.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, autor);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				list.add(instanciaArqSimp(rs));
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+
+		return list;
+	}
+	
+	@Override
+	public List<Arquitetura> getArqSimpLocal(String local){
+		List<Arquitetura> list = new ArrayList<Arquitetura>();
+		String sql = "SELECT arq.id_arq, arq.titulo, arq.autor, arq.descricao, arq.localidade, "
+				+ " img.id_img, img.path_img, img.desc_img, img.id_arq FROM arquitetura AS arq INNER JOIN img_path AS img "
+				+ "ON arq.id_arq = img.id_arq WHERE arq.localidade LIKE CONCAT( '%',?,'%')";
+		try {
+			conn = DB.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, local);
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				list.add(instanciaArqSimp(rs));
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		
+		return list;
+	}
+
+	
+	private Arquitetura instanciaImagens(ResultSet rs) throws SQLException{
 		Arquitetura arq = new Arquitetura();
 		arq.setId_img(rs.getInt("id_img"));
 		arq.setImg_path(rs.getString("path_img"));
 		arq.setImg_desc(rs.getString("desc_img"));
+		arq.setId_arq(rs.getInt("id_arq"));
 		return arq;
 	}
 
-	private Arquitetura instantiateArquitetura(ResultSet rs) throws SQLException {
+	private Arquitetura instanciaArqSimp(ResultSet rs) throws SQLException {
 		Arquitetura arq = new Arquitetura();
 		arq.setId_arq(rs.getInt("id_arq"));
-		arq.setNome(rs.getString("nome"));
-		arq.setCategoria(rs.getString("categoria"));
-		arq.setTipo(rs.getString("tipo"));
+		arq.setTitulo(rs.getString("titulo"));
 		arq.setAutor(rs.getString("autor"));
-		arq.setMaterial(rs.getString("material"));
-		arq.setAno(rs.getInt("ano"));
 		arq.setDescricao(rs.getString("descricao"));
+		arq.setLocalidade(rs.getString("localidade"));
 		arq.setId_img(rs.getInt("id_img"));
 		arq.setImg_path(rs.getString("path_img"));
 		arq.setImg_desc(rs.getString("desc_img"));
 		return arq;
 	}
 	
+	private Arquitetura instanciaTudo(ResultSet rs) throws SQLException{
+		Arquitetura arq = new Arquitetura();
+		arq.setId_arq(rs.getInt("id_arq"));
+		arq.setTitulo(rs.getString("titulo"));
+		arq.setAutor(rs.getString("autor"));
+		arq.setDescricao(rs.getString("descricao"));
+		arq.setCategoria(rs.getString("categoria"));
+		arq.setTipo(rs.getString("tipo"));
+		arq.setLocalidade(rs.getString("localidade"));
+		arq.setAno(rs.getInt("ano"));		
+		arq.setId_img(rs.getInt("id_img"));
+		arq.setImg_path(rs.getString("path_img"));
+		arq.setImg_desc(rs.getString("desc_img"));
+		arq.setTxt_path(rs.getString("path_txt"));
+		return arq;
+	}
+
 }

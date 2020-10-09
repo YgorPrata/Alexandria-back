@@ -9,7 +9,7 @@ import java.util.List;
 import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ArteDao;
-import com.restapp.model.entities.Arte;
+import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Arte;
 
 public class ArteDaoJDBC extends DB implements ArteDao {
@@ -26,8 +26,8 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 
 	@Override
 	public Arte insert(Arte arte, String arqnome) {
-		String sql =("SELECT arquitetura.id_arq, arquitetura.nome FROM arquitetura INNER JOIN arte"
-				+ " ON arquitetura.id_arq = arte.id_arq WHERE arquitetura.nome=?");
+		String sql =("SELECT arq.id_arq, arq.titulo FROM arquitetura AS arq INNER JOIN arte"
+				+ " ON arq.id_arq = arte.id_arq WHERE arq.titulo=?");
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
@@ -35,27 +35,26 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 			ResultSet rsarq = ps.executeQuery();
 
 			if (rsarq.next()) {
-				rsarq.getInt("arquitetura.id_arq");
-				rsarq.getString("arquitetura.nome");
-				System.out.println("A arquitetura " + rsarq.getString("arquitetura.nome") + 
-						" existe na base, e o id é: "+ rsarq.getInt("arquitetura.id_arq") + ""
+				rsarq.getInt("arq.id_arq");
+				rsarq.getString("arq.titulo");
+				System.out.println("A arquitetura " + rsarq.getString("arq.titulo") + 
+						" existe na base, e o id é: "+ rsarq.getInt("arq.id_arq") + ""
 								+ " . Adicionando a nova obra na base de dados");
 
 				try {
 					conn = DB.getConnection();
-					ps = conn.prepareStatement("INSERT INTO arte (categoria, titulo, autor, tipo, material, "
-							+ " tecnica, data, ano, descricao, id_arq) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? "
-							+ rsarq.getInt("arquitetura.id_arq") + ")", st.RETURN_GENERATED_KEYS);
+					ps = conn.prepareStatement("INSERT INTO arte (titulo, autor, descricao, categoria, tipo "
+							+ " tecnica, ano, id_arq) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? "
+							+ rsarq.getInt("arq.id_arq") + ")", st.RETURN_GENERATED_KEYS);
 
-					ps.setString(1, arte.getCategoria());
-					ps.setString(2, arte.getTitulo());
-					ps.setString(3, arte.getAutor());
-					ps.setString(4, arte.getTipo());
-					ps.setString(5, arte.getMaterial());
+					ps.setString(1, arte.getTitulo());
+					ps.setString(2, arte.getAutor());
+					ps.setString(3, arte.getDescricao());
+					ps.setString(4, arte.getCategoria());					
+					ps.setString(5, arte.getTipo());					
 					ps.setString(6, arte.getTecnica());
 					ps.setInt(7, arte.getAno());
-					ps.setString(8, arte.getDescricao());
-
+					
 					ps.executeUpdate();
 
 					rs = ps.getGeneratedKeys();
@@ -70,7 +69,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 							arte.setId_arte(id);
 						}
 					} else {
-						throw new DbException("Erro incomum. A conclusão do cadastro não foi efetuada.");
+						throw new DbException("Erro. A conclusão do cadastro não foi efetuada.");
 					}
 
 				} catch (SQLException e) {
@@ -146,14 +145,16 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 
 	private Arte instantiateArte(ResultSet rs) throws SQLException {
 		Arte arte = new Arte();
+		Arquitetura arq = new Arquitetura();
+
 		arte.setId_arte(rs.getInt("id_arte"));
 		arte.setAutor(rs.getString("autor"));
-		arte.setTitulo(rs.getString("titulo"));
 		arte.setDescricao(rs.getString("descricao"));
-		arte.setAno(rs.getInt("ano"));
 		arte.setCategoria(rs.getString("categoria"));
-		arte.setMaterial(rs.getString("material"));
 		arte.setTipo(rs.getString("tipo"));
+		arte.setTecnica(rs.getString("tecnica"));		
+		arte.setAno(rs.getInt("ano"));		
+		arq.setId_arq(rs.getInt("id_arq"));		
 		return arte;
 	}
 }

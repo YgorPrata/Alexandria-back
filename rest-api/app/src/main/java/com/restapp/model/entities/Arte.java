@@ -6,32 +6,29 @@ import java.util.Date;
 public class Arte {
 	
 	private Integer id_arte;
-	private String categoria;
 	private String titulo;
-	private String tipo;
 	private String autor;
-	private String material;
+	private String descricao;
+	private String categoria;
+	private String tipo;
 	private String tecnica;
 	private Integer ano;
-	private String descricao;
 	
-	private Arquitetura arq;
+	private Integer id_arq;
 	
 	public Arte(){
 		
 	}
-	
-	public Arte(String categoria, String titulo, String tipo, String autor, String material,
-			String tecnica, Integer ano, String descricao) {
 
-		this.categoria = categoria;
+	public Arte(String titulo, String autor, String descricao, String categoria, String tipo, String tecnica,
+			Integer ano) {
 		this.titulo = titulo;
-		this.tipo = tipo;
 		this.autor = autor;
-		this.material = material;
+		this.descricao = descricao;
+		this.categoria = categoria;
+		this.tipo = tipo;
 		this.tecnica = tecnica;
 		this.ano = ano;
-		this.descricao = descricao;
 	}
 
 	public Integer getId_arte() {
@@ -42,28 +39,12 @@ public class Arte {
 		this.id_arte = id_arte;
 	}
 
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
-
 	public String getTitulo() {
 		return titulo;
 	}
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 
 	public String getAutor() {
@@ -74,12 +55,28 @@ public class Arte {
 		this.autor = autor;
 	}
 
-	public String getMaterial() {
-		return material;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setMaterial(String material) {
-		this.material = material;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public String getTecnica() {
@@ -90,7 +87,6 @@ public class Arte {
 		this.tecnica = tecnica;
 	}
 
-
 	public Integer getAno() {
 		return ano;
 	}
@@ -99,20 +95,12 @@ public class Arte {
 		this.ano = ano;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public Integer getId_arq() {
+		return id_arq;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public Arquitetura getArq() {
-		return arq;
-	}
-
-	public void setArq(Arquitetura arq) {
-		this.arq = arq;
+	public void setId_arq(Integer id_arq) {
+		this.id_arq = id_arq;
 	}
 
 	@Override
@@ -142,8 +130,10 @@ public class Arte {
 
 	@Override
 	public String toString() {
-		return "Arte [id_arte=" + id_arte + ", categoria=" + categoria + ", titulo=" + titulo + ", tipo=" + tipo + ", autor="
-				+ autor + ", material=" + material + ", tecnica=" + tecnica + ", descricao=" + descricao + "]";
+		return "Arte [id_arte=" + id_arte + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
+				+ ", categoria=" + categoria + ", tipo=" + tipo + ", tecnica=" + tecnica + ", ano=" + ano + ", id_arq="
+				+ id_arq + "]";
 	}
+	
 		
 }
