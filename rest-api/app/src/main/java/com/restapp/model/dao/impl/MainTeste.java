@@ -1,16 +1,53 @@
 package com.restapp.model.dao.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Arte;
-
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainTeste {
 
 	public static void main(String[] args) throws Exception {
+		
+		/*Arquitetura arq = new Arquitetura("titulo", "autor", "descricao", null, null, "localidade", null);
+		List<Img> list = new ArrayList<Img>();
+		
+		list.add(new Img("imgs/1234.jpg", "descricao1", arq, null, null));
+		list.add(new Img("imgs/123.jpg", "descricao2", null, null, null));
+		list.add(new Img("imgs/12.jpg", "descricao3", null, null, null));
+		list.add(new Img("imgs/1.jpg", "descricao4", null, null, null));
+		
+		
+		
+		for(Img img : list) {
+			//System.out.println(img.getArq());
+			//System.out.println(img.getId_img());
+			//System.out.println(img.getPath_img());
+			//System.out.println(img.getDesc_img());	
+			
+			System.out.println(img);
+		}*/
+		
+		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		
+		//System.out.println(arqdao.getArqSimpTitulo("museu"));
+		
+		
+		
+		//CRIPTOGRAFANDO LADO SERVIDOR
+		MessageDigest m = MessageDigest.getInstance("MD5");
+		String password = "usersenha";
+		m.reset(); // <---- Reseta antes de fazer o password
+		m.update(password.getBytes(), 0, password.length());
+		BigInteger password1 = new BigInteger(1, m.digest());
+		password = String.format("%1$032x", password1);
+
+		System.out.println(password);
+		
+	
+
+		
+	
+			
 		
 		/*Connection conn = null;
 		Statement st = null;
@@ -152,7 +189,8 @@ public class MainTeste {
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		
 		//System.out.println(arqdao.getArqSimpLocal("rio de janeiro"));
-				
+		
+		
 
 	}
 	

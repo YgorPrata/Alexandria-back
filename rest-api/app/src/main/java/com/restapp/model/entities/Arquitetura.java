@@ -1,9 +1,5 @@
 package com.restapp.model.entities;
 
-import java.sql.Date;
-
-import javax.json.bind.annotation.JsonbDateFormat;
-
 public class Arquitetura {
 	
 	
@@ -15,12 +11,8 @@ public class Arquitetura {
 	private String tipo;
 	private String localidade;
 	private Integer ano;
-	
-	private Integer id_img;
-	private String img_path;
-	private String img_desc;
-	private String txt_path;
-	
+
+		
 	public Arquitetura() {
 		
 	}
@@ -34,6 +26,7 @@ public class Arquitetura {
 		this.localidade = localidade;
 		this.ano = ano;
 	}
+	
 
 	public Integer getId_arq() {
 		return id_arq;
@@ -99,38 +92,7 @@ public class Arquitetura {
 		this.ano = ano;
 	}
 
-	public Integer getId_img() {
-		return id_img;
-	}
-
-	public void setId_img(Integer id_img) {
-		this.id_img = id_img;
-	}
-
-	public String getImg_path() {
-		return img_path;
-	}
-
-	public void setImg_path(String img_path) {
-		this.img_path = img_path;
-	}
-
-	public String getImg_desc() {
-		return img_desc;
-	}
-
-	public void setImg_desc(String img_desc) {
-		this.img_desc = img_desc;
-	}
-
-	public String getTxt_path() {
-		return txt_path;
-	}
-
-	public void setTxt_path(String txt_path) {
-		this.txt_path = txt_path;
-	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -159,10 +121,13 @@ public class Arquitetura {
 	@Override
 	public String toString() {
 		return "Arquitetura [id_arq=" + id_arq + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
-				+ ", categoria=" + categoria + ", tipo=" + tipo + ", localidade=" + localidade + ", ano=" + ano
-				+ ", id_img=" + id_img + ", img_path=" + img_path + ", img_desc=" + img_desc + ", txt_path=" + txt_path
-				+ "]";
+				+ ", categoria=" + categoria + ", tipo=" + tipo + ", localidade=" + localidade + ", ano=" + ano + "]";
 	}
+
+	
+
+	
+	
 
 	
 

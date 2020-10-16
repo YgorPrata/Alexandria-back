@@ -35,17 +35,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.restapp.db.DbException;
+import com.restapp.model.dao.PathDao;
 import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Img;
+import com.restapp.model.entities.Txt;
 
 @Path("/produto")
-public class ArquiteturaResource {
+public class ArquiteturaResource implements PathDao {
 
 	ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
-	String abspathimg = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Upload/WebContent/imgs/";
-	String abspathtxt = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Upload/WebContent/txt/";
-	String pathimg = "imgs/";
-	String pathtxt = "txt/";
 
 	@GET
 	@Path("/arquitetura")
@@ -95,7 +94,7 @@ public class ArquiteturaResource {
 		}
 	}
 	
-	@GET
+	/*@GET
 	@Path("/arquitetura/buscararq/{id_arq}")
 	@Produces({"images/png", "images/jpg"})
 	public Response getById(@PathParam("id_arq") Integer id_arq) throws JsonProcessingException {
@@ -110,9 +109,9 @@ public class ArquiteturaResource {
 			System.out.println(aux.getImg_path());
 						
 			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-			String jsondesc = ow.writeValueAsString(aux.getImg_desc());
+			//String jsondesc = ow.writeValueAsString(aux.getImg_desc());
 			
-			File file = new File(aux.getImg_path());
+			//File file = new File(aux.getImg_path());
 			System.out.println("IMAGEM: "+file);
 		      if (!file.exists()) {
 		    	  return Response.status(404).build();
@@ -133,7 +132,7 @@ public class ArquiteturaResource {
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();			
 		}
 
-	}
+	}*/
 	
 	@POST
 	@Path("/arquitetura/cadastro")
@@ -150,76 +149,60 @@ public class ArquiteturaResource {
 			@FormDataParam("tipo") String tipo,
 			@FormDataParam("localidade") String localidade,
 			@FormDataParam("ano") Integer ano) throws IOException{
-		
-			List<String> listarqnome = new ArrayList<String>();
-			List<String> listdescimg = new ArrayList<String>();
+	
+			List<Img> infoImg = new ArrayList<Img>();
 			String nomesImgs;
 			String nomeTxt;
-			String rltImgs;
-			String rltTxt;
 			String auxDesc;
 			//tratando os dados recebidos por parametro e enviando para salvar (saveFile)
 			for (int i = 0; i < inputStream.size(); i++) {
 				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();				
 				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();				
-				listarqnome.add(pathimg+nomesImgs);
-				
-
-				
+				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();									
 				//lista para as descricoes de cada imagem
 				auxDesc = descricao2.get(i);
-				listdescimg.add(auxDesc);
-				
-				File file = new File(abspathimg+nomesImgs);				
-				OutputStream ops = new FileOutputStream(file);				
-				try {					
-					if(nomesImgs.endsWith(".jpg") || nomesImgs.startsWith(".png")){
-						//File file = new File(nomesImgs);
-						//OutputStream ops = new FileOutputStream(file);						
-						int read = 0;
-						byte[] bytes = new byte[8192];
-						while ((read = inp.read(bytes)) != -1) {
-							System.out.println("FILE SIZE: "+file.length());
-							ops.write(bytes, 0, read);
-						}			
-						ops.flush();
-						ops.close();
-					}
-						
-				} catch (IOException e) {
-					e.printStackTrace();
-					File delfile = file;
-					delfile.delete();
-										
+				infoImg.add(new Img(PathDao.pathimg+nomesImgs, auxDesc, null, null, null));
+								
+				try {	
+					File file = new File(PathDao.abspathimg+nomesImgs);					
+					OutputStream ops = new FileOutputStream(file);						
+					int read = 0;
+					byte[] bytes = new byte[8192];						
+					while ((read = inp.read(bytes)) != -1) {
+						ops.write(bytes, 0, read);							
+					}			
+					ops.flush();
+					ops.close();						
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
 				}
 			}	
 			
 			//tratando o único text file
+			Txt txt;
 			nomeTxt = UUID.randomUUID()+fileDisposition2.getFileName();
-
-			try {
-				if(nomeTxt.endsWith(".txt") || nomeTxt.endsWith(".docx") || nomeTxt.endsWith(".pdf")){
-					inputStream2 = new BufferedInputStream(inputStream2);
-					File file = new File(abspathtxt+nomeTxt);
-					OutputStream ops2 = new FileOutputStream(file);
-					int read = 0;
-					byte[] bytes = new byte[1024];
-					
-					while ((read = inputStream2.read(bytes)) != -1) {
-						ops2.write(bytes, 0, read);
-					}
-					ops2.flush();
-					ops2.close();						
-				}				
-			} catch (IOException e) {
+			txt = new Txt(PathDao.pathtxt+nomeTxt);
+			try {				
+				inputStream2 = new BufferedInputStream(inputStream2);
+				File file = new File(PathDao.abspathtxt+nomeTxt);
+				OutputStream ops2 = new FileOutputStream(file);
+				int read = 0;
+				byte[] bytes = new byte[8192];
+				
+				while ((read = inputStream2.read(bytes)) != -1) {
+					ops2.write(bytes, 0, read);
+				}
+				ops2.flush();
+				ops2.close();						
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			//montando obj arquitetura para inserir no banco			
+					
 			Arquitetura arq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano);		
 			try {
-				arqdao.insert(arq, listarqnome, listdescimg, pathtxt+nomeTxt);					
+				arqdao.insert(arq, infoImg, txt);					
 				return Response.status(200).build();
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -228,9 +211,7 @@ public class ArquiteturaResource {
 		
 	}
 	
-
 	
-			
 	/*@POST
 	@Path("/arquitetura/cadastro")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
