@@ -6,27 +6,19 @@ public class Img {
 	private String path_img;
 	private String desc_img;
 	
-	
-	private Arquitetura arq;
-	private Arte arte;
-	private Livro livro;
-	
 	public Img() {
 
 	}
 
 	
 
-	public Img(String path_img, String desc_img, Arquitetura arq, Arte arte, Livro livro) {
+	public Img(Integer id_img, String path_img, String desc_img) {
+		this.id_img = id_img;
 		this.path_img = path_img;
 		this.desc_img = desc_img;
-		this.arq = arq;
-		this.arte = arte;
-		this.livro = livro;
 	}
 
-
-
+	
 	public Integer getId_img() {
 		return id_img;
 	}
@@ -59,56 +51,42 @@ public class Img {
 	public void setDesc_img(String desc_img) {
 		this.desc_img = desc_img;
 	}
+	
+		
 
-	public Arquitetura getArq() {
-		return arq;
-	}
-
-
-
-	public void setArq(Arquitetura arq) {
-		this.arq = arq;
-	}
-
-
-
-	public Arte getArte() {
-		return arte;
-	}
-
-
-
-	public void setArte(Arte arte) {
-		this.arte = arte;
-	}
-
-
-
-	public Livro getLivro() {
-		return livro;
-	}
-
-
-
-	public void setLivro(Livro livro) {
-		this.livro = livro;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id_img == null) ? 0 : id_img.hashCode());
+		return result;
 	}
 
 
 
 	@Override
-	public String toString() {
-		return "Img [id_img=" + id_img + ", path_img=" + path_img + ", desc_img=" + desc_img + ", arq=" + arq
-				+ ", arte=" + arte + ", livro=" + livro + "]";
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Img other = (Img) obj;
+		if (id_img == null) {
+			if (other.id_img != null)
+				return false;
+		} else if (!id_img.equals(other.id_img))
+			return false;
+		return true;
+
 	}
 
+	@Override
+	public String toString() {
+		return "Img [id_img=" + id_img + ", path_img=" + path_img + ", desc_img=" + desc_img + "]";
+		}
 
-	
 
+	}
 
-
-	
-	
-	
-	
-}

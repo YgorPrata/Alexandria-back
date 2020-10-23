@@ -2,8 +2,6 @@ package com.restapp.resource;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,34 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.FileUtils;
-import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.glassfish.jersey.media.multipart.MultiPart;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.PathDao;
 import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Img;
+import com.restapp.model.entities.Produto;
 import com.restapp.model.entities.Txt;
+
 
 @Path("/produto")
 public class ArquiteturaResource implements PathDao {
@@ -47,50 +39,84 @@ public class ArquiteturaResource implements PathDao {
 	ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 
 	@GET
-	@Path("/arquitetura")
+	@Path("arquitetura/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() throws Exception {
 		if (arqdao.getAll().size() > 0) {
 			return Response.status(200).entity(arqdao.getAll()).build();
 		} else {
-			return Response.status(404).entity("Não há nenhum registro para essa categoria").build();
+			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
 		}
 	}
 
 	@GET
-	@Path("/arquitetura/buscaautor/")
+	@Path("produto-simples/arquitetura/buscaautor/")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getArqSimples(@QueryParam(value = "autor") String autor) {
 		System.out.println("AUTOR MANDADO PELO CLIENT: "+autor);
 		if (arqdao.getArqSimpAutor(autor).size() > 0) {
 			return Response.status(200).entity(arqdao.getArqSimpAutor(autor)).build();
 		} else {
-			return Response.status(404).entity("Não há nenhum registro com esse nome.").build();
+			return Response.status(200).entity("Não há nenhum registro com esse nome.").build();
 		}
 
 	}
 	
 	@GET
-	@Path("/arquitetura/buscatitulo/")
+	@Path("produto-simples/arquitetura/buscatitulo/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimpTitulo(@QueryParam(value = "titulo") String titulo) {
-		System.out.println("TITULO MANDADO PELO CLIENT: "+titulo);
-		if (arqdao.getArqSimpTitulo(titulo).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimpTitulo(titulo)).build();
+	public Response getArqSimpTitulo(@QueryParam(value = "titulo") String titulostr) {
+		System.out.println("TITULO MANDADO PELO CLIENT: "+titulostr);
+		if (arqdao.getArqSimpTitulo(titulostr).size() > 0) {
+			return Response.status(200).entity(arqdao.getArqSimpTitulo(titulostr)).build();
 		} else {
-			return Response.status(404).entity("Não há nenhum registro com esse titulo.").build();
+			return Response.status(200).entity("Não há nenhum registro com esse titulo.").build();
 		}
 	}
 	
 	@GET
-	@Path("/arquitetura/buscalocal/")
+	@Path("produto-simples/arquitetura/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getArqSimp(@QueryParam(value = "tipo") String tipo, @QueryParam(value = "titulo") String titulo,
+			@QueryParam(value = "autor") String autor, @QueryParam(value = "localidade") String localidade) {
+		if(tipo == "titulo") {
+			System.out.println("TITULO MANDADO PELO CLIENT: "+titulo);
+			if (arqdao.getArqSimpTitulo(titulo).size() > 0) {
+				return Response.status(200).entity(arqdao.getArqSimpTitulo(titulo)).build();
+			} else {
+				return Response.status(200).entity("Não há nenhum registro com esse titulo.").build();
+			}
+		}
+		else if(tipo == "autor") {
+			System.out.println("AUTOR MANDADO PELO CLIENT: "+autor);
+			if (arqdao.getArqSimpAutor(autor).size() > 0) {
+				return Response.status(200).entity(arqdao.getArqSimpAutor(autor)).build();
+			} else {
+				return Response.status(200).entity("Não há nenhum registro com esse(a) autor.").build();
+			}
+		}
+		else if(tipo == "localidade") {
+			System.out.println("LOCALIDADE MANDADO PELO CLIENT: "+localidade);
+			if (arqdao.getArqSimpTitulo(localidade).size() > 0) {
+				return Response.status(200).entity(arqdao.getArqSimpLocal(localidade)).build();
+			} else {
+				return Response.status(200).entity("Não há nenhum registro com essa localidade.").build();
+			}
+		}
+		else {
+			return Response.status(500).build();
+		}
+	}
+	
+	@GET
+	@Path("produto-simples/arquitetura/buscalocal/")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getArqSimpLocal(@QueryParam(value = "localidade") String local) {
 		System.out.println("LOCALIDADE MANDADO PELO CLIENT: "+local);
 		if (arqdao.getArqSimpLocal(local).size() > 0) {
 			return Response.status(200).entity(arqdao.getArqSimpLocal(local)).build();
 		} else {
-			return Response.status(404).entity("Não há nenhum registro com essa localidade.").build();
+			return Response.status(200).entity("Não há nenhum registro com essa localidade.").build();
 		}
 	}
 	
@@ -148,61 +174,71 @@ public class ArquiteturaResource implements PathDao {
 			@FormDataParam("categoria") String categoria,
 			@FormDataParam("tipo") String tipo,
 			@FormDataParam("localidade") String localidade,
-			@FormDataParam("ano") Integer ano) throws IOException{
+			@FormDataParam("ano") Integer ano,
+			@FormDataParam("curador") String curador,
+			@FormDataParam("area") Double area) throws IOException{
 	
 			List<Img> infoImg = new ArrayList<Img>();
 			String nomesImgs;
 			String nomeTxt;
 			String auxDesc;
-			//tratando os dados recebidos por parametro e enviando para salvar (saveFile)
+
 			for (int i = 0; i < inputStream.size(); i++) {
 				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();				
 				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();									
+				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();
 				//lista para as descricoes de cada imagem
 				auxDesc = descricao2.get(i);
-				infoImg.add(new Img(PathDao.pathimg+nomesImgs, auxDesc, null, null, null));
-								
-				try {	
-					File file = new File(PathDao.abspathimg+nomesImgs);					
-					OutputStream ops = new FileOutputStream(file);						
-					int read = 0;
-					byte[] bytes = new byte[8192];						
-					while ((read = inp.read(bytes)) != -1) {
-						ops.write(bytes, 0, read);							
-					}			
-					ops.flush();
-					ops.close();						
-				}						
-				catch (IOException e) {
-					e.printStackTrace();												
+				
+				if(nomesImgs.endsWith(".jpg") || nomesImgs.endsWith(".jpeg") || nomesImgs.endsWith(".png")) {
+					infoImg.add(new Img(null, PathDao.pathimg+nomesImgs, auxDesc));					
+					try {	
+						File file = new File(PathDao.abspathimg+nomesImgs);					
+						OutputStream ops = new FileOutputStream(file);						
+						int read = 0;
+						byte[] bytes = new byte[8192];						
+						while ((read = inp.read(bytes)) != -1) {
+							ops.write(bytes, 0, read);							
+						}			
+						ops.flush();
+						ops.close();						
+					}						
+					catch (IOException e) {
+						e.printStackTrace();												
+					}
 				}
-			}	
+			}
+		
 			
 			//tratando o único text file
 			Txt txt;
 			nomeTxt = UUID.randomUUID()+fileDisposition2.getFileName();
-			txt = new Txt(PathDao.pathtxt+nomeTxt);
-			try {				
-				inputStream2 = new BufferedInputStream(inputStream2);
-				File file = new File(PathDao.abspathtxt+nomeTxt);
-				OutputStream ops2 = new FileOutputStream(file);
-				int read = 0;
-				byte[] bytes = new byte[8192];
-				
-				while ((read = inputStream2.read(bytes)) != -1) {
-					ops2.write(bytes, 0, read);
-				}
-				ops2.flush();
-				ops2.close();						
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			if(nomeTxt.endsWith(".pdf") || nomeTxt.endsWith(".docx") || nomeTxt.endsWith(".txt")) {
+				txt = new Txt(PathDao.pathtxt+nomeTxt);
+				try {				
+					inputStream2 = new BufferedInputStream(inputStream2);
+					File file = new File(PathDao.abspathtxt+nomeTxt);
+					OutputStream ops2 = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];
 					
-			Arquitetura arq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano);		
+					while ((read = inputStream2.read(bytes)) != -1) {
+						ops2.write(bytes, 0, read);
+					}
+					ops2.flush();
+					ops2.close();						
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				txt = new Txt();
+			}
+													
 			try {
-				arqdao.insert(arq, infoImg, txt);					
+				Produto prodarq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, curador, area, null, null);
+				arqdao.insert(prodarq, infoImg, txt);					
 				return Response.status(200).build();
 			} catch (DbException e) {
 				e.printStackTrace();

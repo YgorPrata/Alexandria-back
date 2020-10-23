@@ -1,12 +1,57 @@
 package com.restapp.model.dao.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Img;
+import com.restapp.model.entities.Produto;
 
 public class MainTeste {
 
 	public static void main(String[] args) throws Exception {
+		
+		ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		
+		arqdao.getArqSimpTitulo("museu");
+		
+		/*List<Produto> listarq = new ArrayList<>(); 
+		List<Img> listimg = new ArrayList<>();
+		listimg.add(new Img(2, "c:/imgs/imagem1.jpg", "descricao1", null));
+		listimg.add(new Img(3, "c:/imgs/imagem2.jpg", "descricao2", null));
+		listimg.add(new Img(4, "c:/imgs/imagem3.jpg", "descricao3", null));
+		listimg.add(new Img(5, "c:/imgs/imagem4.jpg", "descricao4", null));		
+		listarq.add(new Arquitetura("Titulo1", "Autor1", "desricacao1", "categoria1", "tipo1", "localidad1", 1, listimg ,"curador1", 500.0, null, null));
+		for(Produto arq : listarq) {
+			System.out.println("Lista de imagem 1: "+arq.getImg());
+		}
+		
+		listimg.clear();
+		listarq.clear();
+		listimg.add(new Img(6, "c:/imgs/imagem5.jpg", "descricao5", null));
+		listimg.add(new Img(7, "c:/imgs/imagem6.jpg", "descricao6", null));
+		listimg.add(new Img(8, "c:/imgs/imagem7.jpg", "descricao7", null));
+		listimg.add(new Img(9, "c:/imgs/imagem8.jpg", "descricao8", null));
+		listarq.add(new Arquitetura("Titulo2", "Autor2", "desricacao2", "categoria2", "tipo2", "localidad2", 2, listimg ,"curador2", 1000.0, null, null));
+		
+		for(Produto arq : listarq) {
+			System.out.println("Lista de imagem 2: "+arq.getImg());
+		}*/
+		
+		
+		
+		/*Produto prod = new Arquitetura();
+		List<Img> listimg = new ArrayList<>();
+		listimg.add(new Img(null, "c:/img/img1.jpg", "descricao", null));
+		listimg.add(new Img(null, "c:/img/img2.jpg", "descricao2", null));
+
+		prod.setImg(listimg);
+		
+		System.out.println("PROD IMGS: "+prod.getImg());
+		*/
+		
+		
+		
 		
 		/*Arquitetura arq = new Arquitetura("titulo", "autor", "descricao", null, null, "localidade", null);
 		List<Img> list = new ArrayList<Img>();
@@ -34,19 +79,26 @@ public class MainTeste {
 		
 		
 		//CRIPTOGRAFANDO LADO SERVIDOR
-		MessageDigest m = MessageDigest.getInstance("MD5");
+		/*MessageDigest m = MessageDigest.getInstance("MD5");
 		String password = "usersenha";
 		m.reset(); // <---- Reseta antes de fazer o password
 		m.update(password.getBytes(), 0, password.length());
 		BigInteger password1 = new BigInteger(1, m.digest());
 		password = String.format("%1$032x", password1);
 
-		System.out.println(password);
+		System.out.println(password);*/
+			
+		//List<Produto> list = new ArrayList<>();
+		//Arquitetura arq = new Arquitetura();
+		//List<Img> listimg = new ArrayList<>();
+		/*
+		list.add(new Arquitetura("Museu do Amanha", "Prefeitura", "Museu do Rio de Janeiro", "Arquitetura", "Moderno", "Rio de Janeiro", 2015, "Curador", 10455.35, null, null));
+		list.add(new Arquitetura("Museu do Exercito", "Exercito", "Museu do Exercito Brasileiro no Rio de Janeiro", "Arquitetura", "Moderno", "Rio de Janeiro", 2000, "Curador", 2250.32, null, null));
 		
-	
-
-		
-	
+		for(Produto prod : list) {
+			System.out.println("Prod: "+prod+"\nList: "+list);
+			System.out.println("\n\n");
+		}*/
 			
 		
 		/*Connection conn = null;

@@ -1,32 +1,29 @@
 package com.restapp.model.entities;
 
-public class Arquitetura {
+import java.util.List;
+
+public class Arquitetura extends Produto{
 	
 	
 	private Integer id_arq;
-	private String titulo;
-	private String autor;
-	private String descricao;
-	private String categoria;
-	private String tipo;
-	private String localidade;
-	private Integer ano;
-
-		
+	private String curador;
+	private Double area;
+	private Arte arte;
+	private Livro livro;
+			
 	public Arquitetura() {
-		
+		super();
 	}
 
-	public Arquitetura(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano) {		
-		this.titulo = titulo;
-		this.autor = autor;
-		this.descricao = descricao;
-		this.categoria = categoria;
-		this.tipo = tipo;
-		this.localidade = localidade;
-		this.ano = ano;
+	public Arquitetura(String titulo, String autor, String descricao, String categoria, String tipo, String localidade,
+			Integer ano, List<Img> img, String curador, Double area, Arte arte, Livro livro) {
+		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
+		this.curador = curador;
+		this.area = area;
+		this.arte = arte;
+		this.livro = livro;
 	}
-	
+
 
 	public Integer getId_arq() {
 		return id_arq;
@@ -36,76 +33,61 @@ public class Arquitetura {
 		this.id_arq = id_arq;
 	}
 
-	public String getTitulo() {
-		return titulo;
+
+	public String getCurador() {
+		return curador;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+
+	public void setCurador(String curador) {
+		this.curador = curador;
 	}
 
-	public String getAutor() {
-		return autor;
+
+	public Double getArea() {
+		return area;
 	}
 
-	public void setAutor(String autor) {
-		this.autor = autor;
+
+	public void setArea(Double area) {
+		this.area = area;
 	}
 
-	public String getDescricao() {
-		return descricao;
+
+	public Arte getArte() {
+		return arte;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-	
-	public String getCategoria() {
-		return categoria;
-	}
-	
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
+
+	public void setArte(Arte arte) {
+		this.arte = arte;
 	}
 
-	public String getTipo() {
-		return tipo;
+
+	public Livro getLivro() {
+		return livro;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+
+	public void setLivro(Livro livro) {
+		this.livro = livro;
 	}
 
-	public String getLocalidade() {
-		return localidade;
-	}
 
-	public void setLocalidade(String localidade) {
-		this.localidade = localidade;
-	}
-
-	public Integer getAno() {
-		return ano;
-	}
-
-	public void setAno(Integer ano) {
-		this.ano = ano;
-	}
-
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((id_arq == null) ? 0 : id_arq.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -118,12 +100,22 @@ public class Arquitetura {
 		return true;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Arquitetura [id_arq=" + id_arq + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
-				+ ", categoria=" + categoria + ", tipo=" + tipo + ", localidade=" + localidade + ", ano=" + ano + "]";
+		return "Arquitetura [id_arq=" + id_arq + ", curador=" + curador + ", area=" + area + ", arte=" + arte
+				+ ", livro=" + livro + "]";
 	}
 
+
+	
+
+
+	
+
+
+	
+	
 	
 
 	
