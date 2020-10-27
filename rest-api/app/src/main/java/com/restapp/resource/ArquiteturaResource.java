@@ -24,9 +24,11 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import com.restapp.db.DB;
 import com.restapp.db.DbException;
+import com.restapp.model.dao.ArquiteturaDao;
+import com.restapp.model.dao.DaoFactory;
 import com.restapp.model.dao.PathDao;
-import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Img;
 import com.restapp.model.entities.Produto;
@@ -34,9 +36,9 @@ import com.restapp.model.entities.Txt;
 
 
 @Path("/produto")
-public class ArquiteturaResource implements PathDao {
+public class ArquiteturaResource extends DB implements PathDao  {
 
-	ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+	ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
 
 	@GET
 	@Path("arquitetura/")
@@ -48,77 +50,20 @@ public class ArquiteturaResource implements PathDao {
 			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
 		}
 	}
-
-	@GET
-	@Path("produto-simples/arquitetura/buscaautor/")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimples(@QueryParam(value = "autor") String autor) {
-		System.out.println("AUTOR MANDADO PELO CLIENT: "+autor);
-		if (arqdao.getArqSimpAutor(autor).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimpAutor(autor)).build();
-		} else {
-			return Response.status(200).entity("Não há nenhum registro com esse nome.").build();
-		}
-
-	}
 	
 	@GET
-	@Path("produto-simples/arquitetura/buscatitulo/")
+	@Path("buscasimples/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimpTitulo(@QueryParam(value = "titulo") String titulostr) {
-		System.out.println("TITULO MANDADO PELO CLIENT: "+titulostr);
-		if (arqdao.getArqSimpTitulo(titulostr).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimpTitulo(titulostr)).build();
-		} else {
-			return Response.status(200).entity("Não há nenhum registro com esse titulo.").build();
-		}
-	}
-	
-	@GET
-	@Path("produto-simples/arquitetura/")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimp(@QueryParam(value = "tipo") String tipo, @QueryParam(value = "titulo") String titulo,
-			@QueryParam(value = "autor") String autor, @QueryParam(value = "localidade") String localidade) {
-		if(tipo == "titulo") {
-			System.out.println("TITULO MANDADO PELO CLIENT: "+titulo);
-			if (arqdao.getArqSimpTitulo(titulo).size() > 0) {
-				return Response.status(200).entity(arqdao.getArqSimpTitulo(titulo)).build();
-			} else {
-				return Response.status(200).entity("Não há nenhum registro com esse titulo.").build();
-			}
-		}
-		else if(tipo == "autor") {
-			System.out.println("AUTOR MANDADO PELO CLIENT: "+autor);
-			if (arqdao.getArqSimpAutor(autor).size() > 0) {
-				return Response.status(200).entity(arqdao.getArqSimpAutor(autor)).build();
-			} else {
-				return Response.status(200).entity("Não há nenhum registro com esse(a) autor.").build();
-			}
-		}
-		else if(tipo == "localidade") {
-			System.out.println("LOCALIDADE MANDADO PELO CLIENT: "+localidade);
-			if (arqdao.getArqSimpTitulo(localidade).size() > 0) {
-				return Response.status(200).entity(arqdao.getArqSimpLocal(localidade)).build();
-			} else {
-				return Response.status(200).entity("Não há nenhum registro com essa localidade.").build();
-			}
+	public Response getArqSimp(@QueryParam(value = "query") List<String> busca) {
+		if (arqdao.getArqSimp(busca).size() > 0) {
+			return Response.status(200).entity(arqdao.getArqSimp(busca)).build();
 		}
 		else {
-			return Response.status(500).build();
-		}
-	}
-	
-	@GET
-	@Path("produto-simples/arquitetura/buscalocal/")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimpLocal(@QueryParam(value = "localidade") String local) {
-		System.out.println("LOCALIDADE MANDADO PELO CLIENT: "+local);
-		if (arqdao.getArqSimpLocal(local).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimpLocal(local)).build();
-		} else {
 			return Response.status(200).entity("Não há nenhum registro com essa localidade.").build();
 		}
+			
 	}
+	
 	
 	/*@GET
 	@Path("/arquitetura/buscararq/{id_arq}")

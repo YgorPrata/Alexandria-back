@@ -21,6 +21,10 @@ import com.restapp.model.entities.Txt;
 public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
 	private Connection conn;
+	
+	public ArquiteturaDaoJDBC(Connection conn) {
+		this.conn = conn;
+	}
 
 	@Override
 	public boolean insert(Produto arq, List<Img> list, Txt txt) {
@@ -193,74 +197,25 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		}
 		finally {
 			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
+			DB.closeStatement(ps);			
 		}
 	}
 	
 	
 	@Override
-	public List<Arquitetura> getArqSimpAutor(String autor) {		
-		String sql = "SELECT arq.id_arq, arq.titulo, arq.autor, arq.descricao, arq.localidade, "
-				+ " img.id_img, img.path_img, img.desc_img, img.id_arq FROM arquitetura AS arq INNER JOIN img_path AS img "
-				+ "ON arq.id_arq = img.id_arq WHERE arq.autor LIKE CONCAT( '%',?,'%')";
-
-		try {
-			conn = DB.getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, autor);
-
-			rs = ps.executeQuery();
-			List<Arquitetura> list = new ArrayList<Arquitetura>();
-			
-			while (rs.next()) {
-				//list.add(instanciaArqSimp(rs));
-			}
-			return list;
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}
-
-	}
-	
-	@Override
-	public List<Arquitetura> getArqSimpLocal(String local){		
-		String sql = "SELECT arq.id_arq, arq.titulo, arq.autor, arq.descricao, arq.localidade, "
-				+ " img.id_img, img.path_img, img.desc_img, img.id_arq FROM arquitetura AS arq INNER JOIN img_path AS img "
-				+ "ON arq.id_arq = img.id_arq WHERE arq.localidade LIKE CONCAT( '%',?,'%')";
-		try {
-			conn = DB.getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, local);
-
-
-			rs = ps.executeQuery();
-			List<Arquitetura> list = new ArrayList<Arquitetura>();
-			
-			while (rs.next()) {
-				//list.add(instanciaArqSimp(rs));
-			}
-			return list;
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}
-	}
-	
-	@Override
-	public List<Arquitetura> getArqSimpTitulo(String titulo) {
+	public List<Arquitetura> getArqSimp(List<String> query) {
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, i.id_img,"
 				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN "
-				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod WHERE p.titulo LIKE CONCAT( '%',?,'%')";
+				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
+				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
+				+ "ORDER BY RAND() LIMIT ?";
 		try {
-			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, titulo);
-			rs = ps.executeQuery();			
+			ps.setString(1, query.get(0));
+			ps.setString(2, query.get(1));
+			ps.setString(3, query.get(2));
+			ps.setInt(4, Integer.parseInt(query.get(3)));
+			rs = ps.executeQuery();
 			
 			List<Arquitetura> list = new ArrayList<>();	
 			Map<Integer, Arquitetura> map = new HashMap<Integer, Arquitetura>();

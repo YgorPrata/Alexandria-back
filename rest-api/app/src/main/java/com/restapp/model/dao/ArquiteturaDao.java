@@ -14,8 +14,5 @@ public interface ArquiteturaDao {
 	boolean insert(Produto prodarq, List<Img> img, Txt txt);
 	List<Arquitetura> getById(Integer id_arq);
 	List<Arquitetura> getAll();
-	List<Arquitetura> getArqSimpTitulo(String titulo);
-	List<Arquitetura> getArqSimpAutor(String autor);
-	List<Arquitetura> getArqSimpLocal(String local);
-
+	List<Arquitetura> getArqSimp(List<String> query);
 }

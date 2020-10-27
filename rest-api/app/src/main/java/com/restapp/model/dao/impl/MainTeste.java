@@ -11,9 +11,9 @@ public class MainTeste {
 
 	public static void main(String[] args) throws Exception {
 		
-		ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
+		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		
-		arqdao.getArqSimpTitulo("museu");
+		//arqdao.getArqSimpTitulo("museu");
 		
 		/*List<Produto> listarq = new ArrayList<>(); 
 		List<Img> listimg = new ArrayList<>();
