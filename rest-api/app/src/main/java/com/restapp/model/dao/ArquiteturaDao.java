@@ -8,11 +8,11 @@ import com.restapp.model.entities.Produto;
 import com.restapp.model.entities.Txt;
 
 public interface ArquiteturaDao {
-	
-	//generic DAO
-	
-	boolean insert(Produto prodarq, List<Img> img, Txt txt);
-	List<Arquitetura> getById(Integer id_arq);
+		
+	boolean insert(Arquitetura arq, List<Img> img, Txt txt);
+	Arquitetura getById(Integer id_arq);
 	List<Arquitetura> getAll();
-	List<Arquitetura> getArqSimp(List<String> query);
+	List<Arquitetura> getArqSimpFiltro(String titulo, String autor, String localidade, String limit);
+	List<Arquitetura> getArqSimpNoFilter(String query, String limit);
+	List<Arquitetura> getNovidade();
 }

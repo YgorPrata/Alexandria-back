@@ -9,7 +9,7 @@ import com.restapp.model.entities.Produto;
 
 public class MainTeste {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {	
 		
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		

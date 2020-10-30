@@ -1,32 +1,23 @@
 package com.restapp.model.entities;
 
-public class Livro {
+import java.util.List;
+
+public class Livro extends Produto {
 	
 	private Integer id_livro;
-	private String titulo;
-	private String autor;
-	private String descricao;
-	private String categoria;
-	private String tipo;
 	private String editora;
 	private Integer edicao;
 	private String biografia;
 	private Integer ano;
-		
-	private Integer id_arq;
+	private Arquitetura arq;
 	
 	public Livro(){
 		
 	}
 
-	public Livro(String titulo, String autor, String descricao, String categoria, String tipo, String editora,
-			Integer edicao, String biografia, Integer ano) {
-		super();
-		this.titulo = titulo;
-		this.autor = autor;
-		this.descricao = descricao;
-		this.categoria = categoria;
-		this.tipo = tipo;
+	public Livro(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano, List<Img> img, String editora,
+			Integer edicao, String biografia) {
+		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
 		this.editora = editora;
 		this.edicao = edicao;
 		this.biografia = biografia;
@@ -41,45 +32,6 @@ public class Livro {
 		this.id_livro = id_livro;
 	}
 
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getAutor() {
-		return autor;
-	}
-
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 
 	public String getEditora() {
 		return editora;
@@ -112,13 +64,14 @@ public class Livro {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
+	
 
-	public Integer getId_arq() {
-		return id_arq;
+	public Arquitetura getArq() {
+		return arq;
 	}
 
-	public void setId_arq(Integer id_arq) {
-		this.id_arq = id_arq;
+	public void setArq(Arquitetura arq) {
+		this.arq = arq;
 	}
 
 	@Override
@@ -148,10 +101,11 @@ public class Livro {
 
 	@Override
 	public String toString() {
-		return "Livro [id_livro=" + id_livro + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
-				+ ", categoria=" + categoria + ", tipo=" + tipo + ", editora=" + editora + ", edicao=" + edicao
-				+ ", biografia=" + biografia + ", ano=" + ano + ", id_arq=" + id_arq + "]";
+		return "Livro [id_livro=" + id_livro + ", editora=" + editora + ", edicao=" + edicao + ", biografia="
+				+ biografia + ", ano=" + ano + ", arq=" + arq + "]";
 	}
+
+	
 
 	
 		

@@ -2,34 +2,27 @@ package com.restapp.model.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-public class Arte {
+public class Arte extends Produto{
 	
 	private Integer id_arte;
-	private String titulo;
-	private String autor;
-	private String descricao;
-	private String categoria;
-	private String tipo;
 	private String tecnica;
-	private Integer ano;
 	
-	private Integer id_arq;
+	private Arquitetura arq;
 	
 	public Arte(){
 		
 	}
 
-	public Arte(String titulo, String autor, String descricao, String categoria, String tipo, String tecnica,
-			Integer ano) {
-		this.titulo = titulo;
-		this.autor = autor;
-		this.descricao = descricao;
-		this.categoria = categoria;
-		this.tipo = tipo;
+	public Arte(String titulo, String autor, String descricao, String categoria, String tipo, String localidade,
+			Integer ano, List<Img> img, String tecnica, Arquitetura arq) {
+		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
 		this.tecnica = tecnica;
-		this.ano = ano;
+		this.arq = arq;
 	}
+
+
 
 	public Integer getId_arte() {
 		return id_arte;
@@ -39,46 +32,7 @@ public class Arte {
 		this.id_arte = id_arte;
 	}
 
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getAutor() {
-		return autor;
-	}
-
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
+	
 	public String getTecnica() {
 		return tecnica;
 	}
@@ -87,20 +41,13 @@ public class Arte {
 		this.tecnica = tecnica;
 	}
 
-	public Integer getAno() {
-		return ano;
+
+	public Arquitetura getArq() {
+		return arq;
 	}
 
-	public void setAno(Integer ano) {
-		this.ano = ano;
-	}
-
-	public Integer getId_arq() {
-		return id_arq;
-	}
-
-	public void setId_arq(Integer id_arq) {
-		this.id_arq = id_arq;
+	public void setArq(Arquitetura arq) {
+		this.arq = arq;
 	}
 
 	@Override
@@ -130,10 +77,10 @@ public class Arte {
 
 	@Override
 	public String toString() {
-		return "Arte [id_arte=" + id_arte + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
-				+ ", categoria=" + categoria + ", tipo=" + tipo + ", tecnica=" + tecnica + ", ano=" + ano + ", id_arq="
-				+ id_arq + "]";
+		return "Arte [id_arte=" + id_arte + ", tecnica=" + tecnica + ", arq=" + arq + "]";
 	}
+
+	
 	
 		
 }

@@ -52,15 +52,64 @@ public class ArquiteturaResource extends DB implements PathDao  {
 	}
 	
 	@GET
-	@Path("buscasimples/")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimp(@QueryParam(value = "query") List<String> busca) {
-		if (arqdao.getArqSimp(busca).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimp(busca)).build();
+	@Path("arquitetura/novidade/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getNovidade() throws Exception {
+		if (arqdao.getNovidade().size() > 0) {
+			return Response.status(200).entity(arqdao.getNovidade()).build();
+		} 
+		else if (arqdao.getNovidade().size() <= 0) {
+			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
 		}
 		else {
-			return Response.status(200).entity("Não há nenhum registro com essa localidade.").build();
+			return Response.status(500).entity("Erro no banco").build();
 		}
+	}
+	
+	@GET
+	@Path("arquitetura/buscafiltro/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getArqSimpFiltro(@QueryParam(value = "titulo") String titulo, @QueryParam(value = "autor") String autor, 
+			@QueryParam(value = "localidade") String localidade, @QueryParam(value = "limite") String limit) {
+		if (arqdao.getArqSimpFiltro(titulo, autor, localidade, limit).size() > 0) {
+			return Response.status(200).entity(arqdao.getArqSimpFiltro(titulo, autor, localidade, limit)).build();			
+		}
+		else if(arqdao.getArqSimpFiltro(titulo, autor, localidade, limit).size() <= 0) {
+			return Response.status(200).entity("Não há nenhum registro com esse termo.").build();
+		}
+		else {
+			return Response.status(500).entity("Erro no banco").build();
+		}	
+	}
+	
+	@GET
+	@Path("arquitetura/buscanofiltro/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getArqSimpNoFiltro(@QueryParam(value = "query") String query, @QueryParam(value = "limite") String limit) {
+		if (arqdao.getArqSimpNoFilter(query, limit).size() > 0) {
+			return Response.status(200).entity(arqdao.getArqSimpNoFilter(query, limit)).build();			
+		}
+		else if(arqdao.getArqSimpNoFilter(query, limit).size() <= 0) {
+			return Response.status(200).entity("Não há nenhum registro com esse termo.").build();
+		}
+		else {
+			return Response.status(500).entity("Erro no banco").build();
+		}	
+	}
+	
+	
+	
+	@GET
+	@Path("buscacompleta/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getById(@QueryParam(value = "id") Integer id_prod) {
+		if (arqdao.getById(id_prod) != null) {
+			return Response.status(200).entity(arqdao.getById(id_prod)).build();			
+		}
+		else {			
+			return Response.status(500).entity("Erro no banco de dados").build();
+		}
+		
 			
 	}
 	
@@ -182,8 +231,8 @@ public class ArquiteturaResource extends DB implements PathDao  {
 			}
 													
 			try {
-				Produto prodarq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, curador, area, null, null);
-				arqdao.insert(prodarq, infoImg, txt);					
+				Arquitetura arq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, curador, area, null, null);
+				arqdao.insert(arq, infoImg, txt);					
 				return Response.status(200).build();
 			} catch (DbException e) {
 				e.printStackTrace();

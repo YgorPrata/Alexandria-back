@@ -11,13 +11,13 @@ import com.restapp.model.entities.Livro;
 
 public class LivroResource {
 	
-	LivroDaoJDBC livrodao = new LivroDaoJDBC();
 	
-	@POST
+	
+	/*@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public Livro insert(Livro livro, String tituloarq) {
 		System.out.println("criando novo livro...");
 		return livrodao.insert(livro, tituloarq);
-	}
+	}*/
 }

@@ -12,7 +12,7 @@ create table produto(
 	id_prod int not null primary key auto_increment,
 	titulo varchar(50),
 	autor varchar(20),
-    descricao varchar(1000),	
+    descricao varchar(10000),	
     categoria varchar(20),
 	tipo varchar(20),
     localidade varchar(20),
@@ -89,7 +89,23 @@ insert into usuario(login, senha)
 values("userteste", MD5("usersenha"));
 
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
-values("tituloteste", "autorteste", "descricaoteste", "catgoriateste", "tipoteste", "localidadeteste", 2020, 1);
+values("Museu do Amanhã", "Santiago Calatrava", "O Museu do Amanhã é um museu construído no município do Rio de Janeiro, no Brasil.
+ O prédio, projeto do arquiteto espanhol Santiago Calatrava, 
+ foi erguido ao lado da Praça Mauá, na zona portuária (mais precisamente no Píer Mauá).
+ Sua construção teve o apoio da Fundação Roberto Marinho e teve o custo total de cerca de 230 milhões de reais.
+ O edifício foi inaugurado em 17 de dezembro de 2015 com a presença da então presidente do Brasil Dilma Rousseff
+ e recebeu cerca de 25 mil visitantes em seu primeiro final de semana de funcionamento.
+ O antigo píer desativado passou a abrigar uma construção pós-moderna, orgânica e sustentável que, atualmente,
+ é um ícone da identidade local e cultural da cidade do Rio de Janeiro.
+ A proposta da instituição é ser um museu de artes e ciências,
+ além de contar com mostras que alertam sobre os perigos das mudanças climáticas,
+ da degradação ambiental e do colapso social. O edifício conta com espinhas solares que se movem ao longo da claraboia,
+ projetadas para adaptar-se às mudanças das condições ambientais.
+ A exposição principal é majoritariamente digital e foca em ideias ao invés de objetos.
+ O museu tem parcerias com importantes universidades brasileiras e instituições científicas
+ globais e coleta de dados em tempo real sobre o clima e a população de agências espaciais e das Nações Unidas.
+ A instituição também tem consultores de várias áreas, como astronautas, cientistas sociais e climatologistas.
+ ", "arquitetura", "construção moderna", "Rio de Janeiro", 2020, 1);
 
 insert into arquitetura(curador, area, id_prod)
 values("curadorteste", 10000.50, 1);
