@@ -202,7 +202,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	
 	
 	@Override
-	public List<Arquitetura> getArqSimpFiltro(String titulo, String autor, String localidade, String limit) {
+	public List<Arquitetura> getArqTipo(String titulo, String autor, String localidade, String limit) {
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, i.id_img,"
 				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN "
 				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
@@ -282,7 +282,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	}
 	
 	@Override
-	public List<Arquitetura> getArqSimpNoFilter(String query, String limit){
+	public List<Arquitetura> getArqCategoria(String query, String limit){
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, i.id_img, " 
 				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
 				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
@@ -352,6 +352,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		arq.setTipo(rs.getString("p.tipo"));
 		arq.setLocalidade(rs.getString("p.localidade"));
 		arq.setAno(rs.getInt("p.ano"));	
+		arq.setCurador(rs.getString("a.curador"));
+		arq.setArea(rs.getDouble("a.area"));
 		arq.setListImg(img);
 		return arq;
 	}

@@ -12,7 +12,7 @@ public interface ArquiteturaDao {
 	boolean insert(Arquitetura arq, List<Img> img, Txt txt);
 	Arquitetura getById(Integer id_arq);
 	List<Arquitetura> getAll();
-	List<Arquitetura> getArqSimpFiltro(String titulo, String autor, String localidade, String limit);
-	List<Arquitetura> getArqSimpNoFilter(String query, String limit);
+	List<Arquitetura> getArqTipo(String titulo, String autor, String localidade, String limit);
+	List<Arquitetura> getArqCategoria(String query, String limit);
 	List<Arquitetura> getNovidade();
 }

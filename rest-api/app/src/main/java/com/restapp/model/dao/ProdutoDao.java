@@ -7,4 +7,5 @@ import com.restapp.model.entities.Produto;
 public interface ProdutoDao {
 
 	public List<Produto> getProdNoFiltro(String query, String limit);
+
 }

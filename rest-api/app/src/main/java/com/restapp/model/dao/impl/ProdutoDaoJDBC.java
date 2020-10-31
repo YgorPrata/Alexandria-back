@@ -11,10 +11,7 @@ import java.util.Map;
 import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ProdutoDao;
-import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Livro;
 import com.restapp.model.entities.Produto;
 
 public class ProdutoDaoJDBC extends DB implements ProdutoDao{
@@ -65,9 +62,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(prod == null) {
-					prod = instanciaArqNoFiltro(rs, img);
-					prod = instanciaLivroNoFiltro(rs, img);
-					prod = instanciaArteNoFiltro(rs, img);
+					prod = instanciaProdSimp(rs, img);
 					list.add(prod);
 					map.put(rs.getInt("p.id_prod"), prod);					
 				}				
@@ -85,55 +80,19 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	}
 	
 	
-	private Arquitetura instanciaArqNoFiltro(ResultSet rs, Img img) throws SQLException {
-		Arquitetura arq = new Arquitetura();
-		
-		arq.setTitulo(rs.getString("p.titulo"));
-		arq.setAutor(rs.getString("p.autor"));
-		arq.setDescricao(rs.getString("p.descricao"));
-		arq.setLocalidade(rs.getString("p.localidade"));
-		arq.setCategoria(rs.getString("p.categoria"));	
-		arq.setId_arq(rs.getInt("a.id_arq"));
-		arq.setId_prod(rs.getInt("a.id_prod"));
-		arq.setCurador(rs.getString("a.curador"));
-		arq.setArea(rs.getDouble("a.area"));
-		arq.setImg(img);
-		
-		return arq;
-	}
 	
-	private Livro instanciaLivroNoFiltro(ResultSet rs, Img img) throws SQLException{
-		Livro livro = new Livro();
+	private Produto instanciaProdSimp(ResultSet rs, Img img) throws SQLException {
+		Produto prod = new Produto();
 		
-		livro.setTitulo(rs.getString("p.titulo"));
-		livro.setAutor(rs.getString("p.autor"));
-		livro.setDescricao(rs.getString("p.descricao"));
-		livro.setLocalidade(rs.getString("p.localidade"));
-		livro.setCategoria(rs.getString("p.categoria"));
-		livro.setId_livro(rs.getInt("l.id_livro"));
-		livro.setEditora(rs.getString("l.editora"));
-		livro.setEdicao(rs.getInt("l.edicao"));
-		livro.setBiografia(rs.getString("l.biografia"));
-		livro.setId_prod(rs.getInt("l.id_prod"));
-		livro.setImg(img);
+		prod.setTitulo(rs.getString("p.titulo"));
+		prod.setAutor(rs.getString("p.autor"));
+		prod.setLocalidade(rs.getString("p.localidade"));
+		prod.setCategoria(rs.getString("p.categoria"));	
+		prod.setImg(img);
+		
+		return prod;
+	}
 
-		return livro;
-	}
-	
-	private Arte instanciaArteNoFiltro(ResultSet rs, Img img) throws SQLException{
-		Arte arte = new Arte();
 		
-		arte.setTitulo(rs.getString("p.titulo"));
-		arte.setAutor(rs.getString("p.autor"));
-		arte.setDescricao(rs.getString("p.descricao"));
-		arte.setLocalidade(rs.getString("p.localidade"));
-		arte.setCategoria(rs.getString("p.categoria"));
-		arte.setId_arte(rs.getInt("ar.id_arte"));
-		arte.setTecnica(rs.getString("ar.tecnica"));
-		arte.setId_prod(rs.getInt("ar.id_prod"));
-		arte.setImg(img);
-
-		return arte;
-	}
-	
+		
 }

@@ -67,14 +67,14 @@ public class ArquiteturaResource extends DB implements PathDao  {
 	}
 	
 	@GET
-	@Path("arquitetura/buscafiltro/")
+	@Path("arquitetura/tipo/")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getArqSimpFiltro(@QueryParam(value = "titulo") String titulo, @QueryParam(value = "autor") String autor, 
 			@QueryParam(value = "localidade") String localidade, @QueryParam(value = "limite") String limit) {
-		if (arqdao.getArqSimpFiltro(titulo, autor, localidade, limit).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimpFiltro(titulo, autor, localidade, limit)).build();			
+		if (arqdao.getArqTipo(titulo, autor, localidade, limit).size() > 0) {
+			return Response.status(200).entity(arqdao.getArqTipo(titulo, autor, localidade, limit)).build();			
 		}
-		else if(arqdao.getArqSimpFiltro(titulo, autor, localidade, limit).size() <= 0) {
+		else if(arqdao.getArqTipo(titulo, autor, localidade, limit).size() <= 0) {
 			return Response.status(200).entity("Não há nenhum registro com esse termo.").build();
 		}
 		else {
@@ -83,13 +83,13 @@ public class ArquiteturaResource extends DB implements PathDao  {
 	}
 	
 	@GET
-	@Path("arquitetura/buscanofiltro/")
+	@Path("arquitetura/categoria/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimpNoFiltro(@QueryParam(value = "query") String query, @QueryParam(value = "limite") String limit) {
-		if (arqdao.getArqSimpNoFilter(query, limit).size() > 0) {
-			return Response.status(200).entity(arqdao.getArqSimpNoFilter(query, limit)).build();			
+	public Response getArqCategoria(@QueryParam(value = "query") String query, @QueryParam(value = "limite") String limit) {
+		if (arqdao.getArqCategoria(query, limit).size() > 0) {
+			return Response.status(200).entity(arqdao.getArqCategoria(query, limit)).build();			
 		}
-		else if(arqdao.getArqSimpNoFilter(query, limit).size() <= 0) {
+		else if(arqdao.getArqCategoria(query, limit).size() <= 0) {
 			return Response.status(200).entity("Não há nenhum registro com esse termo.").build();
 		}
 		else {
@@ -100,7 +100,7 @@ public class ArquiteturaResource extends DB implements PathDao  {
 	
 	
 	@GET
-	@Path("buscacompleta/")
+	@Path("arquitetura/buscacompleta/")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getById(@QueryParam(value = "id") Integer id_prod) {
 		if (arqdao.getById(id_prod) != null) {

@@ -2,7 +2,7 @@ package com.restapp.model.entities;
 
 import java.util.List;
 
-public abstract class Produto {
+public class Produto {
 	
 	private Integer id_prod;
 	private String titulo;
