@@ -1,12 +1,8 @@
 package com.restapp.model.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.restapp.model.dao.ArquiteturaDao;
 import com.restapp.model.dao.DaoFactory;
-import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Img;
+import com.restapp.model.dao.ProdutoDao;
 
 public class MainTeste {
 
@@ -14,8 +10,9 @@ public class MainTeste {
 		
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
-		
-		System.out.println(arqdao.getById(1));
+		ProdutoDao prod = DaoFactory.criarProduto();
+		//System.out.println(arqdao.getById(1));
+		System.out.println(prod.getProdCount());
 		
 		
 		/*List<Produto> listarq = new ArrayList<>(); 

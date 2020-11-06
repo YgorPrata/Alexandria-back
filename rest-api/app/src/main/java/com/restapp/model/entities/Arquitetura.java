@@ -16,7 +16,7 @@ public class Arquitetura extends Produto{
 	}
 
 	public Arquitetura(String titulo, String autor, String descricao, String categoria, String tipo, String localidade,
-			Integer ano, List<Img> img, String curador, Double area, Arte arte, Livro livro) {
+			Integer ano, List<Img> img, String curador, Double area) {
 		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
 		this.curador = curador;
 		this.area = area;

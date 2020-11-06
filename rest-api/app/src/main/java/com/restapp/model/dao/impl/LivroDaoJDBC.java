@@ -33,20 +33,20 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	}
 
 	@Override
-	public boolean insert(Livro liv, List<Img> list, Txt txt) {
+	public boolean insert(Livro livro, List<Img> list, Txt txt) {
 		boolean sucesso = false;
 		int id = 0;
 	
 		try {
 			ps = conn.prepareStatement("INSERT INTO produto (titulo, autor, descricao, tipo, "
 					+ " categoria, localidade, ano) VALUES (?, ?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, liv.getTitulo());
-			ps.setString(2, liv.getAutor());
-			ps.setString(3, liv.getDescricao());
-			ps.setString(4, liv.getTipo());
-			ps.setString(5, liv.getCategoria());
-			ps.setString(6, liv.getLocalidade());
-			ps.setInt(7, liv.getAno());
+			ps.setString(1, livro.getTitulo());
+			ps.setString(2, livro.getAutor());
+			ps.setString(3, livro.getDescricao());
+			ps.setString(4, livro.getTipo());
+			ps.setString(5, livro.getCategoria());
+			ps.setString(6, livro.getLocalidade());
+			ps.setInt(7, livro.getAno());
 			ps.executeUpdate();
 
 			rs = ps.getGeneratedKeys();
@@ -57,9 +57,9 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 						
 			String sql = "INSERT INTO livro (editora, edicao, biografia, id_prod) VALUES (?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, liv.getEditora());
-			ps.setInt(2, liv.getEdicao());
-			ps.setString(3, liv.getBiografia());
+			ps.setString(1, livro.getEditora());
+			ps.setInt(2, livro.getEdicao());
+			ps.setString(3, livro.getBiografia());
 			ps.setInt(4, id);
 			ps.executeUpdate();			
 			sucesso = true;

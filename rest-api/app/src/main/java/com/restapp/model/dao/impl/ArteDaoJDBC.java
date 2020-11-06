@@ -1,6 +1,7 @@
 package com.restapp.model.dao.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +15,7 @@ import com.restapp.db.DbException;
 import com.restapp.model.dao.ArteDao;
 import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
+import com.restapp.model.entities.Txt;
 
 public class ArteDaoJDBC extends DB implements ArteDao {
 
@@ -28,75 +30,78 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	}
 
 	@Override
-	public Arte insert(Arte arte, String artenome) {
-		String sql =("SELECT arte.id_arte, arte.titulo FROM arteuitetura AS arte INNER JOIN arte"
-				+ " ON arte.id_arte = arte.id_arte WHERE arte.titulo=?");
+	public boolean insert(Arte arte, List<Img> list, Txt txt) {
+		boolean sucesso = false;
+		int id = 0;
+	
 		try {
+			ps = conn.prepareStatement("INSERT INTO produto (titulo, autor, descricao, tipo, "
+					+ " categoria, localidade, ano) VALUES (?, ?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, arte.getTitulo());
+			ps.setString(2, arte.getAutor());
+			ps.setString(3, arte.getDescricao());
+			ps.setString(4, arte.getTipo());
+			ps.setString(5, arte.getCategoria());
+			ps.setString(6, arte.getLocalidade());
+			ps.setInt(7, arte.getAno());
+			ps.executeUpdate();
+
+			rs = ps.getGeneratedKeys();
+			
+			if (rs.next()) {
+				id = rs.getInt(1);
+			}
+						
+			String sql = "INSERT INTO arte (tecnica, id_prod) VALUES (?, ?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, arte.getTecnica());			
+			ps.setInt(2, id);
+			ps.executeUpdate();			
+			sucesso = true;
+			
+	
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}		
+		
+		try {
+			for(Img img : list) {
+				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
+				conn = DB.getConnection();
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, img.getPath_img());
+				ps.setString(2, img.getDesc_img());
+				ps.setInt(3, id);
+				ps.executeUpdate();
+				sucesso = true;
+				
+			}
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		
+		try {			
+			String sql = "INSERT INTO txt_path (path_txt, id_prod) VALUES (?, ?)";
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, artenome);
-			ResultSet rsarte = ps.executeQuery();
-
-			if (rsarte.next()) {
-				rsarte.getInt("arte.id_arte");
-				rsarte.getString("arte.titulo");
-				System.out.println("A arteuitetura " + rsarte.getString("arte.titulo") + 
-						" existe na base, e o id é: "+ rsarte.getInt("arte.id_arte") + ""
-								+ " . Adicionando a nova obra na base de dados");
-
-				try {
-					conn = DB.getConnection();
-					ps = conn.prepareStatement("INSERT INTO arte (titulo, autor, descricao, categoria, tipo "
-							+ " tecnica, ano, id_arte) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? "
-							+ rsarte.getInt("arte.id_arte") + ")", Statement.RETURN_GENERATED_KEYS);
-
-					ps.setString(1, arte.getTitulo());
-					ps.setString(2, arte.getAutor());
-					ps.setString(3, arte.getDescricao());
-					ps.setString(4, arte.getCategoria());					
-					ps.setString(5, arte.getTipo());					
-					ps.setString(6, arte.getTecnica());
-					ps.setInt(7, arte.getAno());
-					
-					ps.executeUpdate();
-
-					rs = ps.getGeneratedKeys();
-
-					int insert = ps.executeUpdate();
-
-					if (insert > 0) {
-						rs = ps.getGeneratedKeys();
-
-						if (rs.next()) {
-							int id = rs.getInt(1);
-							arte.setId_arte(id);
-						}
-					} else {
-						throw new DbException("Erro. A conclusão do cadastro não foi efetuadar.");
-					}
-
-				} catch (SQLException e) {
-					throw new DbException(e.getMessage());
-				} finally {
-					DB.closeResultSet(rsarte);
-					DB.closeStatement(ps);
-				}
-			}
-
-			else if (rsarte.next() == false) {
-				System.out.println("Esta obra não está em nenhuma arteuiteturar.\nObra não cadastradar.");
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+			ps.setString(1, txt.getPath_txt());
+			ps.setInt(2, id);
+			ps.executeUpdate();
+			sucesso = true;		
+		}
+			
+		catch(SQLException e) {
 			throw new DbException(e.getMessage());
-		} finally {
+		}
+		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
-		}
-		return arte;
-
+		}			
+		return sucesso;
 	}
+	
 	@Override
 	public List<Arte> getAll() {
 		String sql = "SELECT * FROM produto AS p INNER JOIN arte AS ar ON p.id_prod = ar.id_prod "

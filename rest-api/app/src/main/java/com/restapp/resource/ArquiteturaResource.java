@@ -213,7 +213,7 @@ public class ArquiteturaResource {
 			}
 													
 			try {
-				Arquitetura arq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, curador, area, null, null);
+				Arquitetura arq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, curador, area);
 				arqdao.insert(arq, infoImg, txt);					
 				return Response.status(200).build();
 			} catch (DbException e) {

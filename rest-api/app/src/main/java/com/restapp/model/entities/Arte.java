@@ -14,10 +14,9 @@ public class Arte extends Produto{
 	}
 
 	public Arte(String titulo, String autor, String descricao, String categoria, String tipo, String localidade,
-			Integer ano, List<Img> img, String tecnica, Arquitetura arq) {
+			Integer ano, List<Img> img, String tecnica) {
 		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
 		this.tecnica = tecnica;
-		this.arq = arq;
 	}
 
 

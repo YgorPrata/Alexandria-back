@@ -9,6 +9,7 @@ public class Livro extends Produto {
 	private Integer edicao;
 	private String biografia;
 	private Integer ano;
+	
 	private Arquitetura arq;
 	
 	public Livro(){
