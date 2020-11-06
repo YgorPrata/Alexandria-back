@@ -80,10 +80,11 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	}
 	
 	@Override
-	public List<Produto> getNovidades() {
-		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod ORDER BY p.id_prod DESC LIMIT 5";
+	public List<Produto> getNovidades(Integer limit) {
+		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod ORDER BY p.id_prod DESC LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
+			ps.setInt(1, limit);
 			
 			rs = ps.executeQuery();
 			
@@ -117,9 +118,11 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	private Produto instanciaProdSimp(ResultSet rs, Img img) throws SQLException {
 		Produto prod = new Produto();
 		
+		prod.setId_prod(rs.getInt("p.id_prod"));
 		prod.setTitulo(rs.getString("p.titulo"));
 		prod.setAutor(rs.getString("p.autor"));
 		prod.setLocalidade(rs.getString("p.localidade"));
+		prod.setDescricao(rs.getString("p.descricao"));
 		prod.setCategoria(rs.getString("p.categoria"));	
 		prod.setImg(img);
 		
