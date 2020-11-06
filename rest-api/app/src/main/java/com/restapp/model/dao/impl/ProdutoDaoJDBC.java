@@ -79,7 +79,40 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 		}
 	}
 	
-	
+	@Override
+	public List<Produto> getNovidades() {
+		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod ORDER BY p.id_prod DESC LIMIT 5";
+		try {
+			ps = conn.prepareStatement(sql);
+			
+			rs = ps.executeQuery();
+			
+			List<Produto> list = new ArrayList<>();	
+			Map<Integer, Produto> map = new HashMap<Integer, Produto>();
+ 			Img img;
+ 			
+			while(rs.next()) {			
+				Produto arq = map.get(rs.getInt("p.id_prod"));
+				
+				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
+											
+				if(arq == null) {
+					arq = instanciaProdSimp(rs, img);					
+					list.add(arq);
+					map.put(rs.getInt("p.id_prod"), arq);					
+				}				
+			}
+		
+			return list;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+	}	
 	
 	private Produto instanciaProdSimp(ResultSet rs, Img img) throws SQLException {
 		Produto prod = new Produto();
@@ -91,8 +124,6 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 		prod.setImg(img);
 		
 		return prod;
-	}
-
-		
+	}	
 		
 }

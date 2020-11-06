@@ -8,7 +8,8 @@ public class Txt {
 	private Integer id_arte;
 	private Integer id_livro;
 	
-	
+	public static String abspathtxt = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Upload/WebContent/txt/";
+	public static String pathtxt = "txt/";
 	
 	public Txt() {
 

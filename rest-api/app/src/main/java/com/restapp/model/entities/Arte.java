@@ -1,7 +1,5 @@
 package com.restapp.model.entities;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class Arte extends Produto{

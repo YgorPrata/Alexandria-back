@@ -1,46 +1,74 @@
 package com.restapp.resource;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import com.restapp.db.DbException;
-import com.restapp.model.dao.impl.ArteDaoJDBC;
-import com.restapp.model.entities.Arte;
-import com.restapp.model.entities.Artigos;
+import com.restapp.model.dao.ArteDao;
+import com.restapp.model.dao.DaoFactory;
 
-@Path("produto")
+@Path("/produto")
 public class ArteResource {
 	
-	ArteDaoJDBC artedao = new ArteDaoJDBC();
+	ArteDao artedao = DaoFactory.criarArte();
 	
-	@GET @Path("/arte")
+	@GET
+	@Path("arte/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Arte> findAll() throws Exception {		
-		System.out.println("findAll");
-		return artedao.findAll();
+	public Response getAll() throws Exception {
+		if (artedao.getAll().size() > 0) {
+			return Response.status(200).entity(artedao.getAll()).build();
+		} else {
+			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
+		}
+	}
+		
+	@GET
+	@Path("arte/tipo/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getArteSimpFiltro(@QueryParam(value = "titulo") String titulo, @QueryParam(value = "autor") String autor, 
+			@QueryParam(value = "localidade") String localidade, @QueryParam(value = "limite") Integer limit) {
+		if (artedao.getArteTipo(titulo, autor, localidade, limit).size() > 0) {
+			return Response.status(200).entity(artedao.getArteTipo(titulo, autor, localidade, limit)).build();			
+		}
+		else if(artedao.getArteTipo(titulo, autor, localidade, limit).size() <= 0) {
+			return Response.status(200).entity("Não há nenhum registro com esse termo.").build();
+		}
+		else {
+			return Response.status(500).entity("Erro no banco").build();
+		}	
 	}
 	
-	@GET @Path("/arte/busca/{query}")
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Arte> findByName(@PathParam("query") String query){
-		System.out.println("findByName: " + query);
-		return artedao.findByName(query);
+	@GET
+	@Path("arte/categoria/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getArteCategoria(@QueryParam(value = "query") String query, @QueryParam(value = "limite") Integer limit) {
+		if (artedao.getArteCategoria(query, limit).size() > 0) {
+			return Response.status(200).entity(artedao.getArteCategoria(query, limit)).build();			
+		}
+		else if(artedao.getArteCategoria(query, limit).size() <= 0) {
+			return Response.status(200).entity("Não há nenhum registro com esse termo.").build();
+		}
+		else {
+			return Response.status(500).entity("Erro no banco").build();
+		}	
 	}
-	
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	public Arte insert(Arte arte, @PathParam("nomearq") String nomearq) {
-		System.out.println("criando artigo");
-		return artedao.insert(arte, nomearq);
+		
+	@GET
+	@Path("arte/buscacompleta/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getById(@QueryParam(value = "id") Integer id_prod) {
+		if (artedao.getById(id_prod) != null) {
+			return Response.status(200).entity(artedao.getById(id_prod)).build();			
+		}
+		else {			
+			return Response.status(500).entity("Erro no banco de dados").build();
+		}
+		
+			
 	}
 		
 }

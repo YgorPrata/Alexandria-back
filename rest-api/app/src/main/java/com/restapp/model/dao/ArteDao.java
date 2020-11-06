@@ -7,6 +7,8 @@ import com.restapp.model.entities.Arte;
 public interface ArteDao {
 	
 	Arte insert(Arte art, String arqnome);
-	List<Arte> findAll();
-	List<Arte> findByName(String autor);
+	List<Arte> getAll();
+	Arte getById(Integer id_arte);
+	List<Arte> getArteTipo(String titulo, String autor, String localidade, Integer limit);
+	List<Arte> getArteCategoria(String query, Integer limit);
 }

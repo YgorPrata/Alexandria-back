@@ -24,19 +24,16 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ArquiteturaDao;
 import com.restapp.model.dao.DaoFactory;
-import com.restapp.model.dao.PathDao;
 import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Produto;
 import com.restapp.model.entities.Txt;
 
 
 @Path("/produto")
-public class ArquiteturaResource extends DB implements PathDao  {
+public class ArquiteturaResource {
 
 	ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
 
@@ -50,27 +47,12 @@ public class ArquiteturaResource extends DB implements PathDao  {
 			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
 		}
 	}
-	
-	@GET
-	@Path("arquitetura/novidade/")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getNovidade() throws Exception {
-		if (arqdao.getNovidade().size() > 0) {
-			return Response.status(200).entity(arqdao.getNovidade()).build();
-		} 
-		else if (arqdao.getNovidade().size() <= 0) {
-			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
-		}
-		else {
-			return Response.status(500).entity("Erro no banco").build();
-		}
-	}
-	
+		
 	@GET
 	@Path("arquitetura/tipo/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqSimpFiltro(@QueryParam(value = "titulo") String titulo, @QueryParam(value = "autor") String autor, 
-			@QueryParam(value = "localidade") String localidade, @QueryParam(value = "limite") String limit) {
+	public Response getArqTipo(@QueryParam(value = "titulo") String titulo, @QueryParam(value = "autor") String autor, 
+			@QueryParam(value = "localidade") String localidade, @QueryParam(value = "limite") Integer limit) {
 		if (arqdao.getArqTipo(titulo, autor, localidade, limit).size() > 0) {
 			return Response.status(200).entity(arqdao.getArqTipo(titulo, autor, localidade, limit)).build();			
 		}
@@ -85,7 +67,7 @@ public class ArquiteturaResource extends DB implements PathDao  {
 	@GET
 	@Path("arquitetura/categoria/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getArqCategoria(@QueryParam(value = "query") String query, @QueryParam(value = "limite") String limit) {
+	public Response getArqCategoria(@QueryParam(value = "query") String query, @QueryParam(value = "limite") Integer limit) {
 		if (arqdao.getArqCategoria(query, limit).size() > 0) {
 			return Response.status(200).entity(arqdao.getArqCategoria(query, limit)).build();			
 		}
@@ -185,9 +167,9 @@ public class ArquiteturaResource extends DB implements PathDao  {
 				auxDesc = descricao2.get(i);
 				
 				if(nomesImgs.endsWith(".jpg") || nomesImgs.endsWith(".jpeg") || nomesImgs.endsWith(".png")) {
-					infoImg.add(new Img(null, PathDao.pathimg+nomesImgs, auxDesc));					
+					infoImg.add(new Img(null, Img.pathimg+nomesImgs, auxDesc));					
 					try {	
-						File file = new File(PathDao.abspathimg+nomesImgs);					
+						File file = new File(Img.abspathimg+nomesImgs);					
 						OutputStream ops = new FileOutputStream(file);						
 						int read = 0;
 						byte[] bytes = new byte[8192];						
@@ -208,10 +190,10 @@ public class ArquiteturaResource extends DB implements PathDao  {
 			Txt txt;
 			nomeTxt = UUID.randomUUID()+fileDisposition2.getFileName();
 			if(nomeTxt.endsWith(".pdf") || nomeTxt.endsWith(".docx") || nomeTxt.endsWith(".txt")) {
-				txt = new Txt(PathDao.pathtxt+nomeTxt);
+				txt = new Txt(Txt.pathtxt+nomeTxt);
 				try {				
 					inputStream2 = new BufferedInputStream(inputStream2);
-					File file = new File(PathDao.abspathtxt+nomeTxt);
+					File file = new File(Txt.abspathtxt+nomeTxt);
 					OutputStream ops2 = new FileOutputStream(file);
 					int read = 0;
 					byte[] bytes = new byte[8192];

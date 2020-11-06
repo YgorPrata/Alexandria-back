@@ -3,14 +3,17 @@ package com.restapp.model.dao.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ArteDao;
-import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Arte;
+import com.restapp.model.entities.Img;
 
 public class ArteDaoJDBC extends DB implements ArteDao {
 
@@ -25,27 +28,27 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	}
 
 	@Override
-	public Arte insert(Arte arte, String arqnome) {
-		String sql =("SELECT arq.id_arq, arq.titulo FROM arquitetura AS arq INNER JOIN arte"
-				+ " ON arq.id_arq = arte.id_arq WHERE arq.titulo=?");
+	public Arte insert(Arte arte, String artenome) {
+		String sql =("SELECT arte.id_arte, arte.titulo FROM arteuitetura AS arte INNER JOIN arte"
+				+ " ON arte.id_arte = arte.id_arte WHERE arte.titulo=?");
 		try {
 			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, arqnome);
-			ResultSet rsarq = ps.executeQuery();
+			ps.setString(1, artenome);
+			ResultSet rsarte = ps.executeQuery();
 
-			if (rsarq.next()) {
-				rsarq.getInt("arq.id_arq");
-				rsarq.getString("arq.titulo");
-				System.out.println("A arquitetura " + rsarq.getString("arq.titulo") + 
-						" existe na base, e o id é: "+ rsarq.getInt("arq.id_arq") + ""
+			if (rsarte.next()) {
+				rsarte.getInt("arte.id_arte");
+				rsarte.getString("arte.titulo");
+				System.out.println("A arteuitetura " + rsarte.getString("arte.titulo") + 
+						" existe na base, e o id é: "+ rsarte.getInt("arte.id_arte") + ""
 								+ " . Adicionando a nova obra na base de dados");
 
 				try {
 					conn = DB.getConnection();
 					ps = conn.prepareStatement("INSERT INTO arte (titulo, autor, descricao, categoria, tipo "
-							+ " tecnica, ano, id_arq) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? "
-							+ rsarq.getInt("arq.id_arq") + ")", st.RETURN_GENERATED_KEYS);
+							+ " tecnica, ano, id_arte) " + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? "
+							+ rsarte.getInt("arte.id_arte") + ")", Statement.RETURN_GENERATED_KEYS);
 
 					ps.setString(1, arte.getTitulo());
 					ps.setString(2, arte.getAutor());
@@ -69,19 +72,19 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 							arte.setId_arte(id);
 						}
 					} else {
-						throw new DbException("Erro. A conclusão do cadastro não foi efetuada.");
+						throw new DbException("Erro. A conclusão do cadastro não foi efetuadar.");
 					}
 
 				} catch (SQLException e) {
 					throw new DbException(e.getMessage());
 				} finally {
-					DB.closeResultSet(rsarq);
+					DB.closeResultSet(rsarte);
 					DB.closeStatement(ps);
 				}
 			}
 
-			else if (rsarq.next() == false) {
-				System.out.println("Esta obra não está em nenhuma arquitetura.\nObra não cadastrada.");
+			else if (rsarte.next() == false) {
+				System.out.println("Esta obra não está em nenhuma arteuiteturar.\nObra não cadastradar.");
 			}
 
 		} catch (SQLException e) {
@@ -94,67 +97,219 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 		return arte;
 
 	}
-
 	@Override
-	public List<Arte> findAll() {
-		List<Arte> list = new ArrayList<Arte>();
-		String sql = "SELECT * FROM arte";
+	public List<Arte> getAll() {
+		String sql = "SELECT * FROM produto AS p INNER JOIN arte AS ar ON p.id_prod = ar.id_prod "
+				+ "INNER JOIN img_path AS i ON p.id_prod = i.id_prod";
 		try {
-			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				list.add(instantiateArte(rs));
+			
+			List<Arte> list = new ArrayList<>();	
+			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
+ 			List<Img> listimg = new ArrayList<>();
+  			int cont = 0;
+  			int chave = 0;
+ 			
+			while(rs.next()) {
+				cont++;				
+				Arte arte = map.get(rs.getInt("ar.id_prod"));
+				
+				if(chave == rs.getInt("i.id_prod") || cont == 1) {
+					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
+				}
+				
+				if(chave != rs.getInt("i.id_prod") && cont != 1) {
+					listimg = new ArrayList<>();
+					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
+				}
+								
+				if(arte == null) {
+					arte = instanciaTudo(rs, listimg);					
+					list.add(arte);
+					map.put(rs.getInt("ar.id_prod"), arte);
+					for (Map.Entry<Integer, Arte> entry : map.entrySet()) {
+					    chave = entry.getKey();					    
+					}
+				}				
 			}
-
+		
+			return list;
+			
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		} finally {
+		}
+		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
-		return list;
 	}
 
-	@Override
-	public List<Arte> findByName(String autor) {
-
-		List<Arte> list = new ArrayList<Arte>();
-		String sql = "SELECT * FROM arte WHERE autor = ?";
-
+	public Arte getById(Integer id_arte) {
+		String sql = "SELECT * FROM produto AS p INNER JOIN arte AS ar ON p.id_prod = ar.id_prod INNER JOIN "
+				+ "img_path AS i ON p.id_prod = i.id_prod WHERE p.id_prod = ?";
+		
 		try {
-			conn = DB.getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, autor);
-
-			ResultSet rs = ps.executeQuery();
-
-			while (rs.next()) {
-				list.add(instantiateArte(rs));
+			ps.setInt(1, id_arte);
+			rs = ps.executeQuery();
+			
+			Arte arte = new Arte();	
+			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
+ 			List<Img> listimg = new ArrayList<>();
+  			int cont = 0;
+  			int chave = 0;
+ 			
+			while(rs.next()) {
+				cont++;				
+				arte = map.get(rs.getInt("ar.id_prod"));
+				
+				if(chave == rs.getInt("i.id_prod") || cont == 1) {
+					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
+				}
+				
+				if(chave != rs.getInt("i.id_prod") && cont != 1) {
+					listimg = new ArrayList<>();
+					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
+				}
+								
+				if(arte == null) {
+					arte = instanciaTudo(rs, listimg);										
+					map.put(rs.getInt("ar.id_prod"), arte);
+					for (Map.Entry<Integer, Arte> entry : map.entrySet()) {
+					    chave = entry.getKey();					    
+					}
+				}				
 			}
-
+		
+			return arte;
+			
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		} finally {
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);			
+		}
+	}
+	
+	
+	@Override
+	public List<Arte> getArteTipo(String titulo, String autor, String localidade, Integer limit) {
+		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, ar.id_arte, ar.id_prod, i.id_img,"
+				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN "
+				+ "arte AS ar ON p.id_prod = ar.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
+				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
+				+ "ORDER BY RAND() LIMIT ?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, titulo);
+			ps.setString(2, autor);
+			ps.setString(3, localidade);
+			ps.setInt(4, limit);
+			rs = ps.executeQuery();
+			
+			List<Arte> list = new ArrayList<>();	
+			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
+ 			Img img;
+ 			
+			while(rs.next()) {			
+				Arte arte = map.get(rs.getInt("ar.id_prod"));
+
+				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
+											
+				if(arte == null) {
+					arte = instanciaArqSimp(rs, img);					
+					list.add(arte);
+					map.put(rs.getInt("ar.id_prod"), arte);					
+				}				
+			}
+		
+			return list;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}		
+	}
+	
+	@Override
+	public List<Arte> getArteCategoria(String query, Integer limit){
+		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, ar.id_arte, ar.id_prod, i.id_img, " 
+				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
+				+ "arte AS ar ON p.id_prod = ar.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
+				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
+				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR ar.tecnica LIKE CONCAT( '%',?,'%') "
+				+ "ORDER BY RAND() LIMIT ?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, query);
+			ps.setString(2, query);
+			ps.setString(3, query);
+			ps.setString(4, query);
+			ps.setString(5, query);
+			ps.setInt(6, limit);
+			rs = ps.executeQuery();
+			
+			List<Arte> list = new ArrayList<>();	
+			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
+ 			Img img;
+ 			
+			while(rs.next()) {			
+				Arte arte = map.get(rs.getInt("ar.id_prod"));
+				
+				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
+											
+				if(arte == null) {
+					arte = instanciaArqSimp(rs, img);					
+					list.add(arte);
+					map.put(rs.getInt("ar.id_prod"), arte);					
+				}				
+			}
+		
+			return list;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
-		return list;
 	}
+	
+	
+	
 
-	private Arte instantiateArte(ResultSet rs) throws SQLException {
+	private Arte instanciaArqSimp(ResultSet rs, Img img) throws SQLException {
 		Arte arte = new Arte();
-		Arquitetura arq = new Arquitetura();
-
-		arte.setId_arte(rs.getInt("id_arte"));
-		arte.setAutor(rs.getString("autor"));
-		arte.setDescricao(rs.getString("descricao"));
-		arte.setCategoria(rs.getString("categoria"));
-		arte.setTipo(rs.getString("tipo"));
-		arte.setTecnica(rs.getString("tecnica"));		
-		arte.setAno(rs.getInt("ano"));		
-		arq.setId_arq(rs.getInt("id_arq"));		
+		arte.setId_prod(rs.getInt("p.id_prod"));
+		arte.setTitulo(rs.getString("p.titulo"));
+		arte.setAutor(rs.getString("p.autor"));
+		arte.setDescricao(rs.getString("p.descricao"));
+		arte.setLocalidade(rs.getString("p.localidade"));
+		arte.setCategoria(rs.getString("p.categoria"));
+		arte.setId_arte(rs.getInt("ar.id_arte"));
+		arte.setImg(img);
+		return arte;
+	}
+	
+	private Arte instanciaTudo(ResultSet rs, List<Img> img) throws SQLException{
+		Arte arte = new Arte();
+		arte.setId_prod(rs.getInt("p.id_prod"));
+		arte.setTitulo(rs.getString("p.titulo"));
+		arte.setAutor(rs.getString("p.autor"));
+		arte.setDescricao(rs.getString("p.descricao"));
+		arte.setCategoria(rs.getString("p.categoria"));
+		arte.setTipo(rs.getString("p.tipo"));
+		arte.setLocalidade(rs.getString("p.localidade"));
+		arte.setAno(rs.getInt("p.ano"));
+		arte.setId_arte(rs.getInt("ar.id_arte"));
+		arte.setTecnica(rs.getString("ar.tecnica"));
+		arte.setListImg(img);
 		return arte;
 	}
 }

@@ -6,11 +6,12 @@ public class Img {
 	private String path_img;
 	private String desc_img;
 	
+	public static String abspathimg = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Upload/WebContent/imgs/";
+	public static String pathimg = "imgs/";
+	
 	public Img() {
 
-	}
-
-	
+	}	
 
 	public Img(Integer id_img, String path_img, String desc_img) {
 		this.id_img = id_img;

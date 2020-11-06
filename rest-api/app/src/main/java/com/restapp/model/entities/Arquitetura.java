@@ -100,12 +100,14 @@ public class Arquitetura extends Produto{
 		return true;
 	}
 
-
 	@Override
 	public String toString() {
-		return "Arquitetura [id_arq=" + id_arq + ", curador=" + curador + ", area=" + area + ", arte=" + arte
+		return "Arquitetura [produto=" + super.toString() + ", id_arq=" + id_arq + ", curador=" + curador + ", area=" + area + ", arte=" + arte
 				+ ", livro=" + livro + "]";
 	}
+
+
+	
 
 
 	

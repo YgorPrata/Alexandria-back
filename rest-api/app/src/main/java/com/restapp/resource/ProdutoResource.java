@@ -31,4 +31,19 @@ public class ProdutoResource {
 		}
 	}
 	
+	@GET
+	@Path("novidades/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getNovidade() throws Exception {
+		if (proddao.getNovidades().size() > 0) {
+			return Response.status(200).entity(proddao.getNovidades()).build();
+		} 
+		else if (proddao.getNovidades().size() <= 0) {
+			return Response.status(200).entity("Não há nenhum registro para essa categoria").build();
+		}
+		else {
+			return Response.status(500).entity("Erro no banco").build();
+		}
+	}
+	
 }

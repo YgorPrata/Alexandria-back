@@ -12,8 +12,7 @@ public class Produto {
 	private String tipo;
 	private String localidade;
 	private Integer ano;
-	private List<Img> listimg;
-	
+	private List<Img> listimg;	
 	private Img img;
 
 	
@@ -158,6 +157,16 @@ public class Produto {
 			return false;
 		return true;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Produto [id_prod=" + id_prod + ", titulo=" + titulo + ", autor=" + autor + ", descricao=" + descricao
+				+ ", categoria=" + categoria + ", tipo=" + tipo + ", localidade=" + localidade + ", ano=" + ano
+				+ ", listimg=" + listimg + ", img=" + img + "]";
+	}
+	
+	
 	
 	
 	
