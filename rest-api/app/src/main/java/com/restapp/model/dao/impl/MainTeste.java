@@ -1,18 +1,57 @@
 package com.restapp.model.dao.impl;
 
-import com.restapp.model.dao.ArquiteturaDao;
+
 import com.restapp.model.dao.DaoFactory;
-import com.restapp.model.dao.ProdutoDao;
+import com.restapp.model.dao.LoginDao;
+import com.restapp.model.entities.User;
 
 public class MainTeste {
 
 	public static void main(String[] args) throws Exception {	
 		
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
-		ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
-		ProdutoDao prod = DaoFactory.criarProduto();
+		//ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
+		//ProdutoDao prod = DaoFactory.criarProduto();
+		LoginDao user = DaoFactory.criarUsuario();
 		//System.out.println(arqdao.getById(1));
-		System.out.println(prod.getProdCount());
+		//System.out.println(prod.getProdCount());
+		
+		User usuario = new User("felipeuser", "user123", "user");
+		
+		user.insert(usuario);
+		
+		//user.validaUsuario(usuario);	
+		
+		/*CRIPTOGRAFANDO LADO SERVIDOR SHA2 256 bits*/
+		/*
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest("admin123".getBytes("UTF-8"));
+
+        StringBuilder hexString = new StringBuilder();
+        for (int i: hash) {
+            hexString.append(String.format("%02x", 0XFF & i));           
+        }
+        System.out.println(hexString);
+        */
+		
+		
+				
+		/*CRIPTOGRANDO LADO SERVIDOR SHA2 256 BITS COM APACHE COMMON CODEC DIGEST UTILS"
+		String encrypt = DigestUtils.sha256Hex(password);
+		*/
+		
+		
+		
+		
+      //CRIPTOGRAFANDO LADO SERVIDOR MD5
+      		/*MessageDigest m = MessageDigest.getInstance("MD5");
+      		String password = "usersenha";
+      		m.reset(); // <---- Reseta antes de fazer o password
+      		m.update(password.getBytes(), 0, password.length());
+      		BigInteger password1 = new BigInteger(1, m.digest());
+      		password = String.format("%1$032x", password1);
+
+      		System.out.println(password);*/
 		
 		
 		/*List<Produto> listarq = new ArrayList<>(); 

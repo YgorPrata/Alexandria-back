@@ -5,7 +5,8 @@ use alexandria;
 create table usuario(
 	id_user int not null primary key auto_increment,
 	login varchar(20) not null,
-	senha varchar(100) not null
+	senha varchar(100) not null,
+	role varchar(10) not null
 );
 
 create table produto(
@@ -85,8 +86,8 @@ create table txt_path(
 	
 );
 
-insert into usuario(login, senha)
-values("userteste", MD5("usersenha"));
+insert into usuario(login, senha, role)
+values("admin", SHA2('admin',256), "admin");
 
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
 values("Museu do Amanhã", "Santiago Calatrava", "O Museu do Amanhã é um museu construído no município do Rio de Janeiro, no Brasil.

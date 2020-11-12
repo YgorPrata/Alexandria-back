@@ -1,0 +1,130 @@
+package com.restapp.model.dao.impl;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.commons.codec.digest.DigestUtils;
+
+import com.restapp.db.DB;
+import com.restapp.db.DbException;
+import com.restapp.model.dao.LoginDao;
+import com.restapp.model.entities.User;
+
+public class LoginDaoJDBC extends DB implements LoginDao{
+	
+	public Connection conn;
+	
+	public LoginDaoJDBC() {
+		
+	}
+
+	public LoginDaoJDBC(Connection conn) {
+		this.conn = conn;
+	}
+
+	@Override
+	public boolean insert(User usuario) {
+		String sql = "SELECT u.login, u.senha FROM usuario AS u WHERE u.login = ?";  
+		String user = usuario.getUser();
+		boolean sucesso = false;
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, user);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				sucesso = false;
+				System.out.println("login existente. usuario nao cadastrado");
+			}
+			else {
+				try {			
+					ps = conn.prepareStatement("INSERT INTO usuario (login, senha, role) VALUES (?, SHA2(?, 256), ?)");
+					ps.setString(1, usuario.getUser());
+					ps.setString(2, usuario.getPassword());
+					ps.setString(3,  usuario.getRole());
+					ps.executeUpdate();
+					sucesso = true;
+					System.out.println("usuario cadastado");
+				}
+					
+				catch(SQLException e) {
+					throw new DbException(e.getMessage());
+				}
+			}
+			
+			System.out.println(sucesso);
+			return sucesso;
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		
+		
+	}
+
+
+	@Override
+	public boolean validaUsuario(String user, String password) {
+		String sql = "SELECT u.login, u.senha FROM usuario AS u WHERE u.login = ? AND u.senha = ?";  
+		String encryptpw = DigestUtils.sha256Hex(password);
+		boolean autenticado = false;
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, user);
+			ps.setString(2, encryptpw);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				autenticado = true;
+			}
+			else {
+				autenticado = false;
+			}
+			return autenticado;
+			
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+	}
+
+	@Override
+	public String validaRoleUser(String user) {
+		String sql = "SELECT u.role FROM usuario AS u WHERE u.login = ?";  
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, user);
+			rs = ps.executeQuery();
+			
+			String role = null;
+			
+			if(rs.next()) {
+				role = rs.getString("u.role");
+				return role;
+			}
+			
+			return role;
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+	}
+	
+	
+
+}

@@ -4,6 +4,7 @@ import com.restapp.db.DB;
 import com.restapp.model.dao.impl.ArquiteturaDaoJDBC;
 import com.restapp.model.dao.impl.ArteDaoJDBC;
 import com.restapp.model.dao.impl.LivroDaoJDBC;
+import com.restapp.model.dao.impl.LoginDaoJDBC;
 import com.restapp.model.dao.impl.ProdutoDaoJDBC;
 
 public class DaoFactory {
@@ -22,5 +23,9 @@ public class DaoFactory {
 	
 	public static ProdutoDao criarProduto() {
 		return new ProdutoDaoJDBC(DB.getConnection());
+	}
+	
+	public static LoginDao criarUsuario() {
+		return new LoginDaoJDBC(DB.getConnection());
 	}
 }
