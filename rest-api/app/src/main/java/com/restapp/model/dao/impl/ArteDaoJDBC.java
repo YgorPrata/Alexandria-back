@@ -15,7 +15,7 @@ import com.restapp.db.DbException;
 import com.restapp.model.dao.ArteDao;
 import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Txt;
+
 
 public class ArteDaoJDBC extends DB implements ArteDao {
 
@@ -27,79 +27,6 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 
 	public ArteDaoJDBC(Connection conn) {
 		this.conn = conn;
-	}
-
-	@Override
-	public boolean insert(Arte arte, List<Img> list, Txt txt) {
-		boolean sucesso = false;
-		int id = 0;
-	
-		try {
-			ps = conn.prepareStatement("INSERT INTO produto (titulo, autor, descricao, tipo, "
-					+ " categoria, localidade, ano) VALUES (?, ?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, arte.getTitulo());
-			ps.setString(2, arte.getAutor());
-			ps.setString(3, arte.getDescricao());
-			ps.setString(4, arte.getTipo());
-			ps.setString(5, arte.getCategoria());
-			ps.setString(6, arte.getLocalidade());
-			ps.setInt(7, arte.getAno());
-			ps.executeUpdate();
-
-			rs = ps.getGeneratedKeys();
-			
-			if (rs.next()) {
-				id = rs.getInt(1);
-			}
-						
-			String sql = "INSERT INTO arte (tecnica, id_prod) VALUES (?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, arte.getTecnica());			
-			ps.setInt(2, id);
-			ps.executeUpdate();			
-			sucesso = true;
-			
-	
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}		
-		
-		try {
-			for(Img img : list) {
-				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
-				conn = DB.getConnection();
-				ps = conn.prepareStatement(sql);
-				ps.setString(1, img.getPath_img());
-				ps.setString(2, img.getDesc_img());
-				ps.setInt(3, id);
-				ps.executeUpdate();
-				sucesso = true;
-				
-			}
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		
-		try {			
-			String sql = "INSERT INTO txt_path (path_txt, id_prod) VALUES (?, ?)";
-			conn = DB.getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, txt.getPath_txt());
-			ps.setInt(2, id);
-			ps.executeUpdate();
-			sucesso = true;		
-		}
-			
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}			
-		return sucesso;
 	}
 	
 	@Override

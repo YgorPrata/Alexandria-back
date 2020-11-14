@@ -14,7 +14,6 @@ import com.restapp.db.DbException;
 import com.restapp.model.dao.ArquiteturaDao;
 import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Txt;
 
 public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
@@ -27,80 +26,6 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	public ArquiteturaDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
-
-	@Override
-	public boolean insert(Arquitetura arq, List<Img> list, Txt txt) {
-		boolean sucesso = false;
-		int id = 0;
-	
-		try {
-			ps = conn.prepareStatement("INSERT INTO produto (titulo, autor, descricao, tipo, "
-					+ " categoria, localidade, ano) VALUES (?, ?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, arq.getTitulo());
-			ps.setString(2, arq.getAutor());
-			ps.setString(3, arq.getDescricao());
-			ps.setString(4, arq.getTipo());
-			ps.setString(5, arq.getCategoria());
-			ps.setString(6, arq.getLocalidade());
-			ps.setInt(7, arq.getAno());
-			ps.executeUpdate();
-
-			rs = ps.getGeneratedKeys();
-			
-			if (rs.next()) {
-				id = rs.getInt(1);
-			}
-			
-			
-			String sql = "INSERT INTO arquitetura (curador, area, id_prod) VALUES (?, ?, ?)";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, arq.getCurador());
-			ps.setDouble(2, arq.getArea());
-			ps.setInt(3, id);
-			ps.executeUpdate();		
-			sucesso = true;
-			
-	
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}		
-		
-		try {
-			for(Img img : list) {
-				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
-				ps = conn.prepareStatement(sql);
-				ps.setString(1, img.getPath_img());
-				ps.setString(2, img.getDesc_img());
-				ps.setInt(3, id);
-				ps.executeUpdate();
-				sucesso = true;
-				
-			}
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		
-		try {			
-			String sql = "INSERT INTO txt_path (path_txt, id_prod) VALUES (?, ?)";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, txt.getPath_txt());
-			ps.setInt(2, id);
-			ps.executeUpdate();
-			sucesso = true;		
-		}
-			
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}			
-		return sucesso;
-	}
-
 
 	@Override
 	public List<Arquitetura> getAll() {
@@ -165,6 +90,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
   			int cont = 0;
   			int chave = 0;
  			
+  			
 			while(rs.next()) {
 				cont++;				
 				arq = map.get(rs.getInt("a.id_prod"));
@@ -185,8 +111,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 					    chave = entry.getKey();					    
 					}
 				}				
-			}
-		
+			}		
 			return arq;
 			
 		} catch (SQLException e) {

@@ -30,7 +30,7 @@ import com.restapp.model.dao.DaoFactory;
 import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Txt;
+
 
 @Path("/produto")
 public class ArteResource {
@@ -93,90 +93,6 @@ public class ArteResource {
 			
 	}
 	
-	@POST
-	@Path("/arte/cadastro")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFiles2(
-			@FormDataParam("img") List<FormDataBodyPart> inputStream,
-			@FormDataParam("desc_img") List<String> descricao2,
-			@FormDataParam("txt") InputStream inputStream2,
-			@FormDataParam("txt") FormDataContentDisposition fileDisposition2,
-			@FormDataParam("titulo") String titulo,
-			@FormDataParam("autor") String autor,
-			@FormDataParam("descricao") String descricao,
-			@FormDataParam("categoria") String categoria,
-			@FormDataParam("tipo") String tipo,
-			@FormDataParam("localidade") String localidade,
-			@FormDataParam("ano") Integer ano,
-			@FormDataParam("tecnica") String tecnica) throws IOException{
 	
-			List<Img> infoImg = new ArrayList<Img>();
-			String nomesImgs;
-			String nomeTxt;
-			String auxDesc;
-
-			for (int i = 0; i < inputStream.size(); i++) {
-				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();				
-				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();
-				//lista para as descricoes de cada imagem
-				auxDesc = descricao2.get(i);
-				
-				if(nomesImgs.endsWith(".jpg") || nomesImgs.endsWith(".jpeg") || nomesImgs.endsWith(".png")) {
-					infoImg.add(new Img(null, Img.pathimg+nomesImgs, auxDesc));					
-					try {	
-						File file = new File(Img.abspathimg+nomesImgs);					
-						OutputStream ops = new FileOutputStream(file);						
-						int read = 0;
-						byte[] bytes = new byte[8192];						
-						while ((read = inp.read(bytes)) != -1) {
-							ops.write(bytes, 0, read);							
-						}			
-						ops.flush();
-						ops.close();						
-					}						
-					catch (IOException e) {
-						e.printStackTrace();												
-					}
-				}
-			}
-		
-			
-			//tratando o único text file
-			Txt txt;
-			nomeTxt = UUID.randomUUID()+fileDisposition2.getFileName();
-			if(nomeTxt.endsWith(".pdf") || nomeTxt.endsWith(".docx") || nomeTxt.endsWith(".txt")) {
-				txt = new Txt(Txt.pathtxt+nomeTxt);
-				try {				
-					inputStream2 = new BufferedInputStream(inputStream2);
-					File file = new File(Txt.abspathtxt+nomeTxt);
-					OutputStream ops2 = new FileOutputStream(file);
-					int read = 0;
-					byte[] bytes = new byte[8192];
-					
-					while ((read = inputStream2.read(bytes)) != -1) {
-						ops2.write(bytes, 0, read);
-					}
-					ops2.flush();
-					ops2.close();						
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			else {
-				txt = new Txt();
-			}
-													
-			try {
-				Arte arte = new Arte(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, tecnica);
-				artedao.insert(arte, infoImg, txt);					
-				return Response.status(200).build();
-			} catch (DbException e) {
-				e.printStackTrace();
-				return Response.status(500).entity("Ops! Erro ao salvar o cadastro.").build();
-			}
-		
-	}
 		
 }

@@ -6,15 +6,24 @@ public class User {
 	private String user;
 	private String password;
 	private String role;
+	private String user_name;
 	
 	public User() {
 		
 	}
+	
+	/*construtor para cumprir com os cadastros dos produtos para relacionar o 
+	  chave primaria id do usuário com a chave estrangeira definida*/
+	public User(Integer id_user) {
+		this.id_user = id_user;
+	}
 
-	public User(String user, String password, String role) {
+	public User(Integer id_user, String user, String password, String role, String user_name) {
+		this.id_user = id_user;
 		this.user = user;
 		this.password = password;
 		this.role = role;
+		this.user_name = user_name;
 	}
 
 	public Integer getId_user() {
@@ -47,6 +56,15 @@ public class User {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
 
 	@Override
@@ -88,7 +106,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id_user=" + id_user + ", user=" + user + ", password=" + password + ", role=" + role + "]";
+		return "User [id_user=" + id_user + ", user=" + user + ", password=" + password + ", role=" + role
+				+ ", user_name=" + user_name + "]";
 	}
 
 	

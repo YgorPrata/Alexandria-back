@@ -8,21 +8,18 @@ public class Livro extends Produto {
 	private String editora;
 	private Integer edicao;
 	private String biografia;
-	private Integer ano;
-	
-	private Arquitetura arq;
+
 	
 	public Livro(){
 		
 	}
 
-	public Livro(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano, List<Img> img, String editora,
+	public Livro(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano, List<Img> img, User id_user, String editora,
 			Integer edicao, String biografia) {
-		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
+		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img, id_user);
 		this.editora = editora;
 		this.edicao = edicao;
 		this.biografia = biografia;
-		this.ano = ano;
 	}
 
 	public Integer getId_livro() {
@@ -58,23 +55,6 @@ public class Livro extends Produto {
 		this.biografia = biografia;
 	}
 
-	public Integer getAno() {
-		return ano;
-	}
-
-	public void setAno(Integer ano) {
-		this.ano = ano;
-	}
-	
-
-	public Arquitetura getArq() {
-		return arq;
-	}
-
-	public void setArq(Arquitetura arq) {
-		this.arq = arq;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -103,7 +83,7 @@ public class Livro extends Produto {
 	@Override
 	public String toString() {
 		return "Livro [id_livro=" + id_livro + ", editora=" + editora + ", edicao=" + edicao + ", biografia="
-				+ biografia + ", ano=" + ano + ", arq=" + arq + "]";
+				+ biografia + ", toString()=" + super.toString() + "]";
 	}
 
 	

@@ -8,20 +8,16 @@ public class Arquitetura extends Produto{
 	private Integer id_arq;
 	private String curador;
 	private Double area;
-	private Arte arte;
-	private Livro livro;
 			
 	public Arquitetura() {
 		super();
 	}
 
 	public Arquitetura(String titulo, String autor, String descricao, String categoria, String tipo, String localidade,
-			Integer ano, List<Img> img, String curador, Double area) {
-		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
+			Integer ano, List<Img> img, User id_user, String curador, Double area) {
+		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img, id_user);
 		this.curador = curador;
 		this.area = area;
-		this.arte = arte;
-		this.livro = livro;
 	}
 
 
@@ -54,26 +50,6 @@ public class Arquitetura extends Produto{
 	}
 
 
-	public Arte getArte() {
-		return arte;
-	}
-
-
-	public void setArte(Arte arte) {
-		this.arte = arte;
-	}
-
-
-	public Livro getLivro() {
-		return livro;
-	}
-
-
-	public void setLivro(Livro livro) {
-		this.livro = livro;
-	}
-
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -102,8 +78,8 @@ public class Arquitetura extends Produto{
 
 	@Override
 	public String toString() {
-		return "Arquitetura [produto=" + super.toString() + ", id_arq=" + id_arq + ", curador=" + curador + ", area=" + area + ", arte=" + arte
-				+ ", livro=" + livro + "]";
+		return "Arquitetura [id_arq=" + id_arq + ", curador=" + curador + ", area=" + area + ", toString()="
+				+ super.toString() + "]";
 	}
 
 

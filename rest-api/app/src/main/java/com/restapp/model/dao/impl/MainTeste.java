@@ -12,11 +12,11 @@ public class MainTeste {
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		//ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
 		//ProdutoDao prod = DaoFactory.criarProduto();
-		LoginDao user = DaoFactory.criarUsuario();
+		LoginDao user = DaoFactory.autenticaUsuario();
 		//System.out.println(arqdao.getById(1));
 		//System.out.println(prod.getProdCount());
 		
-		User usuario = new User("felipeuser", "user123", "user");
+		User usuario = new User(null, "felipeuser", "user123", "user", "felipe user");
 		
 		user.insert(usuario);
 		

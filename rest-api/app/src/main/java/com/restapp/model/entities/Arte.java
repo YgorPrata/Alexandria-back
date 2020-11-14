@@ -6,16 +6,14 @@ public class Arte extends Produto{
 	
 	private Integer id_arte;
 	private String tecnica;
-	
-	private Arquitetura arq;
-	
+		
 	public Arte(){
 		
 	}
 
 	public Arte(String titulo, String autor, String descricao, String categoria, String tipo, String localidade,
-			Integer ano, List<Img> img, String tecnica) {
-		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img);
+			Integer ano, List<Img> img, User id_user, String tecnica) {
+		super(titulo, autor, descricao, categoria, tipo, localidade, ano, img, id_user);
 		this.tecnica = tecnica;
 	}
 
@@ -37,15 +35,7 @@ public class Arte extends Produto{
 	public void setTecnica(String tecnica) {
 		this.tecnica = tecnica;
 	}
-
-
-	public Arquitetura getArq() {
-		return arq;
-	}
-
-	public void setArq(Arquitetura arq) {
-		this.arq = arq;
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -74,7 +64,7 @@ public class Arte extends Produto{
 
 	@Override
 	public String toString() {
-		return "Arte [id_arte=" + id_arte + ", tecnica=" + tecnica + ", arq=" + arq + "]";
+		return "Arte [id_arte=" + id_arte + ", tecnica=" + tecnica + ", toString()=" + super.toString() + "]";
 	}
 
 	

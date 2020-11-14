@@ -39,10 +39,11 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 			}
 			else {
 				try {			
-					ps = conn.prepareStatement("INSERT INTO usuario (login, senha, role) VALUES (?, SHA2(?, 256), ?)");
+					ps = conn.prepareStatement("INSERT INTO usuario (login, senha, role, user_name) VALUES (?, SHA2(?, 256), ?, ?)");
 					ps.setString(1, usuario.getUser());
 					ps.setString(2, usuario.getPassword());
 					ps.setString(3,  usuario.getRole());
+					ps.setString(4, usuario.getUser_name());
 					ps.executeUpdate();
 					sucesso = true;
 					System.out.println("usuario cadastado");
@@ -52,8 +53,6 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 					throw new DbException(e.getMessage());
 				}
 			}
-			
-			System.out.println(sucesso);
 			return sucesso;
 		}
 		catch(SQLException e) {
@@ -69,11 +68,10 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 
 
 	@Override
-	public boolean validaUsuario(String user, String password) {
-		String sql = "SELECT u.login, u.senha FROM usuario AS u WHERE u.login = ? AND u.senha = ?";  
+	public User validaUsuario(String user, String password) {
+		String sql = "SELECT * FROM usuario AS u WHERE u.login = ? AND u.senha = ?";  
 		String encryptpw = DigestUtils.sha256Hex(password);
-		boolean autenticado = false;
-
+		User userinfo;
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, user);
@@ -81,14 +79,13 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 			rs = ps.executeQuery();
 			
 			if(rs.next()) {
-				autenticado = true;
+				userinfo = new User(rs.getInt("u.id_user"), rs.getString("u.login"), null, rs.getString("u.role"), rs.getString("u.nome"));
+				return userinfo;
 			}
 			else {
-				autenticado = false;
+				return null;
 			}
-			return autenticado;
-			
-			
+	
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		}

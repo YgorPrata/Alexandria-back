@@ -11,7 +11,10 @@ import java.util.Map;
 import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ProdutoDao;
+import com.restapp.model.entities.Arquitetura;
+import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
+import com.restapp.model.entities.Livro;
 import com.restapp.model.entities.Produto;
 
 public class ProdutoDaoJDBC extends DB implements ProdutoDao{
@@ -81,7 +84,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	
 	@Override
 	public List<Produto> getNovidades(Integer limit) {
-		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod ORDER BY p.id_prod DESC LIMIT ?";
+		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod GROUP BY p.id_prod ORDER BY p.id_prod DESC LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, limit);
@@ -195,6 +198,34 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 		
 		return prod;
 	}
-
+	
+	private List<Produto> instanciaTudo(ResultSet rs, List<Img> img) throws SQLException{
+		Produto prod = new Produto();
+		Arquitetura arq = new Arquitetura();
+		Arte arte = new Arte();
+		Livro livro = new Livro();
+		List<Produto> list = new ArrayList<Produto>();
+		prod.setId_prod(rs.getInt("p.id_prod"));
+		prod.setTitulo(rs.getString("p.titulo"));
+		prod.setAutor(rs.getString("p.autor"));
+		prod.setDescricao(rs.getString("p.descricao"));
+		prod.setCategoria(rs.getString("p.categoria"));
+		prod.setTipo(rs.getString("p.tipo"));
+		prod.setLocalidade(rs.getString("p.localidade"));
+		prod.setAno(rs.getInt("p.ano"));
+		arq.setCurador(rs.getString("a.curador"));
+		arq.setArea(rs.getDouble("a.area"));
+		livro.setBiografia(rs.getString("l.biografia"));
+		livro.setEdicao(rs.getInt("l.edicao"));
+		livro.setEditora(rs.getString("l.editora"));
+		arte.setTecnica(rs.getString("ar.tecnica"));
+		prod.setListImg(img);
+		
+		list.add(prod);
+		list.add(arq);
+		list.add(livro);
+		list.add(arte);
+		return list;
+	}
 		
 }

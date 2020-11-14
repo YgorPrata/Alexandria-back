@@ -14,6 +14,7 @@ public class Produto {
 	private Integer ano;
 	private List<Img> listimg;	
 	private Img img;
+	private User user;
 
 	
 	public Produto() {
@@ -21,7 +22,7 @@ public class Produto {
 	}
 	
 
-	public Produto(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano, List<Img> listimg) {
+	public Produto(String titulo, String autor, String descricao, String categoria, String tipo, String localidade, Integer ano, List<Img> listimg, User user) {
 		this.titulo = titulo;
 		this.autor = autor;
 		this.descricao = descricao;
@@ -30,6 +31,7 @@ public class Produto {
 		this.localidade = localidade;
 		this.ano = ano;
 		this.listimg = listimg;
+		this.user = user;
 	}
 
 	
@@ -131,6 +133,17 @@ public class Produto {
 	public void setImg(Img img) {
 		this.img = img;
 	}
+	
+	
+	public User getUser() {
+		return user;
+	}
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 
 	@Override
 	public int hashCode() {

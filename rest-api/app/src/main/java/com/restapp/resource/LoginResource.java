@@ -10,9 +10,12 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
+
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 
 import com.google.gson.Gson;
 import com.restapp.model.dao.DaoFactory;
@@ -25,12 +28,12 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Path("/user")
+@Path("/login")
 public class LoginResource {
 	
 	private static final String phrase = "#";
 	private static final String FRASE_SEGREDO = UUID.randomUUID()+phrase+UUID.randomUUID();
-	LoginDao logindao = DaoFactory.criarUsuario();
+	LoginDao logindao = DaoFactory.autenticaUsuario();
 
 	
 	@POST
@@ -44,11 +47,13 @@ public class LoginResource {
 	
 			User credencial = gson.fromJson(credenciaisJson, User.class);
 	 
-			validaLogin(credencial.getUser(), credencial.getPassword());
+			User userInfos = validaLogin(credencial.getUser(), credencial.getPassword());
 	
 			String token = gerarToken(credencial.getUser(),1);
-	
-			return Response.ok(token).build();
+			//passando as informacoes do usuario por um header customizado no http, token, id e nome
+			return Response.status(200).header("Authorization", token).header("UserId", userInfos.getId_user())
+					.header("UserName", userInfos.getUser_name()).build();
+			
 
 		}
 		catch (Exception e) {
@@ -59,10 +64,15 @@ public class LoginResource {
 
 		}
 	
-	private void validaLogin(String user, String password) throws Exception{	
+	private User validaLogin(String user, String password) throws Exception{	
 		try {
-			if(logindao.validaUsuario(user, password) == false)
+			if(logindao.validaUsuario(user, password) == null) {
 				throw new Exception("Crendencias não válidas!");
+			}
+			else {
+				User userInfo = logindao.validaUsuario(user, password);
+				return userInfo;
+			}
 		} 
 		catch (Exception e) {
 			throw e;
@@ -95,7 +105,7 @@ public class LoginResource {
 
 	}
 	
-	public Claims validaToken(String token) {
+	public Claims validaToken(String token) throws Exception {
 
 		try{
 			Claims claims = Jwts.parser()     
@@ -115,7 +125,7 @@ public class LoginResource {
 		// CRIAR UM METODO DAO QUE PEGA O LOGIN DO USUÁRIO AQUI POR PARAMETRO E QUE RETORNE A ROLE CADASTRADA NO BANCO
 		// CRIAR CONDICIONAL, SE FOR USER RETORNA ENUM USER, SE FOR ADMIN, RETORNA ENUM ADMIN
 		System.out.println("VALOR DA SAIDA DA CHAMADA DO METODO DE VALIDACAO DA ROLE: "+logindao.validaRoleUser(login));
-		if(logindao.validaRoleUser(login) == "admin") {
+		if(logindao.validaRoleUser(login).equals("admin")) {
 			return UserRoles.ADMIN;
 		}
 		else {

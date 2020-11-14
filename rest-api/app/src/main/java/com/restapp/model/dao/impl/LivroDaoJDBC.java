@@ -14,11 +14,8 @@ import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.LivroDao;
 import com.restapp.model.entities.Livro;
-import com.restapp.model.entities.Livro;
-import com.restapp.model.entities.Livro;
-import com.restapp.model.entities.Livro;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Txt;
+
 
 public class LivroDaoJDBC extends DB implements LivroDao {
 
@@ -30,81 +27,6 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 
 	public LivroDaoJDBC(Connection conn) {
 		this.conn = conn;
-	}
-
-	@Override
-	public boolean insert(Livro livro, List<Img> list, Txt txt) {
-		boolean sucesso = false;
-		int id = 0;
-	
-		try {
-			ps = conn.prepareStatement("INSERT INTO produto (titulo, autor, descricao, tipo, "
-					+ " categoria, localidade, ano) VALUES (?, ?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, livro.getTitulo());
-			ps.setString(2, livro.getAutor());
-			ps.setString(3, livro.getDescricao());
-			ps.setString(4, livro.getTipo());
-			ps.setString(5, livro.getCategoria());
-			ps.setString(6, livro.getLocalidade());
-			ps.setInt(7, livro.getAno());
-			ps.executeUpdate();
-
-			rs = ps.getGeneratedKeys();
-			
-			if (rs.next()) {
-				id = rs.getInt(1);
-			}
-						
-			String sql = "INSERT INTO livro (editora, edicao, biografia, id_prod) VALUES (?, ?, ?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, livro.getEditora());
-			ps.setInt(2, livro.getEdicao());
-			ps.setString(3, livro.getBiografia());
-			ps.setInt(4, id);
-			ps.executeUpdate();			
-			sucesso = true;
-			
-	
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}		
-		
-		try {
-			for(Img img : list) {
-				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
-				conn = DB.getConnection();
-				ps = conn.prepareStatement(sql);
-				ps.setString(1, img.getPath_img());
-				ps.setString(2, img.getDesc_img());
-				ps.setInt(3, id);
-				ps.executeUpdate();
-				sucesso = true;
-				
-			}
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		
-		try {			
-			String sql = "INSERT INTO txt_path (path_txt, id_prod) VALUES (?, ?)";
-			conn = DB.getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, txt.getPath_txt());
-			ps.setInt(2, id);
-			ps.executeUpdate();
-			sucesso = true;		
-		}
-			
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}			
-		return sucesso;
 	}
 	
 	@Override
@@ -157,7 +79,7 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	
 	@Override
 	public Livro getById(Integer id_livro){
-		String sql = "SELECT * FROM produto AS p INNER JOIN livro AS a ON p.id_prod = l.id_prod INNER JOIN "
+		String sql = "SELECT * FROM produto AS p INNER JOIN livro AS l ON p.id_prod = l.id_prod INNER JOIN "
 				+ "img_path AS i ON p.id_prod = i.id_prod WHERE p.id_prod = ?";
 		
 		try {
