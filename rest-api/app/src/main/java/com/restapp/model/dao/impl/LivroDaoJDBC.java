@@ -169,13 +169,13 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	}
 	
 	@Override
-	public List<Livro> getLivroCategoria(String query, Integer limit){
+	public List<Livro> getLivroCategoria(String query, Integer limit){		
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, l.id_livro, l.id_prod, i.id_img, " 
 				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
 				+ "livro AS l ON p.id_prod = l.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
 				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
 				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') "
-				+ "OR a.bibliografia LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
+				+ "OR l.biografia LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, query);
@@ -192,14 +192,14 @@ public class LivroDaoJDBC extends DB implements LivroDao {
  			Img img;
  			
 			while(rs.next()) {			
-				Livro livro = map.get(rs.getInt("a.id_prod"));
+				Livro livro = map.get(rs.getInt("l.id_prod"));
 				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(livro == null) {
 					livro = instanciaLivSimp(rs, img);					
 					list.add(livro);
-					map.put(rs.getInt("a.id_prod"), livro);					
+					map.put(rs.getInt("l.id_prod"), livro);					
 				}				
 			}
 		
@@ -239,7 +239,7 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 		livro.setId_livro(rs.getInt("l.id_livro"));		
 		livro.setEditora(rs.getString("l.editora"));
 		livro.setEdicao(rs.getInt("l.edicao"));
-		livro.setBiografia(rs.getString("biografia"));
+		livro.setBiografia(rs.getString("l.biografia"));
 		livro.setListImg(listimg);
 		return livro;
 	}

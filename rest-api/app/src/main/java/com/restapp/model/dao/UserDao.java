@@ -15,6 +15,6 @@ public interface UserDao {
 	boolean insertLivro(Livro livro, List<Img> img);
 	List<Produto> displayUserProdsSimp(Integer id_user);
 	Produto getProdById(Integer id_user, Integer id_prod);
-	Produto updateUserProd(Integer id_user, String query);
+	Produto updateUserArqProd(Integer id_user, Arquitetura arq);
 	boolean deleteUserProd(Integer id_prod);
 }

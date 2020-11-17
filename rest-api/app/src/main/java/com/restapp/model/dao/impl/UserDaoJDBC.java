@@ -392,9 +392,33 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 
 	@Override
-	public Produto updateUserProd(Integer id_user, String query) {
-		// TODO Auto-generated method stub
-		return null;
+	public Produto updateUserArqProd(Integer id_user, Arquitetura arq) {
+		String sql = "UPDATE produto p, arquitetura a, SET p.titulo = ?, p.autor = ?, "
+					+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, a.curador = ?,"
+					+ " a.area = ? WHERE p.id_prod = ? AND p.id_user = ?";
+		try {
+            ps = conn.prepareStatement("sql");
+            ps.setString(1, arq.getTitulo());
+            ps.setString(2, arq.getAutor());
+            ps.setString(3, arq.getLocalidade());
+            ps.setString(4, arq.getDescricao());
+            ps.setString(5, arq.getTipo());
+            ps.setInt(6, arq.getAno());
+            ps.setString(7, arq.getCurador());
+            ps.setDouble(8, arq.getArea());
+            ps.setInt(9, arq.getId_prod());
+            ps.setInt(10, id_user);
+            ps.executeUpdate();
+            
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+        return arq;
 	}
 
 	@Override
