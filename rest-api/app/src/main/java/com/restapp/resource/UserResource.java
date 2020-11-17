@@ -14,6 +14,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -32,8 +33,6 @@ import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
 import com.restapp.model.entities.Livro;
 import com.restapp.model.entities.User;
-import com.restapp.resource.security.Seguro;
-import com.restapp.resource.security.UserRoles;
 
 //@Seguro({UserRoles.ADMIN, UserRoles.USER})
 @Path("/user")
@@ -242,6 +241,47 @@ public class UserResource {
 			return Response.status(500).entity("Erro no banco de dados").build();
 		}					
 	}
+	
+	@PUT
+	@Path("prod/myprods/uparq")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response updateUserArqProd(Arquitetura arq, @HeaderParam("UserId") Integer id_user) {
+		if (userdao.updateUserArqProd(arq, id_user) != null) {
+			return Response.status(200).entity(userdao.updateUserArqProd(arq, id_user)).build();			
+		}
+		else {			
+			return Response.status(500).entity("Erro no banco de dados").build();
+		}					
+	}
+	
+	@PUT
+	@Path("prod/myprods/uparte")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response updateUserArteProd(Arte arte, @HeaderParam("UserId") Integer id_user) {
+		if (userdao.updateUserArteProd(arte, id_user) != null) {
+			return Response.status(200).entity(userdao.updateUserArteProd(arte, id_user)).build();			
+		}
+		else {			
+			return Response.status(500).entity("Erro no banco de dados").build();
+		}					
+	}
+	
+	@PUT
+	@Path("prod/myprods/uplivro")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response updateUserLivroProd(Livro livro, @HeaderParam("UserId") Integer id_user) {
+		if (userdao.updateUserLivroProd(livro, id_user) != null) {
+			return Response.status(200).entity(userdao.updateUserLivroProd(livro, id_user)).build();			
+		}
+		else {			
+			return Response.status(500).entity("Erro no banco de dados").build();
+		}					
+	}
+	
+	
 	
 	
 }

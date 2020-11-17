@@ -392,24 +392,30 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 
 	@Override
-	public Produto updateUserArqProd(Integer id_user, Arquitetura arq) {
-		String sql = "UPDATE produto p, arquitetura a, SET p.titulo = ?, p.autor = ?, "
-					+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, a.curador = ?,"
-					+ " a.area = ? WHERE p.id_prod = ? AND p.id_user = ?";
+	public Produto updateUserArqProd(Arquitetura arq, Integer id_user) {
+		String sql = "UPDATE produto p, arquitetura a, img_path i SET p.titulo = ?, p.autor = ?, "
+				+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, a.curador = ?, a.area = ?, "
+				+ "i.desc_img = ? WHERE i.id_img = ? AND p.id_prod = ? AND p.id_user = ?";
+		
 		try {
-            ps = conn.prepareStatement("sql");
-            ps.setString(1, arq.getTitulo());
-            ps.setString(2, arq.getAutor());
-            ps.setString(3, arq.getLocalidade());
-            ps.setString(4, arq.getDescricao());
-            ps.setString(5, arq.getTipo());
-            ps.setInt(6, arq.getAno());
-            ps.setString(7, arq.getCurador());
-            ps.setDouble(8, arq.getArea());
-            ps.setInt(9, arq.getId_prod());
-            ps.setInt(10, id_user);
-            ps.executeUpdate();
+			for(Img img : arq.getListImg()) {
+	            ps = conn.prepareStatement(sql);
+	            ps.setString(1, arq.getTitulo());
+	            ps.setString(2, arq.getAutor());
+	            ps.setString(3, arq.getLocalidade());
+	            ps.setString(4, arq.getDescricao());
+	            ps.setString(5, arq.getTipo());
+	            ps.setInt(6, arq.getAno());
+	            ps.setString(7, arq.getCurador());
+	            ps.setDouble(8, arq.getArea());
+	            ps.setString(9, img.getDesc_img());
+	            ps.setInt(10, img.getId_img());
+	            ps.setInt(11, arq.getId_prod());
+	            ps.setInt(12, id_user);
+	            ps.executeUpdate();	            
+    		}
             
+            return arq;
             
         } catch (SQLException e) {
             e.printStackTrace();
@@ -418,11 +424,113 @@ public class UserDaoJDBC extends DB implements UserDao{
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
 		}
-        return arq;
+        
+	}
+	
+	@Override
+	public Produto updateUserArteProd(Arte arte, Integer id_user) {
+		String sql = "UPDATE produto p, arte ar, img_path i SET p.titulo = ?, p.autor = ?, "
+				+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, ar.tecnica = ?, "
+				+ "i.desc_img = ? WHERE i.id_img = ? AND p.id_prod = ? AND p.id_user = ?";
+		
+		try {
+			for(Img img : arte.getListImg()) {
+	            ps = conn.prepareStatement(sql);
+	            ps.setString(1, arte.getTitulo());
+	            ps.setString(2, arte.getAutor());
+	            ps.setString(3, arte.getLocalidade());
+	            ps.setString(4, arte.getDescricao());
+	            ps.setString(5, arte.getTipo());
+	            ps.setInt(6, arte.getAno());
+	            ps.setString(7, arte.getTecnica());	     
+	            ps.setString(8, img.getDesc_img());
+	            ps.setInt(9, img.getId_img());
+	            ps.setInt(10, arte.getId_prod());
+	            ps.setInt(11, id_user);
+	            ps.executeUpdate();	            
+    		}
+            
+            return arte;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
 	}
 
 	@Override
-	public boolean deleteUserProd(Integer id_prod) {
+	public Produto updateUserLivroProd(Livro livro, Integer id_user) {
+		String sql = "UPDATE produto p, livro l, img_path i SET p.titulo = ?, p.autor = ?, "
+				+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, l.editora = ?, l.edicao = ?, l.biografia = ? "
+				+ "i.desc_img = ? WHERE i.id_img = ? AND p.id_prod = ? AND p.id_user = ?";
+		
+		try {
+			for(Img img : livro.getListImg()) {
+	            ps = conn.prepareStatement(sql);
+	            ps.setString(1, livro.getTitulo());
+	            ps.setString(2, livro.getAutor());
+	            ps.setString(3, livro.getLocalidade());
+	            ps.setString(4, livro.getDescricao());
+	            ps.setString(5, livro.getTipo());
+	            ps.setInt(6, livro.getAno());
+	            ps.setString(7, livro.getEditora());
+	            ps.setInt(8, livro.getEdicao());
+	            ps.setString(9, livro.getBiografia());
+	            ps.setString(10, img.getDesc_img());
+	            ps.setInt(11, img.getId_img());
+	            ps.setInt(12, livro.getId_prod());
+	            ps.setInt(13, id_user);
+	            ps.executeUpdate();	            
+    		}
+            
+            return livro;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+	}
+
+	@Override
+	public boolean deleteUserArqProd(Integer id_prod) {
+		String sql = "UPDATE produto p, arquitetura a, img_path i SET p.titulo = ?, p.autor = ?, "
+				+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, a.curador = ?, a.area = ?, "
+				+ "i.desc_img = ? WHERE i.id_img = ? AND p.id_prod = ? AND p.id_user = ?";
+		boolean sucesso = false;
+		try {
+			ps = conn.prepareStatement(sql);
+            ps.setInt(1, id_prod);
+            ps.executeUpdate();	
+            sucesso = true;
+    	}
+		
+		catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new RuntimeException(e);
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		
+		return sucesso;
+		
+	}
+	
+	@Override
+	public boolean deleteUserArteProd(Integer id_prod) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteUserLivroProd(Integer id_prod) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -491,6 +599,8 @@ public class UserDaoJDBC extends DB implements UserDao{
 		livro.setListImg(listimg);
 		return livro;
 	}
+
+	
 
 	
 
