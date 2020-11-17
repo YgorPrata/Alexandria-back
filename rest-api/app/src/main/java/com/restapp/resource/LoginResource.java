@@ -10,12 +10,9 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
-
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 
 import com.google.gson.Gson;
 import com.restapp.model.dao.DaoFactory;
@@ -34,6 +31,23 @@ public class LoginResource {
 	private static final String phrase = "#";
 	private static final String FRASE_SEGREDO = UUID.randomUUID()+phrase+UUID.randomUUID();
 	LoginDao logindao = DaoFactory.autenticaUsuario();
+
+	
+	@POST
+	@Path("cadastro/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response insertUser(User usuario) {
+		if(logindao.insertUser(usuario)) {
+			return Response.status(200).entity("Usuario cadastrado com sucesso!").build();
+		}
+		else if(!logindao.insertUser(usuario)){
+			return Response.status(500).entity("Login já existente. Tente outro. ").build();
+		}	
+		else {
+			return Response.status(500).entity("Ocorreu algum problema no banco.").build();
+		}
+	}
+		
 
 	
 	@POST
@@ -122,8 +136,6 @@ public class LoginResource {
 	}
 	
 	public UserRoles getUserRoles(String login) {		
-		// CRIAR UM METODO DAO QUE PEGA O LOGIN DO USUÁRIO AQUI POR PARAMETRO E QUE RETORNE A ROLE CADASTRADA NO BANCO
-		// CRIAR CONDICIONAL, SE FOR USER RETORNA ENUM USER, SE FOR ADMIN, RETORNA ENUM ADMIN
 		System.out.println("VALOR DA SAIDA DA CHAMADA DO METODO DE VALIDACAO DA ROLE: "+logindao.validaRoleUser(login));
 		if(logindao.validaRoleUser(login).equals("admin")) {
 			return UserRoles.ADMIN;

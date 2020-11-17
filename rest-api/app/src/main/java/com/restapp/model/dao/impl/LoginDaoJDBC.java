@@ -23,7 +23,7 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 	}
 
 	@Override
-	public boolean insert(User usuario) {
+	public boolean insertUser(User usuario) {
 		String sql = "SELECT u.login, u.senha FROM usuario AS u WHERE u.login = ?";  
 		String user = usuario.getUser();
 		boolean sucesso = false;
@@ -39,7 +39,7 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 			}
 			else {
 				try {			
-					ps = conn.prepareStatement("INSERT INTO usuario (login, senha, role, user_name) VALUES (?, SHA2(?, 256), ?, ?)");
+					ps = conn.prepareStatement("INSERT INTO usuario (login, senha, role, nome) VALUES (?, SHA2(?, 256), ?, ?)");
 					ps.setString(1, usuario.getUser());
 					ps.setString(2, usuario.getPassword());
 					ps.setString(3,  usuario.getRole());
