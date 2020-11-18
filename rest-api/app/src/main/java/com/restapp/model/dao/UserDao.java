@@ -18,7 +18,6 @@ public interface UserDao {
 	Produto updateUserArqProd(Arquitetura arq, Integer id_user);
 	Produto updateUserArteProd(Arte arte, Integer id_user);
 	Produto updateUserLivroProd(Livro livro, Integer id_user);
-	boolean deleteUserArqProd(Integer id_prod);
-	boolean deleteUserArteProd(Integer id_prod);
-	boolean deleteUserLivroProd(Integer id_prod);
+	boolean deleteUserProd(Integer id_prod);
+
 }

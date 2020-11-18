@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -279,6 +280,14 @@ public class UserResource {
 		else {			
 			return Response.status(500).entity("Erro no banco de dados").build();
 		}					
+	}
+	
+	@DELETE
+	@Path("prod/delete")
+	@Consumes({MediaType.APPLICATION_JSON })
+	public Response deleteUserProd(Integer id_user) {
+		return null;
+		
 	}
 	
 	

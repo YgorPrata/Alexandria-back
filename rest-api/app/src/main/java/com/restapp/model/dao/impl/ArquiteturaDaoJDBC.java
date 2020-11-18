@@ -172,8 +172,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
 				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
 				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
-				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR a.curador LIKE CONCAT( '%',?,'%') "
-				+ "OR a.area LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
+				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR p.tipo LIKE CONCAT( '%',?,'%') OR "
+				+ "a.curador LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, query);

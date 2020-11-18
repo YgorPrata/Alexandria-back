@@ -498,14 +498,28 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 
 	@Override
-	public boolean deleteUserArqProd(Integer id_prod) {
-		String sql = "UPDATE produto p, arquitetura a, img_path i SET p.titulo = ?, p.autor = ?, "
-				+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, a.curador = ?, a.area = ?, "
-				+ "i.desc_img = ? WHERE i.id_img = ? AND p.id_prod = ? AND p.id_user = ?";
+	public boolean deleteUserProd(Integer id_prod) {
+		String sql = "DELETE FROM arquitetura WHERE id_prod = ?"  
+				+"DELETE FROM img_path WHERE id_prod = ?"  
+				+"DELETE FROM produto WHERE id_prod = ?"  
+				+"DELETE FROM arte WHERE id_prod = ?"  
+				+"DELETE FROM img_path WHERE id_prod = ?"  
+				+"DELETE FROM produto WHERE id_prod = ?" 
+				+"DELETE FROM livro WHERE id_prod = ?"  
+				+"DELETE FROM img_path WHERE id_prod = ?"  
+				+"DELETE FROM produto WHERE id_prod = ?";
 		boolean sucesso = false;
 		try {
 			ps = conn.prepareStatement(sql);
             ps.setInt(1, id_prod);
+            ps.setInt(2, id_prod);
+            ps.setInt(3, id_prod);
+            ps.setInt(4, id_prod);
+            ps.setInt(5, id_prod);
+            ps.setInt(6, id_prod);
+            ps.setInt(7, id_prod);
+            ps.setInt(8, id_prod);
+            ps.setInt(9, id_prod);
             ps.executeUpdate();	
             sucesso = true;
     	}
@@ -523,17 +537,6 @@ public class UserDaoJDBC extends DB implements UserDao{
 		
 	}
 	
-	@Override
-	public boolean deleteUserArteProd(Integer id_prod) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteUserLivroProd(Integer id_prod) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 	private Produto instanciaProdSimp(ResultSet rs, Img img) throws SQLException {
 		Produto prod = new Produto();

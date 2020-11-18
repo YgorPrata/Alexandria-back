@@ -9,16 +9,17 @@ public class MainTeste {
 
 	public static void main(String[] args) throws Exception {	
 		
+			
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		//ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
 		//ProdutoDao prod = DaoFactory.criarProduto();
-		LoginDao user = DaoFactory.autenticaUsuario();
+		//LoginDao user = DaoFactory.autenticaUsuario();
 		//System.out.println(arqdao.getById(1));
 		//System.out.println(prod.getProdCount());
 		
-		User usuario = new User(null, "felipeuser", "user123", "user", "felipe user");
+		//User usuario = new User(null, "felipeuser", "user123", "user", "felipe user");
 		
-		user.insert(usuario);
+		//user.insert(usuario);
 		
 		//user.validaUsuario(usuario);	
 		

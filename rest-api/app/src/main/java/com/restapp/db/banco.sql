@@ -69,16 +69,57 @@ values("admin", "admin", SHA2('admin',256), "admin");
 
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
 values("Museu do Amanhã", "Santiago Calatrava", "O Museu do Amanhã é um museu construído no município do Rio de Janeiro, no Brasil.",
-"arquitetura", "construção moderna", "Rio de Janeiro", 2020, 1);
+"Arquitetura", "construção moderna", "Rio de Janeiro", 2020, 1);
+
+insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
+values("Livro antigo", "Autor do livro", "Livro mais antigo do mundo.",
+"Livro", "Mitologia", "Museu desconhecido", 2020, 1);
+
+insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
+values("Arte antiga", "Autor da arte", "Arte mais antiga do mundo.",
+"Arte", "Pop", "Museu desconhecido", 2020, 1);
 
 insert into arquitetura(curador, area, id_prod)
 values("curadorteste", 10000.50, 1);
 
-insert into arte(tecnica, id_prod)
-values("tecnica", 1);
-
 insert into livro(editora, edicao, biografia, id_prod)
-values("editorateste", 1, "biografiateste", 1);
+values("Editora antiga", 1, "Biografia curta", 2);
+
+insert into arte(tecnica, id_prod)
+values("Cubismo", 3);
 
 insert into img_path(path_img, desc_img, id_prod)
-values("imgs/imagem.jpg","descricao", 1);
+values("imgs/imagemArquitetura1.jpg","descricao1", 1);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArquitetura2.jpg","descricao2", 1);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArquitetura3.jpg","descricao3", 1);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArquitetura4.jpg","descricao4", 1);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemLivro1.jpg","descricao1", 2);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemLivro2.jpg","descricao2", 2);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemLivro3.jpg","descricao3", 2);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemLivro4.jpg","descricao4", 2);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArte1.jpg","descricao1", 3);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArte2.jpg","descricao2", 3);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArte3.jpg","descricao3", 3);
+
+insert into img_path(path_img, desc_img, id_prod)
+values("imgs/imagemArte4.jpg","descricao4", 3);

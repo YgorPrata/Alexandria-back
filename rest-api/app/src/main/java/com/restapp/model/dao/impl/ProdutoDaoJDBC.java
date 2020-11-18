@@ -36,9 +36,8 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 				+ "LEFT JOIN arte AS ar ON p.id_prod = ar.id_prod "
 				+ "LEFT JOIN img_path AS i ON p.id_prod = i.id_prod " 
 				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.descricao LIKE CONCAT( '%',?,'%') "
-				+ "OR p.tipo LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
-				+ "OR p.ano LIKE CONCAT( '%',?,'%') OR a.curador LIKE CONCAT( '%',?,'%') "
-				+ "OR l.editora LIKE CONCAT( '%',?,'%') OR l.biografia LIKE CONCAT( '%',?,'%') "
+				+ "OR p.tipo LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') OR p.categoria LIKE CONCAT( '%',?,'%') "
+				+ "OR a.curador LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') OR l.biografia LIKE CONCAT( '%',?,'%') "
 				+ "OR ar.tecnica LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);

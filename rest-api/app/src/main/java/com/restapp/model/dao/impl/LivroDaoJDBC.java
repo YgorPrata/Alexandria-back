@@ -170,11 +170,12 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	
 	@Override
 	public List<Livro> getLivroCategoria(String query, Integer limit){		
+		System.out.println("VEIO AQUI"+query);
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, l.id_livro, l.id_prod, i.id_img, " 
 				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
 				+ "livro AS l ON p.id_prod = l.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
 				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
-				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') "
+				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR p.tipo LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') "
 				+ "OR l.biografia LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
@@ -184,7 +185,8 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 			ps.setString(4, query);
 			ps.setString(5, query);
 			ps.setString(6, query);
-			ps.setInt(7, limit);
+			ps.setString(7, query);
+			ps.setInt(8, limit);
 			rs = ps.executeQuery();
 			
 			List<Livro> list = new ArrayList<>();	
