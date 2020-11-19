@@ -1,10 +1,8 @@
 package com.restapp.model.dao.impl;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +13,7 @@ import com.restapp.db.DbException;
 import com.restapp.model.dao.ArteDao;
 import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
+import com.restapp.model.entities.User;
 
 
 public class ArteDaoJDBC extends DB implements ArteDao {
@@ -32,7 +31,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	@Override
 	public List<Arte> getAll() {
 		String sql = "SELECT * FROM produto AS p INNER JOIN arte AS ar ON p.id_prod = ar.id_prod "
-				+ "INNER JOIN img_path AS i ON p.id_prod = i.id_prod";
+				+ "INNER JOIN img_path AS i ON p.id_prod = i.id_prod INNER JOIN usuario AS u ON p.id_user = u.id_user";
 		try {
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -40,12 +39,15 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 			List<Arte> list = new ArrayList<>();	
 			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
  			List<Img> listimg = new ArrayList<>();
+ 			User user;
   			int cont = 0;
   			int chave = 0;
  			
 			while(rs.next()) {
 				cont++;				
 				Arte arte = map.get(rs.getInt("ar.id_prod"));
+				
+				user = new User(rs.getString("u.nome"));
 				
 				if(chave == rs.getInt("i.id_prod") || cont == 1) {
 					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
@@ -57,7 +59,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 				}
 								
 				if(arte == null) {
-					arte = instanciaTudo(rs, listimg);					
+					arte = instanciaTudo(rs, listimg, user);					
 					list.add(arte);
 					map.put(rs.getInt("ar.id_prod"), arte);
 					for (Map.Entry<Integer, Arte> entry : map.entrySet()) {
@@ -79,7 +81,8 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 
 	public Arte getById(Integer id_arte) {
 		String sql = "SELECT * FROM produto AS p INNER JOIN arte AS ar ON p.id_prod = ar.id_prod INNER JOIN "
-				+ "img_path AS i ON p.id_prod = i.id_prod WHERE p.id_prod = ?";
+				+ "img_path AS i ON p.id_prod = i.id_prod INNER JOIN usuario AS u ON p.id_user = u.id_user "
+				+ "WHERE p.id_prod = ?";
 		
 		try {
 			ps = conn.prepareStatement(sql);
@@ -89,12 +92,15 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 			Arte arte = new Arte();	
 			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
  			List<Img> listimg = new ArrayList<>();
+ 			User user;
   			int cont = 0;
   			int chave = 0;
  			
 			while(rs.next()) {
 				cont++;				
 				arte = map.get(rs.getInt("ar.id_prod"));
+				
+				user = new User(rs.getString("u.nome"));
 				
 				if(chave == rs.getInt("i.id_prod") || cont == 1) {
 					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
@@ -106,7 +112,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 				}
 								
 				if(arte == null) {
-					arte = instanciaTudo(rs, listimg);										
+					arte = instanciaTudo(rs, listimg, user);										
 					map.put(rs.getInt("ar.id_prod"), arte);
 					for (Map.Entry<Integer, Arte> entry : map.entrySet()) {
 					    chave = entry.getKey();					    
@@ -128,10 +134,11 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	
 	@Override
 	public List<Arte> getArteTipo(String titulo, String autor, String localidade, Integer limit) {
-		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, ar.id_arte, ar.id_prod, i.id_img,"
-				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN "
+		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, ar.id_arte, ar.id_prod, i.id_img, "
+				+ "i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN "
 				+ "arte AS ar ON p.id_prod = ar.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
-				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
+				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
 				+ "ORDER BY RAND() LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
@@ -144,14 +151,17 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 			List<Arte> list = new ArrayList<>();	
 			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Arte arte = map.get(rs.getInt("ar.id_prod"));
-
+				
+				user = new User(rs.getString("u.nome"));
+				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(arte == null) {
-					arte = instanciaArqSimp(rs, img);					
+					arte = instanciaArqSimp(rs, img, user);					
 					list.add(arte);
 					map.put(rs.getInt("ar.id_prod"), arte);					
 				}				
@@ -171,9 +181,10 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	@Override
 	public List<Arte> getArteCategoria(String query, Integer limit){
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, ar.id_arte, ar.id_prod, i.id_img, " 
-				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
+				+ "i.path_img, i.desc_img, u.nome FROM produto AS p INNER JOIN " 
 				+ "arte AS ar ON p.id_prod = ar.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
-				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
+				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
 				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR p.tipo LIKE CONCAT( '%',?,'%') OR "
 				+ "ar.tecnica LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
 		try {
@@ -190,14 +201,17 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 			List<Arte> list = new ArrayList<>();	
 			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Arte arte = map.get(rs.getInt("ar.id_prod"));
 				
+				user = new User(rs.getString("u.nome"));
+				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(arte == null) {
-					arte = instanciaArqSimp(rs, img);					
+					arte = instanciaArqSimp(rs, img, user);					
 					list.add(arte);
 					map.put(rs.getInt("ar.id_prod"), arte);					
 				}				
@@ -217,7 +231,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	
 	
 
-	private Arte instanciaArqSimp(ResultSet rs, Img img) throws SQLException {
+	private Arte instanciaArqSimp(ResultSet rs, Img img, User user) throws SQLException {
 		Arte arte = new Arte();
 		arte.setId_prod(rs.getInt("p.id_prod"));
 		arte.setTitulo(rs.getString("p.titulo"));
@@ -226,11 +240,12 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 		arte.setLocalidade(rs.getString("p.localidade"));
 		arte.setCategoria(rs.getString("p.categoria"));
 		arte.setId_arte(rs.getInt("ar.id_arte"));
+		arte.setUser(user);
 		arte.setImg(img);
 		return arte;
 	}
 	
-	private Arte instanciaTudo(ResultSet rs, List<Img> img) throws SQLException{
+	private Arte instanciaTudo(ResultSet rs, List<Img> img, User user) throws SQLException{
 		Arte arte = new Arte();
 		arte.setId_prod(rs.getInt("p.id_prod"));
 		arte.setTitulo(rs.getString("p.titulo"));
@@ -243,6 +258,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 		arte.setId_arte(rs.getInt("ar.id_arte"));
 		arte.setTecnica(rs.getString("ar.tecnica"));
 		arte.setListImg(img);
+		arte.setUser(user);
 		return arte;
 	}
 }

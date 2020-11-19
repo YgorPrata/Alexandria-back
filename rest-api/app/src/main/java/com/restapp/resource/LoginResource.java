@@ -28,7 +28,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Path("/login")
 public class LoginResource {
 	
-	private static final String phrase = "#";
+	private static final String phrase = "TR4B4LH0D3CONCLUS@0D3CUR50";
 	private static final String FRASE_SEGREDO = UUID.randomUUID()+phrase+UUID.randomUUID();
 	LoginDao logindao = DaoFactory.autenticaUsuario();
 

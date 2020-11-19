@@ -8,7 +8,7 @@ import com.restapp.model.entities.User;
 public class MainTeste {
 
 	public static void main(String[] args) throws Exception {	
-		
+	
 			
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		//ArquiteturaDao arqdao = DaoFactory.criarArquitetura();

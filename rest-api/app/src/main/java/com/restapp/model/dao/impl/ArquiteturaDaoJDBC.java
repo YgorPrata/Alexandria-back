@@ -3,7 +3,6 @@ package com.restapp.model.dao.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +13,7 @@ import com.restapp.db.DbException;
 import com.restapp.model.dao.ArquiteturaDao;
 import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Img;
+import com.restapp.model.entities.User;
 
 public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
@@ -30,7 +30,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	@Override
 	public List<Arquitetura> getAll() {
 		String sql = "SELECT * FROM produto AS p INNER JOIN arquitetura AS a ON p.id_prod = a.id_prod "
-				+ "INNER JOIN img_path AS i ON p.id_prod = i.id_prod";
+				+ "INNER JOIN img_path AS i ON p.id_prod = i.id_prod INNER JOIN usuario AS u ON p.id_user = u.id_user";
 		try {
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -38,12 +38,14 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			List<Arquitetura> list = new ArrayList<>();	
 			Map<Integer, Arquitetura> map = new HashMap<Integer, Arquitetura>();
  			List<Img> listimg = new ArrayList<>();
+ 			User user;
   			int cont = 0;
   			int chave = 0;
  			
 			while(rs.next()) {
 				cont++;				
 				Arquitetura arq = map.get(rs.getInt("a.id_prod"));
+				user = new User(rs.getString("u.nome"));
 				
 				if(chave == rs.getInt("i.id_prod") || cont == 1) {
 					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
@@ -55,7 +57,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 				}
 								
 				if(arq == null) {
-					arq = instanciaTudo(rs, listimg);					
+					arq = instanciaTudo(rs, listimg, user);					
 					list.add(arq);
 					map.put(rs.getInt("a.id_prod"), arq);
 					for (Map.Entry<Integer, Arquitetura> entry : map.entrySet()) {
@@ -77,7 +79,8 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 
 	public Arquitetura getById(Integer id_arq) {
 		String sql = "SELECT * FROM produto AS p INNER JOIN arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN "
-				+ "img_path AS i ON p.id_prod = i.id_prod WHERE p.id_prod = ?";
+				+ "img_path AS i ON p.id_prod = i.id_prod INNER JOIN usuario AS u ON p.id_user = u.id_user "
+				+ "WHERE p.id_prod = ?";
 		
 		try {
 			ps = conn.prepareStatement(sql);
@@ -87,6 +90,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			Arquitetura arq = new Arquitetura();	
 			Map<Integer, Arquitetura> map = new HashMap<Integer, Arquitetura>();
  			List<Img> listimg = new ArrayList<>();
+ 			User user;
   			int cont = 0;
   			int chave = 0;
  			
@@ -94,6 +98,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			while(rs.next()) {
 				cont++;				
 				arq = map.get(rs.getInt("a.id_prod"));
+				user = new User(rs.getString("u.nome"));
 				
 				if(chave == rs.getInt("i.id_prod") || cont == 1) {
 					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
@@ -105,7 +110,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 				}
 								
 				if(arq == null) {
-					arq = instanciaTudo(rs, listimg);										
+					arq = instanciaTudo(rs, listimg, user);										
 					map.put(rs.getInt("a.id_prod"), arq);
 					for (Map.Entry<Integer, Arquitetura> entry : map.entrySet()) {
 					    chave = entry.getKey();					    
@@ -126,10 +131,11 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	
 	@Override
 	public List<Arquitetura> getArqTipo(String titulo, String autor, String localidade, Integer limit) {
-		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, i.id_img,"
-				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN "
+		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, "
+				+ "i.id_img, i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN "
 				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
-				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
+				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
 				+ "ORDER BY RAND() LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
@@ -142,14 +148,16 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			List<Arquitetura> list = new ArrayList<>();	
 			Map<Integer, Arquitetura> map = new HashMap<Integer, Arquitetura>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Arquitetura arq = map.get(rs.getInt("a.id_prod"));
-
+				
+				user = new User(rs.getString("u.nome"));
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(arq == null) {
-					arq = instanciaArqSimp(rs, img);					
+					arq = instanciaArqSimp(rs, img, user);					
 					list.add(arq);
 					map.put(rs.getInt("a.id_prod"), arq);					
 				}				
@@ -169,9 +177,10 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	@Override
 	public List<Arquitetura> getArqCategoria(String query, Integer limit){
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, i.id_img, " 
-				+ "i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN " 
+				+ "i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN " 
 				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod " 
-				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
+				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
 				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR p.tipo LIKE CONCAT( '%',?,'%') OR "
 				+ "a.curador LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
 		try {
@@ -188,14 +197,16 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			List<Arquitetura> list = new ArrayList<>();	
 			Map<Integer, Arquitetura> map = new HashMap<Integer, Arquitetura>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Arquitetura arq = map.get(rs.getInt("a.id_prod"));
 				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
-											
+				user = new User(rs.getString("u.nome"));
+				
 				if(arq == null) {
-					arq = instanciaArqSimp(rs, img);					
+					arq = instanciaArqSimp(rs, img, user);					
 					list.add(arq);
 					map.put(rs.getInt("a.id_prod"), arq);					
 				}				
@@ -215,7 +226,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	
 	
 
-	private Arquitetura instanciaArqSimp(ResultSet rs, Img img) throws SQLException {
+	private Arquitetura instanciaArqSimp(ResultSet rs, Img img, User user) throws SQLException {
 		Arquitetura arq = new Arquitetura();
 		arq.setId_prod(rs.getInt("p.id_prod"));
 		arq.setTitulo(rs.getString("p.titulo"));
@@ -224,11 +235,12 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		arq.setLocalidade(rs.getString("p.localidade"));
 		arq.setCategoria(rs.getString("p.categoria"));
 		arq.setId_arq(rs.getInt("a.id_arq"));
+		arq.setUser(user);
 		arq.setImg(img);
 		return arq;
 	}
 	
-	private Arquitetura instanciaTudo(ResultSet rs, List<Img> img) throws SQLException{
+	private Arquitetura instanciaTudo(ResultSet rs, List<Img> img, User user) throws SQLException{
 		Arquitetura arq = new Arquitetura();
 		arq.setId_prod(rs.getInt("p.id_prod"));
 		arq.setTitulo(rs.getString("p.titulo"));
@@ -241,6 +253,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 		arq.setId_arq(rs.getInt("a.id_arq"));
 		arq.setCurador(rs.getString("a.curador"));
 		arq.setArea(rs.getDouble("a.area"));
+		arq.setUser(user);
 		arq.setListImg(img);
 		return arq;
 	}

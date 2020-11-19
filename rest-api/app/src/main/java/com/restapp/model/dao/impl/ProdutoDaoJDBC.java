@@ -11,11 +11,9 @@ import java.util.Map;
 import com.restapp.db.DB;
 import com.restapp.db.DbException;
 import com.restapp.model.dao.ProdutoDao;
-import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
-import com.restapp.model.entities.Livro;
 import com.restapp.model.entities.Produto;
+import com.restapp.model.entities.User;
 
 public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	
@@ -34,7 +32,8 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 		String sql = "SELECT * FROM produto AS p LEFT JOIN arquitetura AS a ON p.id_prod = a.id_prod "
 				+ "LEFT JOIN livro AS l ON p.id_prod = l.id_prod " 
 				+ "LEFT JOIN arte AS ar ON p.id_prod = ar.id_prod "
-				+ "LEFT JOIN img_path AS i ON p.id_prod = i.id_prod " 
+				+ "LEFT JOIN img_path AS i ON p.id_prod = i.id_prod "
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user " 
 				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.descricao LIKE CONCAT( '%',?,'%') "
 				+ "OR p.tipo LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') OR p.categoria LIKE CONCAT( '%',?,'%') "
 				+ "OR a.curador LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') OR l.biografia LIKE CONCAT( '%',?,'%') "
@@ -57,14 +56,17 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 			List<Produto> list = new ArrayList<>();
 			Map<Integer, Produto> map = new HashMap<Integer, Produto>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Produto prod = map.get(rs.getInt("p.id_prod"));
 				
+				user = new User(rs.getString("u.nome"));
+				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(prod == null) {
-					prod = instanciaProdSimp(rs, img);
+					prod = instanciaProdSimp(rs, img, user);
 					list.add(prod);
 					map.put(rs.getInt("p.id_prod"), prod);					
 				}				
@@ -83,7 +85,8 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	
 	@Override
 	public List<Produto> getNovidades(Integer limit) {
-		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod GROUP BY p.id_prod ORDER BY p.id_prod DESC LIMIT ?";
+		String sql = "SELECT * FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user GROUP BY p.id_prod ORDER BY p.id_prod DESC LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, limit);
@@ -93,14 +96,17 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 			List<Produto> list = new ArrayList<>();	
 			Map<Integer, Produto> map = new HashMap<Integer, Produto>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Produto arq = map.get(rs.getInt("p.id_prod"));
 				
+				user = new User(rs.getString("u.nome"));
+				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(arq == null) {
-					arq = instanciaProdSimp(rs, img);					
+					arq = instanciaProdSimp(rs, img, user);					
 					list.add(arq);
 					map.put(rs.getInt("p.id_prod"), arq);					
 				}				
@@ -121,7 +127,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	public List<Produto> getProdTipo(String titulo, String autor, String localidade, Integer limit){
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, i.id_img, " 
 				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
-				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') "
+				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') "
 				+ "OR p.localidade LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ? ";
 		try {
 			ps = conn.prepareStatement(sql);
@@ -134,14 +140,17 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 			List<Produto> list = new ArrayList<>();
 			Map<Integer, Produto> map = new HashMap<Integer, Produto>();
  			Img img;
+ 			User user;
  			
 			while(rs.next()) {			
 				Produto prod = map.get(rs.getInt("p.id_prod"));
 				
+				user = new User(rs.getString("u.nome"));
+				
 				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
 											
 				if(prod == null) {
-					prod = instanciaProdSimp(rs, img);
+					prod = instanciaProdSimp(rs, img, user);
 					list.add(prod);
 					map.put(rs.getInt("p.id_prod"), prod);					
 				}				
@@ -184,7 +193,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 
 	}
 	
-	private Produto instanciaProdSimp(ResultSet rs, Img img) throws SQLException {
+	private Produto instanciaProdSimp(ResultSet rs, Img img, User user) throws SQLException {
 		Produto prod = new Produto();
 		
 		prod.setId_prod(rs.getInt("p.id_prod"));
@@ -192,39 +201,11 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 		prod.setAutor(rs.getString("p.autor"));
 		prod.setLocalidade(rs.getString("p.localidade"));
 		prod.setDescricao(rs.getString("p.descricao"));
-		prod.setCategoria(rs.getString("p.categoria"));	
+		prod.setCategoria(rs.getString("p.categoria"));
+		prod.setUser(user);
 		prod.setImg(img);
 		
 		return prod;
-	}
-	
-	private List<Produto> instanciaTudo(ResultSet rs, List<Img> img) throws SQLException{
-		Produto prod = new Produto();
-		Arquitetura arq = new Arquitetura();
-		Arte arte = new Arte();
-		Livro livro = new Livro();
-		List<Produto> list = new ArrayList<Produto>();
-		prod.setId_prod(rs.getInt("p.id_prod"));
-		prod.setTitulo(rs.getString("p.titulo"));
-		prod.setAutor(rs.getString("p.autor"));
-		prod.setDescricao(rs.getString("p.descricao"));
-		prod.setCategoria(rs.getString("p.categoria"));
-		prod.setTipo(rs.getString("p.tipo"));
-		prod.setLocalidade(rs.getString("p.localidade"));
-		prod.setAno(rs.getInt("p.ano"));
-		arq.setCurador(rs.getString("a.curador"));
-		arq.setArea(rs.getDouble("a.area"));
-		livro.setBiografia(rs.getString("l.biografia"));
-		livro.setEdicao(rs.getInt("l.edicao"));
-		livro.setEditora(rs.getString("l.editora"));
-		arte.setTecnica(rs.getString("ar.tecnica"));
-		prod.setListImg(img);
-		
-		list.add(prod);
-		list.add(arq);
-		list.add(livro);
-		list.add(arte);
-		return list;
 	}
 		
 }

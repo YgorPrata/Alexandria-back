@@ -17,6 +17,12 @@ public class User {
 	public User(Integer id_user) {
 		this.id_user = id_user;
 	}
+	
+	/*construtor definido para representar o nome do usuário em suas publicacoes
+	  criado para não passar valores nulos nas instanciações*/	 
+	public User(String userName) {
+		this.user_name = userName;
+	}
 
 	public User(Integer id_user, String user, String password, String role, String user_name) {
 		this.id_user = id_user;
