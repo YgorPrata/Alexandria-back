@@ -26,9 +26,10 @@ public class DaoFactory {
 		return new ProdutoDaoJDBC(DB.getConnection());
 	}
 	
-	public static LoginDao autenticaUsuario() {
+	public static LoginDao criarAutenticacaoUsuario() {
 		return new LoginDaoJDBC(DB.getConnection());
 	}
+	
 	public static UserDao criarUsuario() {
 		return new UserDaoJDBC(DB.getConnection());
 	}

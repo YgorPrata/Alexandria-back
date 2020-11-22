@@ -1,15 +1,19 @@
 package com.restapp.model.dao.impl;
 
 
-import com.restapp.model.dao.DaoFactory;
-import com.restapp.model.dao.LoginDao;
-import com.restapp.model.entities.User;
+import java.io.File;
+
+import com.restapp.model.entities.Img;
 
 public class MainTeste {
 
 	public static void main(String[] args) throws Exception {	
 	
 			
+		
+		File file = new File(Img.abspathimg);
+		System.out.println(file);
+		
 		//ArquiteturaDaoJDBC arqdao = new ArquiteturaDaoJDBC();
 		//ArquiteturaDao arqdao = DaoFactory.criarArquitetura();
 		//ProdutoDao prod = DaoFactory.criarProduto();

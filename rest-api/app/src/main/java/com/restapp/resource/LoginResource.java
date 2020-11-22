@@ -24,13 +24,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 
 @Path("/login")
+@Api("/Login Service")
 public class LoginResource {
 	
 	private static final String phrase = "TR4B4LH0D3CONCLUS@0D3CUR50";
 	private static final String FRASE_SEGREDO = UUID.randomUUID()+phrase+UUID.randomUUID();
-	LoginDao logindao = DaoFactory.autenticaUsuario();
+	LoginDao logindao = DaoFactory.criarAutenticacaoUsuario();
 
 	
 	@POST
@@ -80,11 +84,11 @@ public class LoginResource {
 	
 	private User validaLogin(String user, String password) throws Exception{	
 		try {
-			if(logindao.validaUsuario(user, password) == null) {
+			if(logindao.validaUser(user, password) == null) {
 				throw new Exception("Crendencias não válidas!");
 			}
 			else {
-				User userInfo = logindao.validaUsuario(user, password);
+				User userInfo = logindao.validaUser(user, password);
 				return userInfo;
 			}
 		} 

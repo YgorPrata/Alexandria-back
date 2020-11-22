@@ -1,38 +1,26 @@
 package com.restapp.resource;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.media.multipart.BodyPartEntity;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import com.restapp.db.DbException;
+
+
 import com.restapp.model.dao.ArteDao;
 import com.restapp.model.dao.DaoFactory;
-import com.restapp.model.entities.Arquitetura;
-import com.restapp.model.entities.Arte;
-import com.restapp.model.entities.Img;
+
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 
 
 @Path("/produto")
+@Api("/Arte Service")
 public class ArteResource {
 	
 	ArteDao artedao = DaoFactory.criarArte();

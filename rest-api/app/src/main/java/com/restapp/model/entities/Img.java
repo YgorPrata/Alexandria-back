@@ -1,5 +1,7 @@
 package com.restapp.model.entities;
 
+import java.util.List;
+
 public class Img {
 	
 	private Integer id_img;	
@@ -8,6 +10,7 @@ public class Img {
 	
 	public static String abspathimg = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Upload/WebContent/imgs/";
 	public static String pathimg = "imgs/";
+	
 	
 	public Img() {
 

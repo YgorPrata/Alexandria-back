@@ -29,7 +29,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean insertArq(Arquitetura arq, List<Img> list) {
+	public boolean insertArq(Arquitetura arq) {
 		boolean sucesso = false;
 		int id = 0;
 	
@@ -53,8 +53,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 			}
 			
 			
-			String sql = "INSERT INTO arquitetura (curador, area, id_prod) VALUES (?, ?, ?)";
-			ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement("INSERT INTO arquitetura (curador, area, id_prod) VALUES (?, ?, ?)");
 			ps.setString(1, arq.getCurador());
 			ps.setDouble(2, arq.getArea());
 			ps.setInt(3, id);
@@ -62,13 +61,8 @@ public class UserDaoJDBC extends DB implements UserDao{
 			sucesso = true;
 			
 	
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}		
-		
-		try {
-			for(Img img : list) {
+				
+			for(Img img : arq.getListImg()) {
 				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, img.getPath_img());
@@ -76,14 +70,13 @@ public class UserDaoJDBC extends DB implements UserDao{
 				ps.setInt(3, id);
 				ps.executeUpdate();
 				sucesso = true;
-				
 			}
+				
 		}
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
 		}
-		
-		
+			
 		finally {
 			DB.closeResultSet(rs);
 			DB.closeStatement(ps);
@@ -92,7 +85,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean insertArte(Arte arte, List<Img> list) {
+	public boolean insertArte(Arte arte) {
 		boolean sucesso = false;
 		int id = 0;
 	
@@ -115,23 +108,15 @@ public class UserDaoJDBC extends DB implements UserDao{
 				id = rs.getInt(1);
 			}
 						
-			String sql = "INSERT INTO arte (tecnica, id_prod) VALUES (?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO arte (tecnica, id_prod) VALUES (?, ?)");
 			ps.setString(1, arte.getTecnica());			
 			ps.setInt(2, id);
 			ps.executeUpdate();			
 			sucesso = true;
 			
 	
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}		
-		
-		try {
-			for(Img img : list) {
+			for(Img img : arte.getListImg()) {
 				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
-				conn = DB.getConnection();
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, img.getPath_img());
 				ps.setString(2, img.getDesc_img());
@@ -153,7 +138,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean insertLivro(Livro livro, List<Img> list) {
+	public boolean insertLivro(Livro livro) {
 		boolean sucesso = false;
 		int id = 0;
 	
@@ -175,9 +160,8 @@ public class UserDaoJDBC extends DB implements UserDao{
 			if (rs.next()) {
 				id = rs.getInt(1);
 			}
-						
-			String sql = "INSERT INTO livro (editora, edicao, biografia, id_prod) VALUES (?, ?, ?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
+						 
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO livro (editora, edicao, biografia, id_prod) VALUES (?, ?, ?, ?)");
 			ps.setString(1, livro.getEditora());
 			ps.setInt(2, livro.getEdicao());
 			ps.setString(3, livro.getBiografia());
@@ -186,15 +170,9 @@ public class UserDaoJDBC extends DB implements UserDao{
 			sucesso = true;
 			
 	
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}		
 		
-		try {
-			for(Img img : list) {
+			for(Img img : livro.getListImg()) {
 				String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
-				conn = DB.getConnection();
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, img.getPath_img());
 				ps.setString(2, img.getDesc_img());
@@ -433,21 +411,23 @@ public class UserDaoJDBC extends DB implements UserDao{
 			
 		try {
 			for(Img img : arq.getListImg()) {
-	            ps = conn.prepareStatement(sql);
-	            ps.setString(1, arq.getTitulo());
-	            ps.setString(2, arq.getAutor());
-	            ps.setString(3, arq.getDescricao());
-	            ps.setString(4, arq.getCategoria());
-	            ps.setString(5, arq.getTipo());
-	            ps.setString(6, arq.getLocalidade());	            
-	            ps.setInt(7, arq.getAno());
-	            ps.setString(8, arq.getCurador());
-	            ps.setDouble(9, arq.getArea());
-	            ps.setString(10, img.getDesc_img());	            
-	            ps.setInt(11, img.getId_img());	            	        
-	            ps.setInt(12, arq.getId_prod());
-	            ps.setInt(13, id_user);
-	            ps.executeUpdate();	            
+				if(img.getId_img() != null) {
+		            ps = conn.prepareStatement(sql);
+		            ps.setString(1, arq.getTitulo());
+		            ps.setString(2, arq.getAutor());
+		            ps.setString(3, arq.getDescricao());
+		            ps.setString(4, arq.getCategoria());
+		            ps.setString(5, arq.getTipo());
+		            ps.setString(6, arq.getLocalidade());	            
+		            ps.setInt(7, arq.getAno());
+		            ps.setString(8, arq.getCurador());
+		            ps.setDouble(9, arq.getArea());
+		            ps.setString(10, img.getDesc_img());	            
+		            ps.setInt(11, img.getId_img());	            	        
+		            ps.setInt(12, arq.getId_prod());
+		            ps.setInt(13, id_user);
+		            ps.executeUpdate();	         
+				}
     		}
 			
             
@@ -460,6 +440,34 @@ public class UserDaoJDBC extends DB implements UserDao{
 			DB.closeStatement(ps);
 		}
         
+	}
+	
+	@Override
+	public boolean addNewImgArq(Arquitetura arq) {
+		boolean sucesso = false;
+		try {
+			for(Img img : arq.getListImg()) {
+				if(img.getId_img() == null) {
+					String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
+					ps = conn.prepareStatement(sql);
+					ps.setString(1, img.getPath_img());
+					ps.setString(2, img.getDesc_img());
+					ps.setInt(3, arq.getId_prod());
+					ps.executeUpdate();
+					sucesso = true;
+				}
+			}
+			return sucesso;
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}
+		
+		
 	}
 	
 	@Override

@@ -68,7 +68,7 @@ public class LoginDaoJDBC extends DB implements LoginDao{
 
 
 	@Override
-	public User validaUsuario(String user, String password) {
+	public User validaUser(String user, String password) {
 		String sql = "SELECT * FROM usuario AS u WHERE u.login = ? AND u.senha = ?";  
 		String encryptpw = DigestUtils.sha256Hex(password);
 		User userinfo;

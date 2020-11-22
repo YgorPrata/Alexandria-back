@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,12 +33,16 @@ import com.restapp.model.entities.Arquitetura;
 import com.restapp.model.entities.Arte;
 import com.restapp.model.entities.Img;
 import com.restapp.model.entities.Livro;
-import com.restapp.model.entities.User;
 import com.restapp.resource.security.Seguro;
 import com.restapp.resource.security.UserRoles;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
+
 //@Seguro({UserRoles.ADMIN, UserRoles.USER})
 @Path("/user")
+@Api("/User Service")
 public class UserResource {
 	
 	UserDao userdao = DaoFactory.criarUsuario();
@@ -47,112 +50,97 @@ public class UserResource {
 	@POST
 	@Path("/arquitetura/cadastro")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFiles(
+	public Response insertArq(@FormDataParam("arq") FormDataBodyPart jsonArq,
 			@FormDataParam("img") List<FormDataBodyPart> inputStream,
-			@FormDataParam("desc_img") List<String> descricao2,
-			@FormDataParam("titulo") String titulo,
-			@FormDataParam("autor") String autor,
-			@FormDataParam("descricao") String descricao,
-			@FormDataParam("categoria") String categoria,
-			@FormDataParam("tipo") String tipo,
-			@FormDataParam("localidade") String localidade,
-			@FormDataParam("ano") Integer ano,
-			@FormDataParam("curador") String curador,
-			@FormDataParam("area") Double area,
 			@HeaderParam("UserId") Integer userId) throws IOException{
-			//userid é o value de um dos headers customizado para trafegar as infos do usuario		
-			List<Img> infoImg = new ArrayList<Img>();
-			String nomesImgs;
-			String auxDesc;
-
-			for (int i = 0; i < inputStream.size(); i++) {
-				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();				
-				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();
-				//lista para as descricoes de cada imagem
-				auxDesc = descricao2.get(i);
+			//userid é o value de um dos headers customizado para trafegar as infos do usuario
+			
+			jsonArq.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+			Arquitetura arq = jsonArq.getValueAs(Arquitetura.class);
+			
+			String nomeIs;
+			int cont = 0;
+			
+			System.out.println();
 				
-				if(nomesImgs.endsWith(".jpg") || nomesImgs.endsWith(".jpeg") || nomesImgs.endsWith(".png")) {
-					infoImg.add(new Img(null, Img.pathimg+nomesImgs, auxDesc));					
-					try {	
-						File file = new File(Img.abspathimg+nomesImgs);					
-						OutputStream ops = new FileOutputStream(file);						
-						int read = 0;
-						byte[] bytes = new byte[8192];						
-						while ((read = inp.read(bytes)) != -1) {
-							ops.write(bytes, 0, read);							
-						}			
-						ops.flush();
-						ops.close();						
-					}						
-					catch (IOException e) {
-						e.printStackTrace();												
-					}
+			for(Img img : arq.getListImg()) {				
+				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
+				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
+				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
+				img.setPath_img(Img.pathimg+nomeIs);
+				arq.getUser().setId_user(userId);
+			
+				try {
+					File file = new File(Img.abspathimg+nomeIs);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();
+					cont++;
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
 				}
-			}
-		
-													
+			}		
+			
 			try {
-		
-				Arquitetura arq = new Arquitetura(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, new User(userId), curador, area);
-				userdao.insertArq(arq, infoImg);					
+				userdao.insertArq(arq);					
 				return Response.status(201).build();
 			} catch (DbException e) {
 				e.printStackTrace();
 				return Response.status(500).entity("Ops! Erro ao salvar o cadastro.").build();
 			}
-		
+			
 	}
 	
 	@POST
 	@Path("/arte/cadastro")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFiles2(
+	public Response insertArte(@FormDataParam("arte") FormDataBodyPart jsonArte,
 			@FormDataParam("img") List<FormDataBodyPart> inputStream,
-			@FormDataParam("desc_img") List<String> descricao2,
-			@FormDataParam("titulo") String titulo,
-			@FormDataParam("autor") String autor,
-			@FormDataParam("descricao") String descricao,
-			@FormDataParam("categoria") String categoria,
-			@FormDataParam("tipo") String tipo,
-			@FormDataParam("localidade") String localidade,
-			@FormDataParam("ano") Integer ano,
-			@FormDataParam("tecnica") String tecnica,
 			@HeaderParam("UserId") Integer userId) throws IOException{
-	
-			List<Img> infoImg = new ArrayList<Img>();
-			String nomesImgs;
-			String auxDesc;
-
-			for (int i = 0; i < inputStream.size(); i++) {
-				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();				
-				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();
-				//lista para as descricoes de cada imagem
-				auxDesc = descricao2.get(i);
+			//userid é o value de um dos headers customizado para trafegar as infos do usuario
+			
+			jsonArte.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+			Arte arte = jsonArte.getValueAs(Arte.class);
+			
+			String nomeIs;
+			int cont = 0;
+			
+			System.out.println();
 				
-				if(nomesImgs.endsWith(".jpg") || nomesImgs.endsWith(".jpeg") || nomesImgs.endsWith(".png")) {
-					infoImg.add(new Img(null, Img.pathimg+nomesImgs, auxDesc));					
-					try {	
-						File file = new File(Img.abspathimg+nomesImgs);					
-						OutputStream ops = new FileOutputStream(file);						
-						int read = 0;
-						byte[] bytes = new byte[8192];						
-						while ((read = inp.read(bytes)) != -1) {
-							ops.write(bytes, 0, read);							
-						}			
-						ops.flush();
-						ops.close();						
-					}						
-					catch (IOException e) {
-						e.printStackTrace();												
-					}
+			for(Img img : arte.getListImg()) {				
+				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
+				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
+				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
+				img.setPath_img(Img.pathimg+nomeIs);
+				arte.getUser().setId_user(userId);
+			
+				try {
+					File file = new File(Img.abspathimg+nomeIs);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();
+					cont++;
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
 				}
-			}
-															
+			}		
+			
 			try {
-				Arte arte = new Arte(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, new User(userId), tecnica);
-				userdao.insertArte(arte, infoImg);					
+				userdao.insertArte(arte);					
 				return Response.status(201).build();
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -164,54 +152,46 @@ public class UserResource {
 	@POST
 	@Path("/livro/cadastro")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFiles2(
+	public Response insertLivro(@FormDataParam("livro") FormDataBodyPart jsonLivro,
 			@FormDataParam("img") List<FormDataBodyPart> inputStream,
-			@FormDataParam("desc_img") List<String> descricao2,
-			@FormDataParam("titulo") String titulo,
-			@FormDataParam("autor") String autor,
-			@FormDataParam("descricao") String descricao,
-			@FormDataParam("categoria") String categoria,
-			@FormDataParam("tipo") String tipo,
-			@FormDataParam("localidade") String localidade,
-			@FormDataParam("ano") Integer ano,
-			@FormDataParam("editora") String editora,
-			@FormDataParam("edicao") Integer edicao,
-			@FormDataParam("biografia") String biografia,
 			@HeaderParam("UserId") Integer userId) throws IOException{
-	
-			List<Img> infoImg = new ArrayList<Img>();
-			String nomesImgs;
-			String auxDesc;
-
-			for (int i = 0; i < inputStream.size(); i++) {
-				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(i).getEntity();				
-				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-				nomesImgs = UUID.randomUUID()+inputStream.get(i).getContentDisposition().getFileName();
-				//lista para as descricoes de cada imagem
-				auxDesc = descricao2.get(i);
+			//userid é o value de um dos headers customizado para trafegar as infos do usuario
+			
+			jsonLivro.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+			Livro livro = jsonLivro.getValueAs(Livro.class);
+			
+			String nomeIs;
+			int cont = 0;
+			
+			System.out.println();
 				
-				if(nomesImgs.endsWith(".jpg") || nomesImgs.endsWith(".jpeg") || nomesImgs.endsWith(".png")) {
-					infoImg.add(new Img(null, Img.pathimg+nomesImgs, auxDesc));					
-					try {	
-						File file = new File(Img.abspathimg+nomesImgs);					
-						OutputStream ops = new FileOutputStream(file);						
-						int read = 0;
-						byte[] bytes = new byte[8192];						
-						while ((read = inp.read(bytes)) != -1) {
-							ops.write(bytes, 0, read);							
-						}			
-						ops.flush();
-						ops.close();						
-					}						
-					catch (IOException e) {
-						e.printStackTrace();												
-					}
+			for(Img img : livro.getListImg()) {				
+				BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
+				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
+				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
+				img.setPath_img(Img.pathimg+nomeIs);
+				livro.getUser().setId_user(userId);
+			
+				try {
+					File file = new File(Img.abspathimg+nomeIs);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();
+					cont++;
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
 				}
-			}
-															
+			}		
+			
 			try {
-				Livro livro = new Livro(titulo, autor, descricao, categoria, tipo, localidade, ano, infoImg, new User(userId), editora, edicao, biografia);
-				userdao.insertLivro(livro, infoImg);					
+				userdao.insertLivro(livro);					
 				return Response.status(201).build();
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -274,15 +254,17 @@ public class UserResource {
 		
 		String nomeIs;
 		int cont = 0;
-			
+		
+		
 		for(Img img : arq.getListImg()) {
+			System.out.println("TAMANHO DA LISTA DE IMAGEM: "+arq.getListImg().size());
 			BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
 			InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
 			nomeIs = inputStream.get(cont).getContentDisposition().getFileName();
 			cont++;
 			System.out.println("NOME DA IMAGEM QUE VEM DO CLIENTE: "+nomeIs);
 			
-			if(!nomeIs.equals("")) {
+			if(img.getId_img() != null && !nomeIs.isEmpty()) {
 				img.setPath_img(img.getPath_img());
 				nomeIs = img.getPath_img();
 				
@@ -306,16 +288,53 @@ public class UserResource {
 				catch (IOException e) {
 					e.printStackTrace();												
 				}
+			}
+			else if(img.getId_img() == null) {
+				cont--;
+				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
+				img.setPath_img(Img.pathimg+nomeIs);
+				System.out.println("ID DO USUARIO HEADPARAM: "+userId);
+			
+				try {
+					File file = new File(Img.abspathimg+nomeIs);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();
+					cont++;
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
+				}
 			}		
 		}
-	
+		
+		if(userdao.addNewImgArq(arq)) {
+			if(userdao.updateUserArqProd(arq, userId)) {
+				return Response.status(201).entity("Obra atualizada e novas imagens adicionas!").build();
+			}
+			else {
+				return Response.status(500).entity("Erro ao atualizar a obra.").build();
+			}
+		}
+		else if(!userdao.addNewImgArq(arq)) {
+			if(userdao.updateUserArqProd(arq, userId)) {
+				return Response.status(200).entity("Obra atualizada!").build();
+			}
+			else {
+				return Response.status(500).entity("Erro ao atualizar a obra.").build();
+			}
+		}
 					
-		if(userdao.updateUserArqProd(arq, userId)) {
-			return Response.status(200).entity("Obra atualizada!").build();
-		}
 		else {			
-			return Response.status(500).entity("Erro no banco de dados").build();
+			return Response.status(500).entity("Erro no banco de dados.").build();
 		}
+		
 	}
 	
 	
@@ -340,7 +359,7 @@ public class UserResource {
 			cont++;
 			System.out.println("NOME DA IMAGEM QUE VEM DO CLIENTE: "+nomeIs);
 			
-			if(!nomeIs.equals("")) {
+			if(!nomeIs.isEmpty()) {
 				img.setPath_img(img.getPath_img());
 				nomeIs = img.getPath_img();
 				
@@ -396,7 +415,7 @@ public class UserResource {
 			cont++;
 			System.out.println("NOME DA IMAGEM QUE VEM DO CLIENTE: "+nomeIs);
 			
-			if(!nomeIs.equals("")) {
+			if(!nomeIs.isEmpty()) {
 				img.setPath_img(img.getPath_img());
 				nomeIs = img.getPath_img();
 				
