@@ -42,7 +42,10 @@ public class LoginResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response insertUser(User usuario) {
 		if(logindao.insertUser(usuario)) {
-			return Response.status(200).entity("Usuario cadastrado com sucesso!").build();
+			String token = gerarToken(usuario.getUser(),1);			
+			return Response.status(200).entity("Usuario cadastrado com sucesso!").header("Authorization", token)
+					.header("UserId", usuario.getId_user())
+					.header("UserName", usuario.getUser_name()).build();
 		}
 		else if(!logindao.insertUser(usuario)){
 			return Response.status(500).entity("Login já existente. Tente outro. ").build();

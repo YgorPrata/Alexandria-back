@@ -37,10 +37,8 @@ import com.restapp.resource.security.Seguro;
 import com.restapp.resource.security.UserRoles;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
 
-//@Seguro({UserRoles.ADMIN, UserRoles.USER})
+@Seguro({UserRoles.ADMIN, UserRoles.USER})
 @Path("/user")
 @Api("/User Service")
 public class UserResource {

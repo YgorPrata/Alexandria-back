@@ -70,8 +70,8 @@ public class ProdutoResource {
 	@GET
 	@Path("count/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProdCount(@QueryParam(value = "limite") Integer limit) throws Exception {
-		if (proddao.getProdCount() != 0) {
+	public Response getProdCount() throws Exception {
+		if (proddao.getProdCount() > 0) {
 			return Response.status(200).entity(proddao.getProdCount()).build();
 		} 
 		else if (proddao.getProdCount() <= 0) {
