@@ -38,7 +38,7 @@ import com.restapp.resource.security.UserRoles;
 
 import io.swagger.annotations.Api;
 
-@Seguro({UserRoles.ADMIN, UserRoles.USER})
+//@Seguro({UserRoles.ADMIN, UserRoles.USER})
 @Path("/user")
 @Api("/User Service")
 public class UserResource {
@@ -54,7 +54,12 @@ public class UserResource {
 			//userid é o value de um dos headers customizado para trafegar as infos do usuario
 			
 			jsonArq.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+			
+			System.out.println("JSON "+jsonArq.getFormDataContentDisposition().getParameters().values());
+			
 			Arquitetura arq = jsonArq.getValueAs(Arquitetura.class);
+
+			System.out.println("AUTOR: "+arq.getAutor());
 			
 			String nomeIs;
 			int cont = 0;
@@ -66,7 +71,7 @@ public class UserResource {
 				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
 				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
 				img.setPath_img(Img.pathimg+nomeIs);
-				arq.getUser().setId_user(userId);
+				//arq.getUser().setId_user(userId);
 			
 				try {
 					File file = new File(Img.abspathimg+nomeIs);
@@ -87,7 +92,7 @@ public class UserResource {
 			}		
 			
 			try {
-				userdao.insertArq(arq);					
+				userdao.insertArq(arq, userId);					
 				return Response.status(201).build();
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -117,7 +122,7 @@ public class UserResource {
 				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
 				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
 				img.setPath_img(Img.pathimg+nomeIs);
-				arte.getUser().setId_user(userId);
+				//arte.getUser().setId_user(userId);
 			
 				try {
 					File file = new File(Img.abspathimg+nomeIs);
@@ -138,7 +143,7 @@ public class UserResource {
 			}		
 			
 			try {
-				userdao.insertArte(arte);					
+				userdao.insertArte(arte, userId);					
 				return Response.status(201).build();
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -168,7 +173,7 @@ public class UserResource {
 				InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
 				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
 				img.setPath_img(Img.pathimg+nomeIs);
-				livro.getUser().setId_user(userId);
+				//livro.getUser().setId_user(userId);
 			
 				try {
 					File file = new File(Img.abspathimg+nomeIs);
@@ -189,7 +194,7 @@ public class UserResource {
 			}		
 			
 			try {
-				userdao.insertLivro(livro);					
+				userdao.insertLivro(livro, userId);					
 				return Response.status(201).build();
 			} catch (DbException e) {
 				e.printStackTrace();
@@ -267,6 +272,102 @@ public class UserResource {
 				nomeIs = img.getPath_img();
 				
 				String pathAndFileName = nomeIs;
+				String originalPath = "/assets/images/files/";
+				String replace = "";
+				String nomeImgProcessado = pathAndFileName.replace(originalPath, replace);
+				
+				try {
+					File file = new File(Img.abspathimg+nomeImgProcessado);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();						
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
+				}
+			}
+			else if(img.getId_img() == null) {
+				cont--;
+				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
+				img.setPath_img(Img.pathimg+nomeIs);
+				System.out.println("ID DO USUARIO HEADPARAM: "+userId);
+			
+				try {
+					File file = new File(Img.abspathimg+nomeIs);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();
+					cont++;
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
+				}
+			}		
+		}
+		
+		if(userdao.addNewImg(arq)) {
+			if(userdao.updateUserArqProd(arq, userId)) {
+				return Response.status(201).entity("Obra atualizada e novas imagens adicionadas!").build();
+			}
+			else {
+				return Response.status(500).entity("Erro ao atualizar a obra.").build();
+			}
+		}
+		else if(!userdao.addNewImg(arq)) {
+			if(userdao.updateUserArqProd(arq, userId)) {
+				return Response.status(200).entity("Obra atualizada!").build();
+			}
+			else {
+				return Response.status(500).entity("Erro ao atualizar a obra.").build();
+			}
+		}
+					
+		else {			
+			return Response.status(500).entity("Erro no banco de dados.").build();
+		}
+		
+	}
+	
+	
+	@PUT
+	@Path("prod/myprods/uparte")
+	@Consumes({ MediaType.MULTIPART_FORM_DATA })
+	public Response updateUserArteProd(@FormDataParam("arte") FormDataBodyPart jsonArte, 
+			@FormDataParam("img") List<FormDataBodyPart> inputStream,
+			@HeaderParam("UserId") Integer userId) {
+		
+		 
+		jsonArte.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+		Arte arte = jsonArte.getValueAs(Arte.class);
+		
+		String nomeIs;
+		int cont = 0;
+			
+		for(Img img : arte.getListImg()) {
+			System.out.println("TAMANHO DA LISTA DE IMAGEM: "+arte.getListImg().size());
+			BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
+			InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
+			nomeIs = inputStream.get(cont).getContentDisposition().getFileName();
+			cont++;
+			System.out.println("NOME DA IMAGEM QUE VEM DO CLIENTE: "+nomeIs);
+			
+			if(img.getId_img() != null && !nomeIs.isEmpty()) {
+				img.setPath_img(img.getPath_img());
+				nomeIs = img.getPath_img();
+				
+				String pathAndFileName = nomeIs;
 				String originalPath = "imgs/";
 				String replace = "";
 				String nomeImgProcessado = pathAndFileName.replace(originalPath, replace);
@@ -312,16 +413,16 @@ public class UserResource {
 			}		
 		}
 		
-		if(userdao.addNewImgArq(arq)) {
-			if(userdao.updateUserArqProd(arq, userId)) {
-				return Response.status(201).entity("Obra atualizada e novas imagens adicionas!").build();
+		if(userdao.addNewImg(arte)) {
+			if(userdao.updateUserArteProd(arte, userId)) {
+				return Response.status(201).entity("Obra atualizada e novas imagens adicionadas!").build();
 			}
 			else {
 				return Response.status(500).entity("Erro ao atualizar a obra.").build();
 			}
 		}
-		else if(!userdao.addNewImgArq(arq)) {
-			if(userdao.updateUserArqProd(arq, userId)) {
+		else if(!userdao.addNewImg(arte)) {
+			if(userdao.updateUserArteProd(arte, userId)) {
 				return Response.status(200).entity("Obra atualizada!").build();
 			}
 			else {
@@ -331,64 +432,6 @@ public class UserResource {
 					
 		else {			
 			return Response.status(500).entity("Erro no banco de dados.").build();
-		}
-		
-	}
-	
-	
-	@PUT
-	@Path("prod/myprods/uparte")
-	@Consumes({ MediaType.MULTIPART_FORM_DATA })
-	public Response updateUserArteProd(@FormDataParam("arte") FormDataBodyPart jsonArte, 
-			@FormDataParam("img") List<FormDataBodyPart> inputStream,
-			@HeaderParam("UserId") Integer userId) {
-		
-		 
-		jsonArte.setMediaType(MediaType.APPLICATION_JSON_TYPE);
-		Arte arte = jsonArte.getValueAs(Arte.class);
-		
-		String nomeIs;
-		int cont = 0;
-			
-		for(Img img : arte.getListImg()) {
-			BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
-			InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
-			nomeIs = inputStream.get(cont).getContentDisposition().getFileName();
-			cont++;
-			System.out.println("NOME DA IMAGEM QUE VEM DO CLIENTE: "+nomeIs);
-			
-			if(!nomeIs.isEmpty()) {
-				img.setPath_img(img.getPath_img());
-				nomeIs = img.getPath_img();
-				
-				String pathAndFileName = nomeIs;
-				String originalPath = "imgs/";
-				String replace = "";
-				String nomeImgProcessado = pathAndFileName.replace(originalPath, replace);
-				
-				try {
-					File file = new File(Img.abspathimg+nomeImgProcessado);
-					OutputStream ops = new FileOutputStream(file);
-					int read = 0;
-					byte[] bytes = new byte[8192];	
-					
-					while ((read = inp.read(bytes)) != -1) {				
-						ops.write(bytes, 0, read);					
-					}					
-					ops.flush();
-					ops.close();						
-				}						
-				catch (IOException e) {
-					e.printStackTrace();												
-				}
-			}			
-		}
-		
-		if (userdao.updateUserArteProd(arte, userId)) {
-			return Response.status(200).entity("Obra atualizada!").build();			
-		}
-		else {			
-			return Response.status(500).entity("Erro no banco de dados").build();
 		}					
 	}
 	
@@ -407,13 +450,14 @@ public class UserResource {
 		int cont = 0;
 			
 		for(Img img : livro.getListImg()) {
+			System.out.println("TAMANHO DA LISTA DE IMAGEM: "+livro.getListImg().size());
 			BodyPartEntity bodyPartEntity = (BodyPartEntity) inputStream.get(cont).getEntity();				
 			InputStream inp = new BufferedInputStream(bodyPartEntity.getInputStream());
 			nomeIs = inputStream.get(cont).getContentDisposition().getFileName();
 			cont++;
 			System.out.println("NOME DA IMAGEM QUE VEM DO CLIENTE: "+nomeIs);
 			
-			if(!nomeIs.isEmpty()) {
+			if(img.getId_img() != null && !nomeIs.isEmpty()) {
 				img.setPath_img(img.getPath_img());
 				nomeIs = img.getPath_img();
 				
@@ -437,26 +481,63 @@ public class UserResource {
 				catch (IOException e) {
 					e.printStackTrace();												
 				}
-			}			
+			}
+			else if(img.getId_img() == null) {
+				cont--;
+				nomeIs = UUID.randomUUID()+inputStream.get(cont).getContentDisposition().getFileName();
+				img.setPath_img(Img.pathimg+nomeIs);
+				System.out.println("ID DO USUARIO HEADPARAM: "+userId);
+			
+				try {
+					File file = new File(Img.abspathimg+nomeIs);
+					OutputStream ops = new FileOutputStream(file);
+					int read = 0;
+					byte[] bytes = new byte[8192];	
+					
+					while ((read = inp.read(bytes)) != -1) {				
+						ops.write(bytes, 0, read);					
+					}					
+					ops.flush();
+					ops.close();
+					cont++;
+				}						
+				catch (IOException e) {
+					e.printStackTrace();												
+				}
+			}		
 		}
 		
-		if (userdao.updateUserLivroProd(livro, userId)) {
-			return Response.status(200).entity("Obra atualizada!").build();			
+		if(userdao.addNewImg(livro)) {
+			if(userdao.updateUserLivroProd(livro, userId)) {
+				return Response.status(201).entity("Obra atualizada e novas imagens adicionadas!").build();
+			}
+			else {
+				return Response.status(500).entity("Erro ao atualizar a obra.").build();
+			}
 		}
+		else if(!userdao.addNewImg(livro)) {
+			if(userdao.updateUserLivroProd(livro, userId)) {
+				return Response.status(200).entity("Obra atualizada!").build();
+			}
+			else {
+				return Response.status(500).entity("Erro ao atualizar a obra.").build();
+			}
+		}
+					
 		else {			
-			return Response.status(500).entity("Erro no banco de dados").build();
+			return Response.status(500).entity("Erro no banco de dados.").build();
 		}					
 	}
 	
-	@Seguro({UserRoles.ADMIN})
+	//@Seguro({UserRoles.ADMIN})
 	@DELETE
 	@Path("prod/delprods/{id}")
 	@Consumes({MediaType.APPLICATION_JSON })
-	public Response deleteUserProd(@PathParam("id") Integer id_user) {
-		if (userdao.deleteUserProd(id_user)) {
+	public Response deleteUserProd(@PathParam("id") Integer id_prod) {
+		if (userdao.deleteUserProd(id_prod)) {
 			return Response.status(200).entity("Produto deletado com sucesso.").build();			
 		}
-		else if(!userdao.deleteUserProd(id_user)) {
+		else if(!userdao.deleteUserProd(id_prod)) {
 			return Response.status(404).entity("Id do Produto não encontrado. Nenhuma alteração foi feita.").build();
 		}
 		else {			

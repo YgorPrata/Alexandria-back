@@ -126,7 +126,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	@Override
 	public List<Produto> getProdTipo(String titulo, String autor, String localidade, Integer limit){
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, i.id_img, " 
-				+ " i.path_img, i.desc_img, i.id_prod FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
+				+ " i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') "
 				+ "OR p.localidade LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ? ";
 		try {

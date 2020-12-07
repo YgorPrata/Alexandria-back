@@ -1,15 +1,13 @@
 package com.restapp.model.entities;
 
-import java.util.List;
-
 public class Img {
 	
 	private Integer id_img;	
 	private String path_img;
 	private String desc_img;
 	
-	public static String abspathimg = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Upload/WebContent/imgs/";
-	public static String pathimg = "imgs/";
+	public static String abspathimg = "C:/Users/felip/OneDrive/Disciplinas - Cursos/Faculdade/2020.2/Projeto Final 2/PROJETOS/Alexandria-front/public/assets/images/files/";
+	public static String pathimg = "/assets/images/files/";
 	
 	
 	public Img() {

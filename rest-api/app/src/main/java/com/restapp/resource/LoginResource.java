@@ -41,11 +41,8 @@ public class LoginResource {
 	@Path("cadastro/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response insertUser(User usuario) {
-		if(logindao.insertUser(usuario)) {
-			String token = gerarToken(usuario.getUser(),1);			
-			return Response.status(200).entity("Usuario cadastrado com sucesso!").header("Authorization", token)
-					.header("UserId", usuario.getId_user())
-					.header("UserName", usuario.getUser_name()).build();
+		if(logindao.insertUser(usuario)) {		
+			return Response.status(200).entity("Usuario cadastrado com sucesso!").build();
 		}
 		else if(!logindao.insertUser(usuario)){
 			return Response.status(500).entity("Login já existente. Tente outro. ").build();
@@ -72,8 +69,10 @@ public class LoginResource {
 	
 			String token = gerarToken(credencial.getUser(),1);
 			//passando as informacoes do usuario por um header customizado no http, token, id e nome
-			return Response.status(200).header("Authorization", token).header("UserId", userInfos.getId_user())
-					.header("UserName", userInfos.getUser_name()).build();
+			return Response.status(200).header("Authorization", token)
+					.header("UserId", userInfos.getId_user())
+					.header("UserName", userInfos.getUser_name())
+					.header("UserRole", userInfos.getRole()).build();
 			
 
 		}

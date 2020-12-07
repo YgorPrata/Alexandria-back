@@ -29,7 +29,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean insertArq(Arquitetura arq) {
+	public boolean insertArq(Arquitetura arq, Integer id_user) {
 		boolean sucesso = false;
 		int id = 0;
 	
@@ -43,7 +43,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 			ps.setString(5, arq.getCategoria());
 			ps.setString(6, arq.getLocalidade());
 			ps.setInt(7, arq.getAno());
-			ps.setInt(8, arq.getUser().getId_user());
+			ps.setInt(8, id_user);
 			ps.executeUpdate();
 
 			rs = ps.getGeneratedKeys();
@@ -85,7 +85,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean insertArte(Arte arte) {
+	public boolean insertArte(Arte arte, Integer id_user) {
 		boolean sucesso = false;
 		int id = 0;
 	
@@ -99,7 +99,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 			ps.setString(5, arte.getCategoria());
 			ps.setString(6, arte.getLocalidade());
 			ps.setInt(7, arte.getAno());
-			ps.setInt(8, arte.getUser().getId_user());
+			ps.setInt(8, id_user);
 			ps.executeUpdate();
 
 			rs = ps.getGeneratedKeys();
@@ -138,7 +138,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean insertLivro(Livro livro) {
+	public boolean insertLivro(Livro livro, Integer id_user) {
 		boolean sucesso = false;
 		int id = 0;
 	
@@ -152,7 +152,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 			ps.setString(5, livro.getCategoria());
 			ps.setString(6, livro.getLocalidade());
 			ps.setInt(7, livro.getAno());
-			ps.setInt(8, livro.getUser().getId_user());
+			ps.setInt(8, id_user);
 			ps.executeUpdate();
 
 			rs = ps.getGeneratedKeys();
@@ -402,6 +402,32 @@ public class UserDaoJDBC extends DB implements UserDao{
 		}	
 		
 	}
+	
+	@Override
+	public boolean addNewImg(Produto prod) {
+		boolean sucesso = false;
+		try {
+			for(Img img : prod.getListImg()) {
+				if(img.getId_img() == null) {
+					String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
+					ps = conn.prepareStatement(sql);
+					ps.setString(1, img.getPath_img());
+					ps.setString(2, img.getDesc_img());
+					ps.setInt(3, prod.getId_prod());
+					ps.executeUpdate();
+					sucesso = true;
+				}
+			}
+			return sucesso;
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(ps);
+		}		
+	}
 
 	@Override
 	public boolean updateUserArqProd(Arquitetura arq, Integer id_user) {
@@ -443,34 +469,6 @@ public class UserDaoJDBC extends DB implements UserDao{
 	}
 	
 	@Override
-	public boolean addNewImgArq(Arquitetura arq) {
-		boolean sucesso = false;
-		try {
-			for(Img img : arq.getListImg()) {
-				if(img.getId_img() == null) {
-					String sql = "INSERT INTO img_path (path_img, desc_img, id_prod) VALUES (?, ?, ?)";
-					ps = conn.prepareStatement(sql);
-					ps.setString(1, img.getPath_img());
-					ps.setString(2, img.getDesc_img());
-					ps.setInt(3, arq.getId_prod());
-					ps.executeUpdate();
-					sucesso = true;
-				}
-			}
-			return sucesso;
-		}
-		catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		}
-		finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(ps);
-		}
-		
-		
-	}
-	
-	@Override
 	public boolean updateUserArteProd(Arte arte, Integer id_user) {
 		String sql = "UPDATE produto p, arte ar, img_path i SET p.titulo = ?, p.autor = ?, "
 				+ "p.localidade = ?, p.descricao = ?, p.tipo = ?, p.ano = ?, ar.tecnica = ?, "
@@ -478,19 +476,21 @@ public class UserDaoJDBC extends DB implements UserDao{
 		
 		try {
 			for(Img img : arte.getListImg()) {
-	            ps = conn.prepareStatement(sql);
-	            ps.setString(1, arte.getTitulo());
-	            ps.setString(2, arte.getAutor());
-	            ps.setString(3, arte.getLocalidade());
-	            ps.setString(4, arte.getDescricao());
-	            ps.setString(5, arte.getTipo());
-	            ps.setInt(6, arte.getAno());
-	            ps.setString(7, arte.getTecnica());	     
-	            ps.setString(8, img.getDesc_img());
-	            ps.setInt(9, img.getId_img());
-	            ps.setInt(10, arte.getId_prod());
-	            ps.setInt(11, id_user);
-	            ps.executeUpdate();	            
+				if(img.getId_img() != null) {
+		            ps = conn.prepareStatement(sql);
+		            ps.setString(1, arte.getTitulo());
+		            ps.setString(2, arte.getAutor());
+		            ps.setString(3, arte.getLocalidade());
+		            ps.setString(4, arte.getDescricao());
+		            ps.setString(5, arte.getTipo());
+		            ps.setInt(6, arte.getAno());
+		            ps.setString(7, arte.getTecnica());	     
+		            ps.setString(8, img.getDesc_img());
+		            ps.setInt(9, img.getId_img());
+		            ps.setInt(10, arte.getId_prod());
+		            ps.setInt(11, id_user);
+		            ps.executeUpdate();	            
+				}
     		}
             
 			return true;
@@ -510,22 +510,24 @@ public class UserDaoJDBC extends DB implements UserDao{
 				+ "l.biografia = ?, i.desc_img = ? WHERE i.id_img = ? AND p.id_prod = ? AND p.id_user = ?";
 		try {
 			for(Img img : livro.getListImg()) {
-	            ps = conn.prepareStatement(sql);
-	            ps.setString(1, livro.getTitulo());
-	            ps.setString(2, livro.getAutor());
-	            ps.setString(3, livro.getDescricao());
-	            ps.setString(4, livro.getCategoria());
-	            ps.setString(5, livro.getTipo());
-	            ps.setString(6, livro.getLocalidade());
-	            ps.setInt(7, livro.getAno());
-	            ps.setString(8, livro.getEditora());
-	            ps.setInt(9, livro.getEdicao());
-	            ps.setString(10, livro.getBiografia());
-	            ps.setString(11, img.getDesc_img());
-	            ps.setInt(12, img.getId_img());
-	            ps.setInt(13, livro.getId_prod());
-	            ps.setInt(14, id_user);
-	            ps.executeUpdate();	            
+				if(img.getId_img() != null) {
+		            ps = conn.prepareStatement(sql);
+		            ps.setString(1, livro.getTitulo());
+		            ps.setString(2, livro.getAutor());
+		            ps.setString(3, livro.getDescricao());
+		            ps.setString(4, livro.getCategoria());
+		            ps.setString(5, livro.getTipo());
+		            ps.setString(6, livro.getLocalidade());
+		            ps.setInt(7, livro.getAno());
+		            ps.setString(8, livro.getEditora());
+		            ps.setInt(9, livro.getEdicao());
+		            ps.setString(10, livro.getBiografia());
+		            ps.setString(11, img.getDesc_img());
+		            ps.setInt(12, img.getId_img());
+		            ps.setInt(13, livro.getId_prod());
+		            ps.setInt(14, id_user);
+		            ps.executeUpdate();	            
+				}
     		}
             
 			return true;
@@ -537,6 +539,7 @@ public class UserDaoJDBC extends DB implements UserDao{
 			DB.closeStatement(ps);
 		}
 	}
+	
 
 	@Override
 	public boolean deleteUserProd(Integer id_prod) {
