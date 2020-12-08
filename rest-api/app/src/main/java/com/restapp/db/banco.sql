@@ -81,10 +81,10 @@ values("Museu do Amanhã", "Santiago Calatrava", "O Museu do Amanhã é um museu
  Sua construção teve o apoio da Fundação Roberto Marinho e teve o custo total de cerca de 230 milhões de reais.
  O edifício foi inaugurado em 17 de dezembro de 2015 com a presença da então presidente do Brasil Dilma Rousseff e recebeu cerca
  de 25 mil visitantes em seu primeiro final de semana de funcionamento",
-"Arquitetura", "Moderno", "Rio de Janeiro, RJ - Brasil", 2015, 2);
+"arquitetura", "Moderno", "Rio de Janeiro, RJ - Brasil", 2015, 2);
 
 insert into arquitetura(curador, area, id_prod)
-values("Prefeitura do Rio de Janeiro", 15.000, 1);
+values("Prefeitura do Rio de Janeiro", 15000.0, 1);
 
 insert into img_path(path_img, desc_img, id_prod)
 values("/assets/images/files/museudoamanha1.jpg","Museu do Amanhã - Inauguração", 1);
@@ -98,15 +98,19 @@ values("/assets/images/files/museudoamanha3.jpg","Museu do Amanhã visto de cima
 
 /*ARQUITETURA 2*/
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
-values("Igreja de Nossa Senhora da Candelária", "Antônio Martins da Palma e sua esposa, Leonor Gonçalves", "A Igreja de Nossa Senhora da Candelária surgiu em cumprimento de uma promessa feita por Antônio Martins da Palma e sua esposa, Leonor Gonçalves. O casal de espanhóis foi surpreendido por uma tempestade durante uma viagem marítima e invocou pela Santa de sua devoção, Nossa Senhora da Candelária, prometendo erguer uma capela no primeiro porto que chegasse a salvo. A promessa foi cumprida e, aportando no Rio de Janeiro, ergueram a capela.
-
-No dia 03 de junho de 1775, a Provedoria da Irmandade autorizou a construção de um grandioso templo em estilo barroco, a atual Igreja de Nossa Senhora da Candelária, no lugar da capela já deteriorada pela ação do tempo. Após 123 anos de construção, a Igreja foi inaugurada em 10 de julho de 1898.
-
-Ao longo de mais de dois séculos, a Igreja passou por reformas e revitalizações, sempre preservando os aspectos arquitetônicos originais e a tradição religiosa. Hoje no templo, além das missas e celebrações religiosas, são realizadas apresentações culturais do Projeto Candelária.",
-"Arquitetura", "Neoclassico", "Rio de Janeiro, RJ - Brasil", 1877, 1);
+values("Igreja de Nossa Senhora da Candelária", "Antônio Martins da Palma e sua esposa, Leonor Gonçalves", "A Igreja de Nossa Senhora da Candelária surgiu em
+ cumprimento de uma promessa feita por Antônio Martins da Palma e sua esposa, Leonor Gonçalves.
+ O casal de espanhóis foi surpreendido por uma tempestade durante uma viagem marítima e invocou pela Santa de sua devoção,
+ Nossa Senhora da Candelária, prometendo erguer uma capela no primeiro porto que chegasse a salvo. A promessa foi cumprida e,
+ aportando no Rio de Janeiro, ergueram a capela. No dia 03 de junho de 1775, a Provedoria da Irmandade autorizou a construção de um grandioso templo em estilo barroco,
+ a atual Igreja de Nossa Senhora da Candelária, no lugar da capela já deteriorada pela ação do tempo. Após 123 anos de construção,
+ a Igreja foi inaugurada em 10 de julho de 1898. Ao longo de mais de dois séculos, a Igreja passou por reformas e revitalizações,
+ sempre preservando os aspectos arquitetônicos originais e a tradição religiosa. Hoje no templo, além das missas e celebrações religiosas,
+ são realizadas apresentações culturais do Projeto Candelária.",
+"arquitetura", "Neoclassico", "Rio de Janeiro, RJ - Brasil", 1877, 1);
 
 insert into arquitetura(curador, area, id_prod)
-values("Não aplicável", 5000.0, 1);
+values("Não aplicável", 5000.0, 2);
 
 insert into img_path(path_img, desc_img, id_prod)
 values("/assets/images/files/candelaria1.jpg","Igreja de Nossa Senhora da Candelária", 2);
@@ -127,16 +131,14 @@ values("/assets/images/files/candelaria5.jpg","Vista do teto da cúpula da Cande
 /*ARQUITETURA 3*/
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
 values("Santa Sofia", "Isidoro de Mileto e Antêmio de Trales", "Construída em Constantinopla, entre 527 e 532, durante o reinado do Imperador Justiniano (527-565),
- a Basílica de Santa Sofia foi dedicada à Sabedoria de Deus e daí sua denominação latinizada de “Santa Sofia” e no grego “Hagia Sophia”.
-
-A denominação de basílica relaciona-se ao fato do poder civil,
- representado pelo imperador (basileus em grego) ter ordenado a sua construção e tal gesto foi imortalizado no mosaico presente
- na basílica de San Vitale, em Ravena na Itália, onde o imperador Justiniano aparece acompanhado de seu séquito (militares e políticos)
+ a Basílica de Santa Sofia foi dedicada à Sabedoria de Deus e daí sua denominação latinizada de “Santa Sofia” e no grego “Hagia Sophia”. 
+ A denominação de basílica relaciona-se ao fato do poder civil, representado pelo imperador (basileus em grego) ter ordenado a sua construção e tal gesto foi
+ imortalizado no mosaico presente na basílica de San Vitale, em Ravena na Itália, onde o imperador Justiniano aparece acompanhado de seu séquito (militares e políticos)
  e entrega ao bispo Maximiano (bispo de Constantinopla) um recipiente que contém ouro, simbolizando o financiamento da igreja.",
-"Arquitetura", "Bizantino", "Istambul - Turquia", 2015, 2);
+"arquitetura", "Bizantino", "Istambul - Turquia", 2015, 2);
 
 insert into arquitetura(curador, area, id_prod)
-values("Não aplicável", 100.000, 3);
+values("Não aplicável", 100000.0, 3);
 
 insert into img_path(path_img, desc_img, id_prod)
 values("/assets/images/files/santasofia1.jpg","Santa Sofia, vista externa. Foto retirada em 2004.", 3);
@@ -153,13 +155,18 @@ values("/assets/images/files/santasofia4.jpg","Interior de Santa Sofia, mostrand
 
 /*ARQUITETURA 4*/
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
-values("Museu de Arte Moderna do Rio de Janeiro", "Affonso Eduardo Reidy", "O museu foi inaugurado em 1948, por iniciativa de um grupo de empresários presidido por Raymundo Ottoni de Castro Maia, como uma organização particular sem fins lucrativos, fruto do contexto cultural e econômico que o Brasil vivenciou no segundo pós-guerra, em que se observou a diversificação dos equipamentos culturais deste país, a aquisição de um valioso patrimônio artístico e a assimilação das correntes artísticas modernas.
-
-Palco de diversos acontecimentos de grande relevância na vanguarda artística brasileira, o museu amealhou ao longo de sua história uma grande coleção de arte moderna e contemporânea altamente representativa. Parte dessa coleção foi perdida no trágico incêndio de 1978. Conserva hoje aproximadamente 15 mil obras de arte, sendo 6.600 da coleção própria e as demais, em regime de comodato, advindas da Coleção Gilberto Chateaubriand, desde 1993, e da coleção de fotografias de Joaquim Paiva.",
-"Arquitetura", "Moderno", "Rio de Janeiro, RJ - Brasil", 1948, 1);
+values("Museu de Arte Moderna do Rio de Janeiro", "Affonso Eduardo Reidy", "O museu foi inaugurado em 1948,
+ por iniciativa de um grupo de empresários presidido por Raymundo Ottoni de Castro Maia, como uma organização particular sem fins lucrativos,
+ fruto do contexto cultural e econômico que o Brasil vivenciou no segundo pós-guerra, em que se observou a diversificação dos equipamentos culturais deste país,
+ a aquisição de um valioso patrimônio artístico e a assimilação das correntes artísticas modernas. 
+ Palco de diversos acontecimentos de grande relevância na vanguarda artística brasileira,
+ o museu amealhou ao longo de sua história uma grande coleção de arte moderna e contemporânea altamente representativa.
+ Parte dessa coleção foi perdida no trágico incêndio de 1978. Conserva hoje aproximadamente 15 mil obras de arte, sendo 6.600 da coleção própria e as demais,
+ em regime de comodato, advindas da Coleção Gilberto Chateaubriand, desde 1993, e da coleção de fotografias de Joaquim Paiva.",
+"arquitetura", "Moderno", "Rio de Janeiro, RJ - Brasil", 1948, 1);
 
 insert into arquitetura(curador, area, id_prod)
-values("Fernando Cocchiarale", 40.000, 4);
+values("Fernando Cocchiarale", 40000.0, 4);
 
 insert into img_path(path_img, desc_img, id_prod)
 values("/assets/images/files/museuartemoderna1.jpg","Museu de Arte Moderna", 4);
@@ -183,7 +190,7 @@ values("Livro de catecismo", "Sophronius of Vratsa", "O Livro do Domingo é o pr
  Ele foi escrito pelo bispo Sofronii, um membro da Paisii Hilandarski, fundadora do movimento renascentista búlgaro.
  É constituído de 96 sermões e destinava-se a servir como guia religioso,
  numa época em que a Bíblia ainda não havia sido traduzida do búlgaro antigo.",
-"Livro", "Religião", "Biblioteca do Congresso, Washington - EUA", 1806, 2);
+"livro", "Religião", "Biblioteca do Congresso, Washington - EUA", 1806, 2);
 
 insert into livro(editora, edicao, biografia, id_prod)
 values("Não aplicável", 1, "Santo Sophronius de Vratsa, nascido Stoyko Vladislavov, era um clérigo búlgaro e uma
@@ -212,7 +219,7 @@ values("Uma Carta de Cristóvão Colombo", "Cristóvão Colombo", "Após sua pri
  Stephan Plannck publicou uma tradução em latim. O preâmbulo de Plannck dava crédito a Fernando de Aragão por apoiar a expedição,
  porém omitia qualquer referência à Rainha Isabel. Plannck logo publicou uma edição corrigida que mencionava o papel de Isabel.
  Foi esta edição em latim que circulou amplamente e espalhou, por toda a Europa, a notícia das descobertas de Colombo.",
-"Livro", "Epístola - Geografia - História", "Biblioteca do Congresso, Washington - EUA", 1493, 2);
+"livro", "Epístola - Geografia - História", "Biblioteca do Congresso, Washington - EUA", 1493, 2);
 
 insert into livro(editora, edicao, biografia, id_prod)
 values("Não aplicável", 1, "Cristóvão de Colombo foi um navegador e explorador italiano,
@@ -236,7 +243,7 @@ values("A Divina Comédia", "Dante Alighieri", "A divina comédia é um dos maio
  Nele, o escritor apresenta uma jornada inesquecível pelo tormento infinito do Inferno e a árdua subida da montanha do
  Purgatório até o glorioso reino do Paraíso. Dante conseguiu fundir sátira,
  inteligência e paixão em uma alegoria cristã imortal sobre a busca da humanidade pelo autoconhecimento e pela transformação espiritual.",
-"Livro", "Poesia épica", "Bibliotecas Virtuais", 2017, 1);
+"livro", "Poesia épica", "Bibliotecas Virtuais", 2017, 1);
 
 insert into livro(editora, edicao, biografia, id_prod)
 values("Nova Fronteira", 12, "Dante Alighieri foi um escritor, poeta e político florentino, nascido na atual Itália.
@@ -263,7 +270,7 @@ values("Guia Ilustrado de Cultivo e Tecelagem: Vida Rural na China", "Jiāo Bǐn
  e o memorando formal de apresentação por Yan Yudun, os poemas foram inscritos pelo Imperador Kangxi. O pintor, Jiao Bingzhen, baseia-se,
  em grande parte, nas ''Ilustrações de Cultivo e Tecelagem'' feitas pelo pintor Lou Shou no início da dinastia Song do Sul,
  fazendo alterações para produzir estas imagens, que são obras-primas de arte, notáveis por sua vivacidade e habilidosa execução.",
-"Livro", "Agricultura - Arte - Desenho", "Biblioteca do Congresso, Washington - EUA", 1696, 1);
+"livro", "Agricultura - Arte - Desenho", "Biblioteca do Congresso, Washington - EUA", 1696, 1);
 
 insert into livro(editora, edicao, biografia, id_prod)
 values("Não Aplicável", 1, "Jiāo Bǐngzhēn, 1689-1726 era natural de Jining, Shandong, que se tornou um notável pintor e astrônomo.
@@ -292,7 +299,7 @@ values("/assets/images/files/agriculturachinesa5.jpg","Representação das mulhe
 insert into produto(titulo, autor, descricao, categoria, tipo, localidade, ano, id_user)
 values("A Boba", "Anita Malfatti", "A composição A Boba é um dos quadros mais conhecidos e notáveis da pintora Anita Malfatti que,
  não se atrelando aos rigores da época, ousou tanto na temática quanto no tratamento pictórico e no uso das cores",
-"Arte", "Retrato", "Museu de Arte Contemporânea da Universidade de São Paulo", 1916, 2);
+"arte", "Retrato", "Museu de Arte Contemporânea da Universidade de São Paulo", 1916, 2);
 
 insert into arte(tecnica, id_prod)
 values("Cubismo", 9);
@@ -313,7 +320,7 @@ values("Estátua de Dom Pedro I", "Louis Rochet", "O monumento foi erguido por i
  e os quatro grandes rios nacionais — Amazonas, Madeira, São Francisco e Paraná.
  Nas alegorias estão figurados indígenas e diversas espécies de animais — antas, tatus,
  tamanduás — assim como gárgulas douradas e diversos outros motivos decorativos.",
-"Arte", "Estátua", "Praça Tiradentes, Rio de Janeiro RJ - Brasil", 1862, 1);
+"arte", "Estátua", "Praça Tiradentes, Rio de Janeiro RJ - Brasil", 1862, 1);
 
 insert into arte(tecnica, id_prod)
 values("Cubismo", 10);
@@ -341,7 +348,7 @@ values("Pietà", "Michelangelo Buonarroti", "“Pietà” foi elaborada em márm
  Trazendo a figura de Jesus em proporção menor que a representada por Maria, o artista quis expressar que o filho não esmagaria a sua mãe.
  Já Maria conta com uma expressão de sofrimento idealizada, além de apresentar uma pureza inigualável.
  Logo, essa é uma das esculturas mais famosas do Renascentismo.",
-"Arte", "Escultura", "Basilica de São Pedro - Vaticano.", 1499, 1);
+"arte", "Escultura", "Basilica de São Pedro - Vaticano.", 1499, 1);
 
 insert into arte(tecnica, id_prod)
 values("Mármore", 11);
@@ -376,7 +383,7 @@ values("Cerâmica indígena de Medellín", "Henry Price", "Em suas aquarelas e d
  Antioquia e Cauca, sob a direção de Agustín Codazzi (1793 a 1859).
  Muitas das aquarelas e desenhos de Price de 1852 a 1855 retratam as paisagens, o povo, seus costumes e os artefatos colombianos.
  Essas obras são mantidas hoje na Biblioteca Nacional da Colômbia (Colección Comisión Corográfica).",
-"Arte", "Escultura", "Biblioteca Nacional da Colombia", 1852, 2);
+"arte", "Escultura", "Biblioteca Nacional da Colombia", 1852, 2);
 
 insert into arte(tecnica, id_prod)
 values("Cerâmica", 12);
