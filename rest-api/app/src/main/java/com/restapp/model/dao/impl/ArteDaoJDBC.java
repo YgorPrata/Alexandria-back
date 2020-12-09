@@ -38,33 +38,20 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 			
 			List<Arte> list = new ArrayList<>();	
 			Map<Integer, Arte> map = new HashMap<Integer, Arte>();
- 			List<Img> listimg = new ArrayList<>();
+ 			Img img;
  			User user;
-  			int cont = 0;
-  			int chave = 0;
  			
-			while(rs.next()) {
-				cont++;				
+			while(rs.next()) {			
 				Arte arte = map.get(rs.getInt("ar.id_prod"));
 				
 				user = new User(rs.getString("u.nome"));
 				
-				if(chave == rs.getInt("i.id_prod") || cont == 1) {
-					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
-				}
-				
-				if(chave != rs.getInt("i.id_prod") && cont != 1) {
-					listimg = new ArrayList<>();
-					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
-				}
-								
+				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
+											
 				if(arte == null) {
-					arte = instanciaTudo(rs, listimg, user);					
+					arte = instanciaArqSimp(rs, img, user);					
 					list.add(arte);
-					map.put(rs.getInt("ar.id_prod"), arte);
-					for (Map.Entry<Integer, Arte> entry : map.entrySet()) {
-					    chave = entry.getKey();					    
-					}
+					map.put(rs.getInt("ar.id_prod"), arte);					
 				}				
 			}
 		

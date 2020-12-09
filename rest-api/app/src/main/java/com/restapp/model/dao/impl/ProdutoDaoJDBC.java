@@ -37,7 +37,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 				+ "WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') OR p.descricao LIKE CONCAT( '%',?,'%') "
 				+ "OR p.tipo LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') OR p.categoria LIKE CONCAT( '%',?,'%') "
 				+ "OR a.curador LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') OR l.biografia LIKE CONCAT( '%',?,'%') "
-				+ "OR ar.tecnica LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
+				+ "OR ar.tecnica LIKE CONCAT( '%',?,'%') LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, query);
@@ -128,7 +128,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, i.id_img, " 
 				+ " i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') OR p.autor LIKE CONCAT( '%',?,'%') "
-				+ "OR p.localidade LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ? ";
+				+ "OR p.localidade LIKE CONCAT( '%',?,'%') LIMIT ? ";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, titulo);

@@ -37,32 +37,19 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 			
 			List<Arquitetura> list = new ArrayList<>();	
 			Map<Integer, Arquitetura> map = new HashMap<Integer, Arquitetura>();
- 			List<Img> listimg = new ArrayList<>();
+ 			Img img;
  			User user;
-  			int cont = 0;
-  			int chave = 0;
  			
-			while(rs.next()) {
-				cont++;				
+			while(rs.next()) {			
 				Arquitetura arq = map.get(rs.getInt("a.id_prod"));
+				
 				user = new User(rs.getString("u.nome"));
-				
-				if(chave == rs.getInt("i.id_prod") || cont == 1) {
-					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
-				}
-				
-				if(chave != rs.getInt("i.id_prod") && cont != 1) {
-					listimg = new ArrayList<>();
-					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
-				}
-								
+				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
+											
 				if(arq == null) {
-					arq = instanciaTudo(rs, listimg, user);					
+					arq = instanciaArqSimp(rs, img, user);					
 					list.add(arq);
-					map.put(rs.getInt("a.id_prod"), arq);
-					for (Map.Entry<Integer, Arquitetura> entry : map.entrySet()) {
-					    chave = entry.getKey();					    
-					}
+					map.put(rs.getInt("a.id_prod"), arq);					
 				}				
 			}
 		
@@ -131,12 +118,12 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	
 	@Override
 	public List<Arquitetura> getArqTipo(String titulo, String autor, String localidade, Integer limit) {
+		System.out.println("ARQ TIPO");
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, "
 				+ "i.id_img, i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN "
 				+ "arquitetura AS a ON p.id_prod = a.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
-				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
-				+ "ORDER BY RAND() LIMIT ?";
+				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, titulo);
@@ -182,7 +169,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
 				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
 				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR p.tipo LIKE CONCAT( '%',?,'%') OR "
-				+ "a.curador LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
+				+ "a.curador LIKE CONCAT( '%',?,'%') LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, query);

@@ -38,7 +38,7 @@ import com.restapp.resource.security.UserRoles;
 
 import io.swagger.annotations.Api;
 
-//@Seguro({UserRoles.ADMIN, UserRoles.USER})
+@Seguro({UserRoles.ADMIN, UserRoles.USER})
 @Path("/user")
 @Api("/User Service")
 public class UserResource {
@@ -529,7 +529,6 @@ public class UserResource {
 		}					
 	}
 	
-	//@Seguro({UserRoles.ADMIN})
 	@DELETE
 	@Path("prod/delprods/{id}")
 	@Consumes({MediaType.APPLICATION_JSON })

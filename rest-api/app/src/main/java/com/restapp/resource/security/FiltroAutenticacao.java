@@ -24,14 +24,15 @@ public class FiltroAutenticacao implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+		System.out.println("AUTHORIZATION HEADER: "+authorizationHeader);
+		System.out.println("REQUEST CONTEXT: "+requestContext);
 
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-			throw new NotAuthorizedException("Authorization header precisa ser provido");
-		}
-		
-		String token = authorizationHeader.substring("Bearer".length()).trim();
+			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Você precisa estar logado!").build());
+		}		
 
 		try {
+			String token = authorizationHeader.substring("Bearer".length()).trim();
 			Claims claims = new LoginResource().validaToken(token);
 
 			if (claims == null)
@@ -43,7 +44,7 @@ public class FiltroAutenticacao implements ContainerRequestFilter {
 		} catch (Exception e) {
 			e.printStackTrace();
 			requestContext.abortWith(
-					Response.status(Response.Status.UNAUTHORIZED).build());
+					Response.status(Response.Status.UNAUTHORIZED).entity("Você precisa estar logado!").build());
 		}
 
 	}

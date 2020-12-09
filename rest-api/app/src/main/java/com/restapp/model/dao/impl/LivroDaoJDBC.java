@@ -38,33 +38,20 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 			
 			List<Livro> list = new ArrayList<>();	
 			Map<Integer, Livro> map = new HashMap<Integer, Livro>();
- 			List<Img> listimg = new ArrayList<>();
+ 			Img img;
  			User user;
-  			int cont = 0;
-  			int chave = 0;
  			
-			while(rs.next()) {
-				cont++;				
+			while(rs.next()) {			
 				Livro livro = map.get(rs.getInt("l.id_prod"));
 				
 				user = new User(rs.getString("u.nome"));
-				
-				if(chave == rs.getInt("i.id_prod") || cont == 1) {
-					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
-				}
-				
-				if(chave != rs.getInt("i.id_prod") && cont != 1) {
-					listimg = new ArrayList<>();
-					listimg.add(new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img")));					
-				}
-								
+
+				img = new Img(rs.getInt("i.id_img"), rs.getString("i.path_img"), rs.getString("i.desc_img"));
+											
 				if(livro == null) {
-					livro = instanciaTudo(rs, listimg, user);					
+					livro = instanciaLivSimp(rs, img, user);					
 					list.add(livro);
-					map.put(rs.getInt("l.id_prod"), livro);
-					for (Map.Entry<Integer, Livro> entry : map.entrySet()) {
-					    chave = entry.getKey();					    
-					}
+					map.put(rs.getInt("l.id_prod"), livro);					
 				}				
 			}
 		
