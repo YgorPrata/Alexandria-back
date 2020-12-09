@@ -126,7 +126,7 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 				+ "livro AS l ON p.id_prod = l.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
 				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
-				+ "ORDER BY RAND() LIMIT ?";
+				+ "ORDER BY LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, titulo);
@@ -174,7 +174,7 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
 				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') " 
 				+ "OR p.descricao LIKE CONCAT( '%',?,'%') OR p.tipo LIKE CONCAT( '%',?,'%') OR l.editora LIKE CONCAT( '%',?,'%') "
-				+ "OR l.biografia LIKE CONCAT( '%',?,'%') ORDER BY RAND() LIMIT ?";
+				+ "OR l.biografia LIKE CONCAT( '%',?,'%') LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, query);
