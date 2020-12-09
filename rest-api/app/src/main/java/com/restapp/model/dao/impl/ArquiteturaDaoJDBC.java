@@ -118,6 +118,7 @@ public class ArquiteturaDaoJDBC extends DB implements ArquiteturaDao {
 	
 	@Override
 	public List<Arquitetura> getArqTipo(String titulo, String autor, String localidade, Integer limit) {
+		System.out.println("ARQUITETURA LIMIT: "+limit);
 		System.out.println("ARQ TIPO");
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, a.id_arq, a.id_prod, "
 				+ "i.id_img, i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN "

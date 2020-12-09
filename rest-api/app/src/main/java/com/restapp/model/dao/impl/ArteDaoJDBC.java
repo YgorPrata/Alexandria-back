@@ -121,6 +121,7 @@ public class ArteDaoJDBC extends DB implements ArteDao {
 	
 	@Override
 	public List<Arte> getArteTipo(String titulo, String autor, String localidade, Integer limit) {
+		System.out.println("ARTE LIMIT: "+limit);
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, ar.id_arte, ar.id_prod, i.id_img, "
 				+ "i.path_img, i.desc_img, i.id_prod, u.nome FROM produto AS p INNER JOIN "
 				+ "arte AS ar ON p.id_prod = ar.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "

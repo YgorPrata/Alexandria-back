@@ -259,7 +259,7 @@ insert into img_path(path_img, desc_img, id_prod)
 values("/assets/images/files/adivinacomedia3.jpg","A Divina Comédia - Purgatório", 7);
 
 insert into img_path(path_img, desc_img, id_prod)
-values("/assets/images/files/adivinacomedia4.jpg","A Divina Comédia - Paraíso", 2);
+values("/assets/images/files/adivinacomedia4.jpg","A Divina Comédia - Paraíso", 7);
 
 
 /*LIVRO 4*/
@@ -338,7 +338,7 @@ insert into img_path(path_img, desc_img, id_prod)
 values("/assets/images/files/dompedro4.jpg","Registro feito em 1862 por Manoel Banchieri", 10);
 
 insert into img_path(path_img, desc_img, id_prod)
-values("/assets/images/files/dompedro5.jpg","Diário do Rio de Janeiro, 23 de outubro de 1854.", 3);
+values("/assets/images/files/dompedro5.jpg","Diário do Rio de Janeiro, 23 de outubro de 1854.", 10);
 
 
 /*ARTE 3*/

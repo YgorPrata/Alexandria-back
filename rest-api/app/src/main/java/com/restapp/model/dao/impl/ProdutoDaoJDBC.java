@@ -28,7 +28,7 @@ public class ProdutoDaoJDBC extends DB implements ProdutoDao{
 	}
 	
 	@Override
-	public List<Produto> getProdNoFiltro(String query, Integer limit){
+	public List<Produto> getProdNoFiltro(String query, Integer limit){		
 		String sql = "SELECT * FROM produto AS p LEFT JOIN arquitetura AS a ON p.id_prod = a.id_prod "
 				+ "LEFT JOIN livro AS l ON p.id_prod = l.id_prod " 
 				+ "LEFT JOIN arte AS ar ON p.id_prod = ar.id_prod "

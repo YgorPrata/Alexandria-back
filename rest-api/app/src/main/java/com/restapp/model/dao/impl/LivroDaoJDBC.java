@@ -121,12 +121,12 @@ public class LivroDaoJDBC extends DB implements LivroDao {
 	
 	@Override
 	public List<Livro> getLivroTipo(String titulo, String autor, String localidade, Integer limit) {
+		System.out.println("LIVRO LIMIT: "+limit);
 		String sql = "SELECT p.id_prod, p.titulo, p.autor, p.descricao, p.localidade, p.categoria, l.id_livro, l.id_prod, i.id_img,"
 				+ " i.path_img, i.desc_img, u.nome FROM produto AS p INNER JOIN "
 				+ "livro AS l ON p.id_prod = l.id_prod INNER JOIN img_path AS i ON p.id_prod = i.id_prod "
 				+ "INNER JOIN usuario AS u ON p.id_user = u.id_user WHERE p.titulo LIKE CONCAT( '%',?,'%') "
-				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') "
-				+ "ORDER BY LIMIT ?";
+				+ "OR p.autor LIKE CONCAT( '%',?,'%') OR p.localidade LIKE CONCAT( '%',?,'%') LIMIT ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, titulo);
