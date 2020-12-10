@@ -30,15 +30,15 @@ public class FiltroAutorizacao implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		/*TRATA A AUTORIZAÇÃO A NÍVEL DE CLASSE*/
 		Class<?> classe = resourceInfo.getResourceClass();
-		System.out.println("CLASSE DO CLASS<?> RESOURCE INFO: "+classe);
+		//System.out.println("CLASSE DO CLASS<?> RESOURCE INFO: "+classe);
 		List<UserRoles> nivelPermissaoClasse = extrairUserRoles(classe);
-		System.out.println("NIVEL DE PERMISSAO DA CLASSE: "+nivelPermissaoClasse);
+		//System.out.println("NIVEL DE PERMISSAO DA CLASSE: "+nivelPermissaoClasse);
 		/*AQUI É EXTRAÍDO O NÍVEL DE PERMISSAO A NIVEL DE CLASSE E PASSADO PARA O BLOCO SEGUINTE*/
 
 		/*TRATA A AUTORIZAÇÃO A NÍVEL DE MÉTODO (PERMISSAO DA NOTATION QUE ESTÁ NO ENDPOINT ACESSADO)*/
 		Method metodo = resourceInfo.getResourceMethod();
 		List<UserRoles> nivelPermisaoMetodo = extrairUserRoles(metodo);
-		System.out.println("NIVEL DE PERMISSAO METODO: "+nivelPermisaoMetodo);
+		//System.out.println("NIVEL DE PERMISSAO METODO: "+nivelPermisaoMetodo);
 		/*AQUI É EXTRAÍDO O NÍVEL DE PERMISSAO A NIVEL DE METODO E PASSADO PARA O BLOCO SEGUINTE 
 		(PERMISSAO DA NOTATION QUE ESTÁ NO ENDPOINT ACESSADO)*/
 
@@ -62,7 +62,7 @@ public class FiltroAutorizacao implements ContainerRequestFilter {
 	}
 	//Metodo que extrai os niveis de permissao que foram definidos no @Seguro
 	private List<UserRoles> extrairUserRoles(AnnotatedElement annotatedElement) {
-		System.out.println("METODO DE EXTRACAO DE PERMISSAO DOS USUARIOS: "+annotatedElement);
+		//System.out.println("METODO DE EXTRACAO DE PERMISSAO DOS USUARIOS: "+annotatedElement);
 		if (annotatedElement == null) {
 			return new ArrayList<UserRoles>();
 		} else {
@@ -71,7 +71,7 @@ public class FiltroAutorizacao implements ContainerRequestFilter {
 				return new ArrayList<UserRoles>();
 			} else {
 				UserRoles[] allowedRoles = secured.value();
-				System.out.println("VARIAVEL IGUALANDO AO SECURED.VALUE: "+allowedRoles);
+				//System.out.println("VARIAVEL IGUALANDO AO SECURED.VALUE: "+allowedRoles);
 				return Arrays.asList(allowedRoles);
 			}
 		}
@@ -86,7 +86,7 @@ public class FiltroAutorizacao implements ContainerRequestFilter {
 			boolean temPermissao = false;
 			//Busca quais os niveis de acesso o usuario tem.
 			UserRoles nivelPermissaoUsuario = new LoginResource().getUserRoles(login);
-			System.out.println("NIVEL DE PERMISSAO DO USUARIO PASSADO PELO METODO GET USER ROLES: "+nivelPermissaoUsuario);
+			//System.out.println("NIVEL DE PERMISSAO DO USUARIO PASSADO PELO METODO GET USER ROLES: "+nivelPermissaoUsuario);
 			
 			for (UserRoles nivelPermissao : nivelPermissaoPermitidos) {
 				if(nivelPermissao.equals(nivelPermissaoUsuario))

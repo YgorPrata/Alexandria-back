@@ -24,8 +24,8 @@ public class FiltroAutenticacao implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-		System.out.println("AUTHORIZATION HEADER: "+authorizationHeader);
-		System.out.println("REQUEST CONTEXT: "+requestContext);
+		//System.out.println("AUTHORIZATION HEADER: "+authorizationHeader);
+		//System.out.println("REQUEST CONTEXT: "+requestContext);
 
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Você precisa estar logado!").build());

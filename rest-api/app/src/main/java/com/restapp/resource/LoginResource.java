@@ -142,7 +142,7 @@ public class LoginResource {
 	}
 	
 	public UserRoles getUserRoles(String login) {		
-		System.out.println("VALOR DA SAIDA DA CHAMADA DO METODO DE VALIDACAO DA ROLE: "+logindao.validaRoleUser(login));
+		//System.out.println("VALOR DA SAIDA DA CHAMADA DO METODO DE VALIDACAO DA ROLE: "+logindao.validaRoleUser(login));
 		if(logindao.validaRoleUser(login).equals("admin")) {
 			return UserRoles.ADMIN;
 		}

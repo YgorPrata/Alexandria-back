@@ -55,11 +55,11 @@ public class UserResource {
 			
 			jsonArq.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 			
-			System.out.println("JSON "+jsonArq.getFormDataContentDisposition().getParameters().values());
+			//System.out.println("JSON "+jsonArq.getFormDataContentDisposition().getParameters().values());
 			
 			Arquitetura arq = jsonArq.getValueAs(Arquitetura.class);
 
-			System.out.println("AUTOR: "+arq.getAutor());
+			//System.out.println("AUTOR: "+arq.getAutor());
 			
 			String nomeIs;
 			int cont = 0;
@@ -368,7 +368,7 @@ public class UserResource {
 				nomeIs = img.getPath_img();
 				
 				String pathAndFileName = nomeIs;
-				String originalPath = "imgs/";
+				String originalPath = "/assets/images/files/";
 				String replace = "";
 				String nomeImgProcessado = pathAndFileName.replace(originalPath, replace);
 				
@@ -462,7 +462,7 @@ public class UserResource {
 				nomeIs = img.getPath_img();
 				
 				String pathAndFileName = nomeIs;
-				String originalPath = "imgs/";
+				String originalPath = "/assets/images/files/";
 				String replace = "";
 				String nomeImgProcessado = pathAndFileName.replace(originalPath, replace);
 				
